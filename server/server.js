@@ -1,5 +1,6 @@
 var coreAudio = require("node-core-audio"),
-    app = require('express')(),
+    express = require('express'),
+    app = express(),
     http = require('http').Server(app),
     io = require('socket.io')(http),
     FFT = require('fft'),
@@ -14,7 +15,8 @@ engine.setOptions({
 });
 engine.addAudioCallback(processAudio);
 
-
+app.use(express.static('lib'));
+app.use(express.static('visualizations'));
 app.get('/', function(req, res){
   res.sendfile('client/index.html');
 });
