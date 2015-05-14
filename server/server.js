@@ -4,12 +4,14 @@ var coreAudio = require("node-core-audio"),
     http = require('http').Server(app),
     io = require('socket.io')(http),
     FFT = require('fft'),
+    BUFFER_SIZE = 256,
 
     engine = coreAudio.createNewAudioEngine(),
-    fft = new FFT.complex( engine.getOptions().framesPerBuffer / 2, false ),
-    fftBuffer = new Float32Array(1024);
+    fft = new FFT.complex( BUFFER_SIZE / 2, false ),
+    fftBuffer = new Float32Array(BUFFER_SIZE);
 
 engine.setOptions({
+    framesPerBuffer: BUFFER_SIZE,
     inputDevice: 1,
     interleaved: false
 });
@@ -35,9 +37,9 @@ http.listen(3000, function(){});
  * @param {Array} inputBuffer
  */
 function processAudio(inputBuffer) {
-    var ts = inputBuffer[0], ft;
+    var ts = new Float32Array(inputBuffer[0]), ft;
     fft.simple(fftBuffer, ts, 'complex');
-    ft = fftBuffer.slice(0, fftBuffer.length / 2);
+    ft = fftBuffer.slice(0, BUFFER_SIZE / 2);
 
     io.emit('sample', {ft: ft, ts: ts} );
 }
