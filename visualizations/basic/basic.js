@@ -47,8 +47,6 @@ function basic(skqw) {
 
     function init() {
         ctx = skqw.createCanvas().getContext('2d');
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-        ctx.lineWidth = 3;
     }
 
     function tick(timestamp) {
@@ -59,7 +57,6 @@ function basic(skqw) {
 
         ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
         ctx.fillRect(0, 0, w, h);
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
         drawBars();
         drawWave();
     }
@@ -67,6 +64,9 @@ function basic(skqw) {
     function drawWave() {
         var length = ts.length,
             width = w / length;
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+        ctx.lineWidth = 5;
 
         for(var i = 0; i < ts.length; i++) {
             var val = ts[i],
@@ -80,14 +80,14 @@ function basic(skqw) {
                 ctx.lineTo(x, y);
             }
         }
-
-        //ctx.closePath();
         ctx.stroke();
     }
 
     function drawBars() {
         var length = ft.length,
             width = w / length;
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
 
         for(var i = 0; i < ft.length; i++) {
             var val = ft[i],

@@ -1,4 +1,8 @@
-var coreAudio = require("node-core-audio"),
+var coreAudio = require('node-core-audio'),
+    cheerio = require('cheerio'),
+    fs = require('fs'),
+    path = require('path'),
+    glob = require('glob'),
     express = require('express'),
     app = express(),
     http = require('http').Server(app),
@@ -19,8 +23,18 @@ engine.addAudioCallback(processAudio);
 
 app.use(express.static('lib'));
 app.use(express.static('visualizations'));
+
 app.get('/', function(req, res){
-  res.sendfile('client/index.html');
+    var html = fs.readFileSync(__dirname + '/../client/index.html', 'utf8');
+    var $ = cheerio.load(html);
+
+    glob(__dirname + '/../visualizations/**/*.js', function(err, files) {
+        files.forEach(function(file) {
+            var src = path.normalize(file).replace(path.normalize(__dirname + '/../visualizations'), '');
+            $('body').append('<script src="' + src + '">');
+        });
+        res.send($.html());
+    });
 });
 
 io.on('connection', function(socket){});
