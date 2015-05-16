@@ -25,21 +25,10 @@
 <div id="container"></div>
 
 <script src="../socket.io/socket.io.js"></script>
-<script src="dat.gui.min.js"></script>
-<script src="skqw.js"></script>
-<script src="skqw-dat.js"></script>
-<!--<script src="basic/basic.js"></script>-->
-
-<script>
-
-    var instance = skqw(document.querySelector('#container'))
-            .loadVisualization('basic', basic)
-            .setVisualization('basic')
-            .start();
-
-    skqwDat(instance);
-
-</script>
+<script src="lib/dat.gui.min.js"></script>
+<script src="lib/skqw.js"></script>
+<script src="lib/skqw-dat.js"></script>
+<script src="client/client.js"></script>
 
 </body>
 </html>

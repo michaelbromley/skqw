@@ -21,25 +21,34 @@ engine.setOptions({
 });
 engine.addAudioCallback(processAudio);
 
-app.use(express.static('lib'));
-app.use(express.static('visualizations'));
+app.use('/lib', express.static('lib'));
+app.use('/visualizations', express.static('visualizations'));
+app.use('/client', express.static('client'));
 
-app.get('/', function(req, res){
-    var html = fs.readFileSync(__dirname + '/../client/index.html', 'utf8');
-    var $ = cheerio.load(html);
-
-    glob(__dirname + '/../visualizations/**/*.js', function(err, files) {
-        files.forEach(function(file) {
-            var src = path.normalize(file).replace(path.normalize(__dirname + '/../visualizations'), '');
-            $('body').append('<script src="' + src + '">');
-        });
-        res.send($.html());
-    });
-});
+app.get('/', injectVisScripts);
 
 io.on('connection', function(socket){});
 
 http.listen(3000, function(){});
+
+
+function injectVisScripts(req, res) {
+    var html = fs.readFileSync(__dirname + '/../client/index.html', 'utf8');
+    var $ = cheerio.load(html),
+        appendToBody = appendToElement($('body'));
+
+    glob(__dirname + '/../visualizations/**/*.js', function(err, files) {
+        files.forEach(appendToBody);
+        res.send($.html());
+    });
+}
+
+function appendToElement(element) {
+    return function (file) {
+        var src = path.normalize(file).replace(path.normalize(__dirname + '/../visualizations'), '');
+        element.append('<script src="visualizations/' + src + '">');
+    }
+}
 
 /**
  * Apply a Fast Fourier Transform (fft) to the time series data provided
