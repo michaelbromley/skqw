@@ -24,14 +24,14 @@ engine.addAudioCallback(processAudio);
 app.use('/lib', express.static('lib'));
 app.use('/visualizations', express.static('visualizations'));
 app.use('/client', express.static('client'));
-
 app.get('/', injectVisScripts);
-
 io.on('connection', function(socket){});
-
 http.listen(3000, function(){});
 
-
+/**
+ * Inject any scripts from the visualizations folder into the client index.html file
+ * and then serves the modified file.
+ */
 function injectVisScripts(req, res) {
     var html = fs.readFileSync(__dirname + '/../client/index.html', 'utf8');
     var $ = cheerio.load(html),
@@ -43,6 +43,13 @@ function injectVisScripts(req, res) {
     });
 }
 
+/**
+ * Returns a function that appends script element with a normalized path based on `file` to the
+ * specified element.
+ *
+ * @param {Element} element
+ * @returns {Function}
+ */
 function appendToElement(element) {
     return function (file) {
         var src = path.normalize(file).replace(path.normalize(__dirname + '/../visualizations'), '');
