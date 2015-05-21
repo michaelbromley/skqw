@@ -1,6 +1,10 @@
+/**
+ * {SKQW}
+ */
 var skqw;
-
-window.addEventListener('load', init);
+angular.module('app', [])
+    .run(init)
+    .controller('AppController', AppController);
 
 function init() {
     skqw = SKQW(document.querySelector('#container'));
@@ -12,8 +16,20 @@ function init() {
         }
     }
 
-    skqw.setVisualization(Object.keys(visLibrary)[0]);
+    skqw.setVisualization(Object.keys(visLibrary)[1]);
     skqw.start();
 
     skqwDat(skqw);
 }
+
+function AppController() {
+    var vm = this;
+
+    vm.visLibrary = Object.keys(visLibrary);
+    vm.selectVis = function() {
+        skqw.setVisualization(vm.currentVis);
+        skqw.start();
+    };
+}
+
+
