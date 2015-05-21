@@ -8,7 +8,7 @@ var visLibrary = visLibrary || {};
      * An example of the most basic kind of 2D visualization, to illustrate the expected format & API of a
      * skqw visualization plugin.
      *
-     * @param {SKQW} skqw
+     * @param skqw
      * @returns {{name: string, author: string, params: {sensitivity: number}, paramsMetadata: {sensitivity: {min: number, max: number, step: number}}, init: init, tick: tick}}
      */
     function vis(skqw) {
@@ -16,7 +16,10 @@ var visLibrary = visLibrary || {};
             ft,
             ts,
             w,
-            h;
+            h,
+            params = {
+                sensitivity: 250
+            };
 
         /**
          * The return value must be an object with the following required properties:
@@ -37,9 +40,7 @@ var visLibrary = visLibrary || {};
             author: 'Michael Bromley',
             init: init,
             tick: tick,
-            params: {
-                sensitivity: 250
-            },
+            params: params,
             paramsMetadata: {
                 sensitivity : {
                     min: 0,
