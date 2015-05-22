@@ -2,6 +2,7 @@
  * {SKQW}
  */
 var skqw;
+
 angular.module('app', [])
     .run(init)
     .controller('AppController', AppController);
@@ -24,6 +25,8 @@ function init() {
 
 function AppController() {
     var vm = this;
+
+    vm.currentVis = skqw.getVisualization();
 
     vm.visLibrary = Object.keys(visLibrary);
     vm.selectVis = function() {
