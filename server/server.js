@@ -22,11 +22,12 @@ engine.setOptions({
 engine.addAudioCallback(processAudio);
 
 app.use('/lib', express.static('lib'));
+app.use('/node_modules', express.static('node_modules'));
 app.use('/visualizations', express.static('visualizations'));
 app.use('/client', express.static('client'));
 app.get('/', injectVisScripts);
 io.on('connection', function(socket){});
-http.listen(3000, function(){});
+http.listen(3000);
 
 /**
  * Inject any scripts from the visualizations folder into the client index.html file
