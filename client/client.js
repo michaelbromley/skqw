@@ -26,7 +26,7 @@ function init() {
 function AppController() {
     var vm = this;
 
-    vm.currentVis = skqw.getVisualization();
+    vm.currentVis = skqw.getVisualization().name;
 
     vm.visLibrary = Object.keys(visLibrary);
     vm.selectVis = function() {
