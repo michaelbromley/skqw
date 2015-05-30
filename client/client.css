@@ -13,6 +13,12 @@ body {
     right: 0;
 }
 
+#container canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
 .controls-container {
     height: 100px;
     position: absolute;
