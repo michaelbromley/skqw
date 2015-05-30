@@ -28,7 +28,8 @@ var visLibrary = visLibrary || {};
             w,
             h,
             params = {
-                sensitivity: 250
+                sensitivity: 20,
+                depth: 50
             };
 
         function init() {
@@ -53,7 +54,7 @@ var visLibrary = visLibrary || {};
             //resizeCanvas();
         }
 
-        function tick(timestamp) {
+        function tick() {
             w = skqw.width;
             h = skqw.height;
             ft = skqw.stream.ft;
@@ -62,6 +63,7 @@ var visLibrary = visLibrary || {};
             volume = Array.prototype.reduce.call(ft, function(a, b) {
                 return a + b;
             });
+            volume *= params.sensitivity;
 
             fgCtx.clearRect(-fgCanvas.width, -fgCanvas.height, fgCanvas.width*2, fgCanvas.height *2);
             //sfCtx.clearRect(-fgCanvas.width/2, -fgCanvas.height/2, fgCanvas.width, fgCanvas.height);
@@ -69,6 +71,9 @@ var visLibrary = visLibrary || {};
            /* stars.forEach(function(star) {
                 star.drawStar();
             });*/
+
+            rotateForeground();
+
             tiles.forEach(function(tile) {
                 tile.drawPolygon();
             });
@@ -113,8 +118,8 @@ var visLibrary = visLibrary || {};
         Polygon.prototype.calculateOffset = function(coords) {
             var angle = Math.atan(coords[1]/coords[0]);
             var distance = Math.sqrt(Math.pow(coords[0], 2) + Math.pow(coords[1], 2)); // a bit of pythagoras
-            var mentalFactor = Math.min(Math.max((Math.tan(volume/6000) * 0.5), -20), 2); // this factor makes the visualization go crazy wild
-            var offsetFactor = Math.pow(distance/3, 2) * (volume/2000000) * (Math.pow(this.high, 1.3)/300) * mentalFactor;
+            var mentalFactor = Math.min(Math.max((Math.tan(volume/60000000) * 0.5), -20), 2); // this factor makes the visualization go crazy wild
+            var offsetFactor = Math.pow(distance/3, 2) * (volume * params.depth / 50) * (Math.pow(this.high, 1.3)/300) * mentalFactor;
             var offsetX = Math.cos(angle) * offsetFactor;
             var offsetY = Math.sin(angle) * offsetFactor;
             offsetX *= (coords[0] < 0) ? -1 : 1;
@@ -362,7 +367,12 @@ var visLibrary = visLibrary || {};
             paramsMetadata: {
                 sensitivity : {
                     min: 0,
-                    max: 500,
+                    max: 100,
+                    step: 1
+                },
+                depth : {
+                    min: 0,
+                    max: 100,
                     step: 1
                 }
             }
