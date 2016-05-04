@@ -17,21 +17,20 @@ function init() {
         }
     }
 
-    skqw.setVisualization(Object.keys(visLibrary)[1]);
+    skqw.setVisualization(Object.keys(visLibrary)[0]);
     skqw.start();
 
-    skqwDat(skqw);
+    skqwDat(skqw.getVisualization().fn);
 }
 
 function AppController() {
     var vm = this;
 
-    vm.currentVis = skqw.getVisualization().name;
-
     vm.visLibrary = Object.keys(visLibrary);
     vm.selectVis = function() {
         skqw.setVisualization(vm.currentVis);
         skqw.start();
+        skqwDat(skqw.getVisualization().fn);
     };
 }
 

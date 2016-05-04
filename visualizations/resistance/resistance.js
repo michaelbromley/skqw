@@ -29,29 +29,30 @@ var visLibrary = visLibrary || {};
             h,
             params = {
                 sensitivity: 20,
-                depth: 50
+                depth: 20
             };
 
         function init() {
             // background image layer
-            /*bgCanvas = skqw.createCanvas();
-            bgCtx = bgCanvas.getContext("2d");
-
-            // middle starfield layer
-            sfCanvas = skqw.createCanvas();
-            sfCtx = sfCanvas.getContext("2d");*/
+                        bgCanvas = skqw.createCanvas();
+                        bgCtx = bgCanvas.getContext("2d");
 
             // foreground hexagons layer
             fgCanvas = skqw.createCanvas();
             fgCtx = fgCanvas.getContext("2d");
 
+            // middle starfield layer
+            sfCanvas = skqw.createCanvas();
+            sfCtx = sfCanvas.getContext("2d");
+
+
+
             fgCtx.translate(fgCanvas.width/2,fgCanvas.height/2);
-            //sfCtx.translate(fgCanvas.width/2,fgCanvas.height/2);
+            sfCtx.translate(fgCanvas.width/2,fgCanvas.height/2);
             tileSize = fgCanvas.width > fgCanvas.height ? fgCanvas.width / 25 : fgCanvas.height / 25;
 
             makePolygonArray();
             makeStarArray();
-            //resizeCanvas();
         }
 
         function tick() {
@@ -63,25 +64,26 @@ var visLibrary = visLibrary || {};
             volume = Array.prototype.reduce.call(ft, function(a, b) {
                 return a + b;
             });
-            volume *= params.sensitivity;
+            volume = Math.abs(volume) * params.sensitivity;
 
             fgCtx.clearRect(-fgCanvas.width, -fgCanvas.height, fgCanvas.width*2, fgCanvas.height *2);
-            //sfCtx.clearRect(-fgCanvas.width/2, -fgCanvas.height/2, fgCanvas.width, fgCanvas.height);
+            sfCtx.clearRect(-fgCanvas.width/2, -fgCanvas.height/2, fgCanvas.width, fgCanvas.height);
 
-           /* stars.forEach(function(star) {
+            stars.forEach(function(star) {
                 star.drawStar();
-            });*/
+            });
 
+            drawBg();
             rotateForeground();
 
             tiles.forEach(function(tile) {
                 tile.drawPolygon();
             });
-            /*tiles.forEach(function(tile) {
+            tiles.forEach(function(tile) {
                 if (tile.highlight > 0) {
                     tile.drawHighlight();
                 }
-            });*/
+            });
         }
 
         function Polygon(sides, x, y, tileSize, ctx, num) {
@@ -256,7 +258,7 @@ var visLibrary = visLibrary || {};
             this.ctx.strokeStyle='rgba(' + brightness + ', ' + brightness + ', ' + brightness + ', 1)';
             this.ctx.beginPath();
             this.ctx.moveTo(this.x,this.y);
-            var lengthFactor = 1 + Math.min(Math.pow(distanceFromCentre,2)/30000 * Math.pow(volume, 2)/6000000, distanceFromCentre);
+            var lengthFactor = 1 + Math.min(Math.pow(distanceFromCentre,2)/3000 * Math.pow(volume, 2)/6000000, distanceFromCentre);
             var toX = Math.cos(this.angle) * -lengthFactor;
             var toY = Math.sin(this.angle) * -lengthFactor;
             toX *= this.x > 0 ? 1 : -1;
@@ -267,7 +269,7 @@ var visLibrary = visLibrary || {};
 
             // starfield movement coming towards the camera
             var speed = lengthFactor/20 * this.starSize;
-            this.high -= Math.max(this.high - 0.0001, 0);
+            this.high -= Math.max(this.high - 0.00000001, 0);
             if (speed > this.high) {
                 this.high = speed;
             }
@@ -302,31 +304,30 @@ var visLibrary = visLibrary || {};
         function drawBg() {
             bgCtx.clearRect(0, 0, w, h);
             var r, g, b, a;
-            var val = volume/1000;
-            r = 200 + (Math.sin(val) + 1) * 28;
+            var val = volume/100;
+            r = 20 + (Math.sin(val) + 1) * 28;
             g = val * 2;
             b = val * 8;
-            a = Math.sin(val+3*Math.PI/2) + 1;
             bgCtx.beginPath();
             bgCtx.rect(0, 0, w, h);
             // create radial gradient
-            var grd = bgCtx.createRadialGradient(bgCanvas.width/2, bgCanvas.height/2, val, bgCanvas.width/2, bgCanvas.height/2, bgCanvas.width-Math.min(Math.pow(val, 2.7), bgCanvas.width - 20));
-            grd.addColorStop(0, 'rgba(0,0,0,0)');// centre is transparent black
-            grd.addColorStop(0.8, "rgba(" +
+            var grd = bgCtx.createRadialGradient(bgCanvas.width/2, bgCanvas.height/2, val, bgCanvas.width/2, bgCanvas.height/2, bgCanvas.width-Math.min(Math.pow(val, 1.7), bgCanvas.width - 20));
+            grd.addColorStop(0, 'rgba(0,0,0,1)');// centre is transparent black
+            grd.addColorStop(1, "rgba(" +
             Math.round(r) + ", " +
             Math.round(g) + ", " +
-            Math.round(b) + ", 0.4)"); // edges are reddish
+            Math.round(b) + ", 1)"); // edges are reddish
 
             bgCtx.fillStyle = grd;
             bgCtx.fill();
              // debug data
-             bgCtx.font = "bold 30px sans-serif";
+             /*bgCtx.font = "bold 30px sans-serif";
              bgCtx.fillStyle = 'grey';
              bgCtx.fillText("val: " + val, 30, 30);
              bgCtx.fillText("r: " + r , 30, 60);
              bgCtx.fillText("g: " + g , 30, 90);
              bgCtx.fillText("b: " + b , 30, 120);
-             bgCtx.fillText("a: " + a , 30, 150);
+             bgCtx.fillText("a: " + a , 30, 150);*/
         }
 
         function resizeCanvas() {
@@ -372,7 +373,7 @@ var visLibrary = visLibrary || {};
                 },
                 depth : {
                     min: 0,
-                    max: 100,
+                    max: 50,
                     step: 1
                 }
             }

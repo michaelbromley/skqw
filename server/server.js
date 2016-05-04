@@ -98,5 +98,5 @@ function sendSample() {
 
     io.emit('sample', {ft: ft, ts: ts} );
 
-    setTimeout(sendSample, 20);
+    setTimeout(sendSample, 100);
 }
