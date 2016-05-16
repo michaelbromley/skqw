@@ -14,6 +14,19 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 var ENV = process.env.npm_lifecycle_event;
 var isProd = ENV === 'app:build';
 
+var externalsFn =  (function () {
+    var IGNORES = [
+        'node-core-audio',
+        'electron'
+    ];
+    return function (context, request, callback) {
+        if (IGNORES.indexOf(request) >= 0) {
+            return callback(null, "require('" + request + "')");
+        }
+        return callback();
+    };
+})();
+
 module.exports = [
     function makeWebpackConfig() {
         var config = {};
@@ -150,14 +163,19 @@ module.exports = [
 
         };
 
+        config.externals = [externalsFn];
+
         return config;
     }(),
     {
         name: 'main',
         target: 'node',
         node: {
-          __dirname: false,
-          __filename: false
+            __dirname: false,
+            __filename: false
+        },
+        resolve: {
+            extensions: ['', '.ts', '.js', '.json']
         },
         entry: {
             'main': './src/main/index.ts'
@@ -177,19 +195,7 @@ module.exports = [
                 }
             ]
         },
-        externals: [
-            (function () {
-                var IGNORES = [
-                    'electron'
-                ];
-                return function (context, request, callback) {
-                    if (IGNORES.indexOf(request) >= 0) {
-                        return callback(null, "require('" + request + "')");
-                    }
-                    return callback();
-                };
-            })()
-        ]
+        externals: [externalsFn]
     }
 ];
 
@@ -200,23 +206,23 @@ function root(args) {
 }
 
 function packageSort(packages) {
-  var len = packages.length - 1;
-  var first = packages[0];
-  var last = packages[len];
-  return function sort(a, b) {
-    // polyfills always first
-    if (a.names[0] === first) {
-      return -1;
+    var len = packages.length - 1;
+    var first = packages[0];
+    var last = packages[len];
+    return function sort(a, b) {
+        // polyfills always first
+        if (a.names[0] === first) {
+            return -1;
+        }
+        // main always last
+        if (a.names[0] === last) {
+            return 1;
+        }
+        // vendor before app
+        if (a.names[0] !== first && b.names[0] === last) {
+            return -1;
+        } else {
+            return 1;
+        }
     }
-    // main always last
-    if (a.names[0] === last) {
-      return 1;
-    }
-    // vendor before app
-    if (a.names[0] !== first && b.names[0] === last) {
-      return -1;
-    } else {
-      return 1;
-    }
-  }
 }
