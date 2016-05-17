@@ -1,4 +1,4 @@
-import {START_ANALYZER, SAMPLE} from './constants';
+import {START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID} from './constants';
 const {app, BrowserWindow, ipcMain} = require('electron');
 
 import {Analyzer} from './analyzer';
@@ -15,7 +15,7 @@ app.on('ready', function() {
 });
 
 analyzer.sample$
-    .throttleTime(1000)
+    // .throttleTime(1000)
     .subscribe(sample => {
         if (mainWindow) {
             mainWindow.send(SAMPLE, sample);
@@ -25,5 +25,12 @@ analyzer.sample$
 
 ipcMain.on(START_ANALYZER, (event) => {
     analyzer.start();
-    event.sender.send(SAMPLE, 'test');
+});
+
+ipcMain.on(REQUEST_DEVICE_LIST, (event) => {
+    event.sender.send(RECEIVE_DEVICE_LIST, analyzer.listAudioDevices());
+});
+
+ipcMain.on(SET_INPUT_DEVICE_ID, (event, id) => {
+    analyzer.setOptions({ inputDevice: id });
 });

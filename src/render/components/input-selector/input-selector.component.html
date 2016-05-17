@@ -1,0 +1,4 @@
+<label>Input Source:</label>
+<select (change)="inputChanged($event)">
+    <option *ngFor="let input of inputArray" [value]="input.id">{{ input.name }}</option>
+</select>
