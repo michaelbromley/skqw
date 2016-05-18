@@ -51,7 +51,11 @@ export class Analyzer {
      */
     setOptions(options) {
         let merged = Object.assign({}, DEFAULT_OPTIONS, options);
-        engine.setOptions(merged);
+        try {
+            engine.setOptions(merged);
+        } catch (ex) {
+            // log it?
+        }
     }
 
     /**

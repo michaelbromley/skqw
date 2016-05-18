@@ -6,7 +6,7 @@ import {Analyzer} from './analyzer';
 let mainWindow = null;
 let analyzer = new Analyzer();
 
-app.on('ready', function() {
+app.on('ready', () => {
     mainWindow = new BrowserWindow({
         height: 600,
         width: 800
@@ -14,16 +14,18 @@ app.on('ready', function() {
     mainWindow.loadUrl('file://' + __dirname + '/dist/index.html');
 });
 
-analyzer.sample$
-    // .throttleTime(1000)
-    .subscribe(sample => {
-        if (mainWindow) {
-            mainWindow.send(SAMPLE, sample);
-        }
-    });
+app.on('before-quit', () => {
+    sampleSubscription.unsubscribe();
+});
+
+let sampleSubscription = analyzer.sample$.subscribe(sample => {
+    if (mainWindow) {
+        mainWindow.send(SAMPLE, sample);
+    }
+});
 
 
-ipcMain.on(START_ANALYZER, (event) => {
+ipcMain.on(START_ANALYZER, () => {
     analyzer.start();
 });
 
