@@ -5,7 +5,9 @@ import {Visualizer} from './components/visualizer/visualizer.component';
 import {InputSelector} from './components/input-selector/input-selector.component';
 const ipcRenderer = require('electron').ipcRenderer;
 
-@Component({
+require('./styles/app.scss');
+
+@Component({ 
     selector: 'app',
     template: require('./app.component.html'),
     directives: [Visualizer, InputSelector]

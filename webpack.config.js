@@ -100,7 +100,7 @@ module.exports = [
                 {test: /\.css$/, loader: 'raw'},
 
                 // all css required in src/app files will be merged in js files
-                {test: /\.scss$/, loader: 'raw!sass'},
+                {test: /\.s[ac]ss$/, loader: 'style!css!sass'},
 
                 // support for .html as raw text
                 // todo: change the loader to something that adds a hash to images
