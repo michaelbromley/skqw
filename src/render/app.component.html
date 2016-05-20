@@ -1,3 +1,6 @@
 <visualizer [sample]="sample" [visualization]="vis"></visualizer>
-<settings-panel></settings-panel>
-<v-selector [library]="library" (select)="selectVis($event)"></v-selector>
+<settings-panel
+        [library]="library"
+        [inputDevices]="inputDevices"
+        (selectVisId)="selectVis($event)"
+        (changeInputDeviceId)="setInputDeviceId($event)"></settings-panel>

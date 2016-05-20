@@ -38,7 +38,7 @@ export class Visualizer {
     }
 
     ngOnInit(): void {
-        window.addEventListener('resize', this.resizeHandler.bind(this)); 
+        window.addEventListener('resize', this.resizeHandler.bind(this));
     }
 
     ngOnChanges(changes: {[key: string]: SimpleChange}): void {
@@ -47,13 +47,14 @@ export class Visualizer {
                 this.visualization.init(this.skqw);
                 this.start();
             } else {
-                this.stop();
+                this.stop(); 
             }
         }
     }
 
     start() {
         this.isRunning = true;
+        this.updateDimensions();
         requestAnimationFrame(this.tick.bind(this));
     }
 

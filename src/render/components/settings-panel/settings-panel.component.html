@@ -1,4 +1,5 @@
 <div class="settings-panel">
     <div class="toggle-button">Settings</div>
-    <input-selector [inputs]="inputs" (inputChange)="changeInputDeviceId($event)"></input-selector>
+    <v-selector [library]="library" (select)="selectVisId.emit($event)"></v-selector>
+    <input-selector [inputs]="inputDevices" (inputChange)="changeInputDeviceId.emit($event)"></input-selector>
 </div>
