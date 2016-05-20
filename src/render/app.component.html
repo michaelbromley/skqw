@@ -1,2 +1,3 @@
-<visualizer [sample]="sample"></visualizer>
-<input-selector [inputs]="inputs" (inputChange)="changeInputDeviceId($event)"></input-selector>
+<visualizer [sample]="sample" [visualization]="vis"></visualizer>
+<settings-panel></settings-panel>
+<v-selector [library]="library" (select)="selectVis($event)"></v-selector>

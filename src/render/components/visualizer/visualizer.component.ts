@@ -1,6 +1,11 @@
-import {Component, ElementRef, Input, HostListener} from '@angular/core';
+import {Component, ElementRef, Input, SimpleChange} from '@angular/core';
 import {ISample} from '../../../main/analyzer';
-import {defaultVis} from './defaultVisualization';
+import {IVisualization} from '../../providers/loader.service';
+
+export interface IDimensions {
+    width: number;
+    height: number;
+}
 
 @Component({
     selector: 'visualizer',
@@ -16,41 +21,52 @@ import {defaultVis} from './defaultVisualization';
 export class Visualizer {
 
     @Input() sample: ISample;
+    @Input() visualization: IVisualization;
+    private skqw;
     private canvases: HTMLCanvasElement[] = [];
-    private dimensions: {
-        width: number;
-        height: number;
-    } = { width: 0, height: 0 };
-    private vis;
+    private dimensions: IDimensions = { width: 0, height: 0 };
     private resizeTimer: number;
+    private isRunning: boolean = false;
 
 
     constructor(private elementRef: ElementRef) {
-    }
-    
-    ngAfterViewInit(): void {
-        this.updateDimensions();
-        this.loadVisualization();
-        this.start();
+        this.skqw = {
+            createCanvas: () => this.createCanvas(),
+            sample: (): ISample => this.sample,
+            dimensions: (): IDimensions => this.dimensions
+        };
     }
 
-    loadVisualization() {
-        this.vis = defaultVis({
-            createCanvas: () => this.createCanvas(),
-            getSample: () => this.sample,
-            getDimensions: () => this.dimensions
-        });
-        
-        this.vis.init();
+    ngOnInit(): void {
+        window.addEventListener('resize', this.resizeHandler.bind(this)); 
+    }
+
+    ngOnChanges(changes: {[key: string]: SimpleChange}): void {
+        if (changes['visualization']) {
+            if (this.visualization && this.visualization.init) {
+                this.visualization.init(this.skqw);
+                this.start();
+            } else {
+                this.stop();
+            }
+        }
     }
 
     start() {
+        this.isRunning = true;
         requestAnimationFrame(this.tick.bind(this));
     }
 
+    stop() {
+        this.isRunning = false;
+        this.removeCanvases();
+    }
+
     tick(timestamp) {
-        this.vis.tick(timestamp);
-        requestAnimationFrame(this.tick.bind(this));
+        if (this.isRunning && this.visualization.tick) {
+            this.visualization.tick(this.skqw, timestamp);
+            requestAnimationFrame(this.tick.bind(this));
+        }
     }
 
     /**
@@ -70,7 +86,6 @@ export class Visualizer {
      * Debounce the resize handler since the resize even gets fired rapidly in
      * succession as the user resizes.
      */
-    @HostListener('resize')
     resizeHandler() {
         clearTimeout(this.resizeTimer);
         this.resizeTimer = setTimeout(this.updateDimensions(), 100);

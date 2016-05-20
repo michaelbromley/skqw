@@ -24,7 +24,7 @@ var externalsFn =  (function () {
             return callback(null, "require('" + request + "')");
         }
         return callback();
-    };
+    }; 
 })();
 
 module.exports = [
@@ -37,6 +37,8 @@ module.exports = [
         } else {
             config.devtool = 'eval-source-map';
         }
+
+        config.target = 'electron-renderer';
 
         // add debug messages
         config.debug = !isProd;

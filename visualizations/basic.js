@@ -3,7 +3,7 @@
  * An example of the most basic kind of 2D visualization, to illustrate the expected format & API of a
  * skqw visualization plugin.
  */
-export function defaultVis() {
+module.exports = function defaultVis() {
     let ctx;
     let ft;
     let ts;
@@ -94,4 +94,4 @@ export function defaultVis() {
         }
     }
 
-}
+};

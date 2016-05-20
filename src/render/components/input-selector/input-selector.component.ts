@@ -17,7 +17,6 @@ export class InputSelector {
                 let name = this.inputs[id];
                 this.inputArray.push({ id, name });
             }
-            console.log('inputArray', this.inputArray);
         }
     }
 

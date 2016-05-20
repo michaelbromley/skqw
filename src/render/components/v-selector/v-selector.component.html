@@ -1,0 +1,5 @@
+<label>Visualization:</label>
+<select (change)="inputChanged($event)">
+    <option [value]="-1">DEFAULT</option>
+    <option *ngFor="let item of library" [value]="item.id">{{ item.name }}</option>
+</select>
