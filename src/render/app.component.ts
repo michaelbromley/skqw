@@ -1,9 +1,9 @@
 import {Component, ChangeDetectorRef} from '@angular/core';
-import {START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID} from '../main/constants';
-import {ISample} from '../main/analyzer';
+import {START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID} from '../common/constants';
 import {Visualizer} from './components/visualizer/visualizer.component';
 import {SettingsPanel} from './components/settings-panel/settings-panel.component';
-import {Loader, IVisualization} from './providers/loader.service';
+import {Loader} from './providers/loader.service';
+import {IParamUpdate, ISample, IVisualization} from '../common/models';
 const ipcRenderer = require('electron').ipcRenderer;
 const {app, dialog} = require('electron').remote;
 const path = require('path');
@@ -59,5 +59,9 @@ export class App {
 
     setInputDeviceId(id: number): void {
         ipcRenderer.send(SET_INPUT_DEVICE_ID, id);
+    }
+
+    updateParamValue(update: IParamUpdate): void {
+        this.vis.params[update.paramKey].value = update.newValue;
     }
 }

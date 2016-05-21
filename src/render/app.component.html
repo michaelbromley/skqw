@@ -1,7 +1,9 @@
 <visualizer [sample]="sample" [visualization]="vis"></visualizer>
 <settings-panel
         [library]="library"
+        [currentVis]="vis"
         [inputDevices]="inputDevices"
         (selectLibraryDir)="selectLibraryDir()"
         (selectVisId)="selectVis($event)"
+        (updateParam)="updateParamValue($event)"
         (changeInputDeviceId)="setInputDeviceId($event)"></settings-panel>

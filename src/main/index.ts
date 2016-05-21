@@ -1,4 +1,4 @@
-import {START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID} from './constants';
+import {START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID} from '../common/constants';
 const {app, BrowserWindow, ipcMain} = require('electron');
 
 import {Analyzer} from './analyzer';

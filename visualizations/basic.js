@@ -5,14 +5,11 @@
  */
 module.exports = function defaultVis() {
     let ctx;
-    let ft;
-    let ts;
-    let w;
-    let h;
     let params = {
         sensitivity: {
             value: 250,
             type: 'range',
+            label: 'sensitivity',
             min: 0,
             max: 500
         }
@@ -30,7 +27,6 @@ module.exports = function defaultVis() {
      *
      * Optional properties:
      * - params: exposes any user-configurable parameters for the vis.
-     * - paramsMetadata: defines metadata for the params - useful for automatic GUI generation.
      */
     return {
         name: 'A Basic Visualization',
@@ -45,28 +41,28 @@ module.exports = function defaultVis() {
     }
 
     function tick(skqw) {
-        w = skqw.dimensions().width;
-        h = skqw.dimensions().height;
-        ft = skqw.sample().ft;
-        ts = skqw.sample().ts;
+        let w = skqw.dimensions().width;
+        let h = skqw.dimensions().height;
+        let ft = skqw.sample().ft;
+        let ts = skqw.sample().ts;
 
         ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
         ctx.fillRect(0, 0, w, h);
-        drawBars();
-        drawWave();
+        drawBars(w, h, ft);
+        drawWave(w, h, ts);
     }
 
-    function drawWave() {
-        var length = ts.length,
+    function drawWave(w, h, ts) {
+        let length = ts.length,
             width = w / length;
 
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
         ctx.lineWidth = 5;
 
-        for(var i = 0; i < ts.length; i++) {
-            var val = ts[i],
-                x = i * width,
-                y = h / 2 + val * params.sensitivity.value * 10;
+        for(let i = 0; i < ts.length; i++) {
+            let val = ts[i];
+            let x = i * width;
+            let y = h / 2 + val * params.sensitivity.value * 10;
 
             if (i === 0) {
                 ctx.beginPath(x, y);
@@ -78,17 +74,17 @@ module.exports = function defaultVis() {
         ctx.stroke();
     }
 
-    function drawBars() {
-        var length = ft.length,
-            width = w / length;
+    function drawBars(w, h, ft) {
+        let length = ft.length;
+        let width = w / length;
 
         ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
 
-        for(var i = 0; i < ft.length; i++) {
-            var val = ft[i],
-                x = i * width,
-                height = val * params.sensitivity.value / 2,
-                y = h - height;
+        for(let i = 0; i < ft.length; i++) {
+            let val = ft[i];
+            let x = i * width;
+            let height = val * params.sensitivity.value / 2;
+            let y = h - height;
 
             ctx.fillRect(x, y, width / 3, height);
         }

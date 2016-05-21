@@ -1,21 +1,6 @@
 import {Injectable} from '@angular/core';
+import {IVisualization, IParameter} from '../../common/models';
 const path = require('path');
-const nativeRequire = require;
-
-export interface IVisualization {
-    name: string;
-    author: string;
-    init: (skqw: any) => void,
-    tick: (skqw: any, timestamp: number) => void,
-    params: {
-        [name: string]: {
-            value: any;
-            type: 'range' | 'boolean';
-            min?: number;
-            max?: number;
-        }
-    }
-}
 
 @Injectable()
 export class Loader {
@@ -34,8 +19,9 @@ export class Loader {
             if (typeof visFactory === 'function') {
                 // TODO: more validation of the object shape
                 let vis = visFactory();
+                let normalized = this.normalizeParams(vis);
                 if (vis.name) {
-                    this.library.push(vis);
+                    this.library.push(normalized);
                 }
             } 
         });
@@ -49,5 +35,29 @@ export class Loader {
         if (0 <= id && id < this.library.length) {
             return this.library[id];
         }
+    }
+
+    /**
+     * Ensure the parameters contain the expected data.
+     */
+    private normalizeParams(vis: IVisualization): IVisualization {
+        for(let paramName in vis.params) {
+            if (vis.params.hasOwnProperty(paramName)) {
+                vis.params[paramName] = this.normalizeParam(vis.params[paramName]);
+            }
+        }
+        return vis;
+    }
+    
+    private normalizeParam(param: IParameter): IParameter {
+        if (param.type === 'range') {
+            if (param.min === undefined) {
+                param.min = 0;
+            }
+            if (param.max === undefined) {
+                param.max = Math.round(<number>param.value * 2);
+            }
+        }
+        return param;
     }
 }

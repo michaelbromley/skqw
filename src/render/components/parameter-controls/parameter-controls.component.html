@@ -1,0 +1,13 @@
+<div class="parameter-controls">
+
+    <div class="parameter" *ngFor="let item of paramsArray">
+        <div *ngIf="item.param.type === 'range'">
+            <input type="range"
+                   (input)="updateValue(item.key, $event.target.value)"
+                   [value]="item.param.value"
+                   [min]="item.param.min"
+                   [max]="item.param.max">
+        </div>
+    </div>
+
+</div>

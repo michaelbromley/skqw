@@ -1,6 +1,5 @@
 import {Component, ElementRef, Input, SimpleChange} from '@angular/core';
-import {ISample} from '../../../main/analyzer';
-import {IVisualization} from '../../providers/loader.service';
+import {IVisualization, ISample} from '../../../common/models';
 
 export interface IDimensions {
     width: number;

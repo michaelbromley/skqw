@@ -1,22 +1,15 @@
 import {Subject} from 'rxjs';
+import {ISample} from '../common/models';
 const coreAudio = require('node-core-audio');
 const FFT = require('fft');
-const BUFFER_SIZE = 128;
 const engine: any = coreAudio.createNewAudioEngine();
+const BUFFER_SIZE = 128;
 const DEFAULT_OPTIONS = {
     framesPerBuffer: BUFFER_SIZE,
     inputDevice: 0,
     interleaved: false
 };
 engine.setOptions(DEFAULT_OPTIONS);
-
-/**
- * { ft: fourier transform array, ts: time series array }
- */
-export interface ISample {
-    ft: any;
-    ts: any;
-}
 
 /**
  * Low-level interface to the hardware sound device using node-core-audio.
@@ -75,7 +68,7 @@ export class Analyzer {
     listAudioDevices(): any {
         return this.devices;
     }
-
+ 
     /**
      * Apply a Fast Fourier Transform (fft) to the time series data provided
      * by the core-audio module
