@@ -43,12 +43,11 @@ export class Visualizer {
 
     ngOnChanges(changes: {[key: string]: SimpleChange}): void {
         if (changes['visualization']) {
+            this.stop();
             if (this.visualization && this.visualization.init) {
                 this.visualization.init(this.skqw);
                 this.start();
-            } else {
-                this.stop(); 
-            }
+            } 
         }
     }
 

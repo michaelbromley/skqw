@@ -2,5 +2,6 @@
 <settings-panel
         [library]="library"
         [inputDevices]="inputDevices"
+        (selectLibraryDir)="selectLibraryDir()"
         (selectVisId)="selectVis($event)"
         (changeInputDeviceId)="setInputDeviceId($event)"></settings-panel>

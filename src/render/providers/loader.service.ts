@@ -21,7 +21,6 @@ export interface IVisualization {
 export class Loader {
 
     private library: IVisualization[] = [];
-    private currentVisualization: IVisualization;
     private visPath: string = __dirname;
 
     setPath(absolutePath: string) {
@@ -29,6 +28,7 @@ export class Loader {
     }
 
     loadAll() {
+        this.library = [];
         require("fs").readdirSync(this.visPath).forEach(file => {
             let visFactory = (<any> global).require(path.join(this.visPath, file));
             if (typeof visFactory === 'function') {
@@ -37,7 +37,7 @@ export class Loader {
                 if (vis.name) {
                     this.library.push(vis);
                 }
-            }
+            } 
         });
     }
     

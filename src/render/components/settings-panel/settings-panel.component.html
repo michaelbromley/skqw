@@ -1,5 +1,6 @@
 <div class="settings-panel">
     <div class="toggle-button">Settings</div>
+    <button (click)="selectLibraryDir.emit(true)">Select Library Dir</button>
     <v-selector [library]="library" (select)="selectVisId.emit($event)"></v-selector>
     <input-selector [inputs]="inputDevices" (inputChange)="changeInputDeviceId.emit($event)"></input-selector>
 </div>
