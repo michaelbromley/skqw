@@ -4,7 +4,7 @@ import {IVisualization, ISample} from '../../../common/models';
 export interface IDimensions {
     width: number;
     height: number;
-}
+} 
 
 @Component({
     selector: 'visualizer',
@@ -15,7 +15,12 @@ export interface IDimensions {
         left: 0;
         right: 0;
         bottom: 0;
-    `]
+    }
+    
+    :host.obscured {
+        
+    }
+    `] 
 })
 export class Visualizer {
 

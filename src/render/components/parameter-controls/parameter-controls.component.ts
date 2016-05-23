@@ -3,8 +3,9 @@ import {IParameter, IParamUpdate} from '../../../common/models';
 
 @Component({
     selector: 'parameter-controls',
-    template: require('./parameter-controls.component.html')
-})
+    template: require('./parameter-controls.component.html'),
+    styles: [require('./parameter-controls.scss').toString()]
+}) 
 export class ParameterControls {
     @Input() params: { [name: string]: IParameter };
     @Output() updateParam = new EventEmitter<IParamUpdate>();

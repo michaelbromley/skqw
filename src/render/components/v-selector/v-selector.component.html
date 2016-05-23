@@ -1,5 +1,10 @@
-<label>Visualization:</label>
-<select (change)="inputChanged($event)">
-    <option [value]="-1">DEFAULT</option>
-    <option *ngFor="let item of library" [value]="item.id">{{ item.name }}</option>
-</select>
+<label class="label">Visualization</label>
+<div class="control has-addons">
+    <button class="button is-light" (click)="selectLibraryDir.emit(true)">Select Library Dir</button>
+    <div class="select">
+        <select (change)="inputChanged($event)">
+            <option *ngIf="library.length === 0">No visualizations found...</option>
+            <option *ngFor="let item of library" [value]="item.id">{{ item.name }}</option>
+        </select>
+    </div>
+</div>

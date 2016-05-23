@@ -3,7 +3,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 @Component({
     selector: 'input-selector',
     template: require('./input-selector.component.html'),
-    styles: [`:host { position: absolute; z-index: 100; }`]
+    styles: [`:host { display: block; } select { width: 100%; }`]
 })
 export class InputSelector {
 

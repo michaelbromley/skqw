@@ -12,6 +12,11 @@ module.exports = function defaultVis() {
             label: 'sensitivity',
             min: 0,
             max: 500
+        },
+        showLines: {
+            value: true,
+            type: 'boolean',
+            label: 'Show time series'
         }
     };
 
@@ -49,7 +54,9 @@ module.exports = function defaultVis() {
         ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
         ctx.fillRect(0, 0, w, h);
         drawBars(w, h, ft);
-        drawWave(w, h, ts);
+        if (params.showLines.value === true) {
+            drawWave(w, h, ts);
+        }
     }
 
     function drawWave(w, h, ts) {

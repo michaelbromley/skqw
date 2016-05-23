@@ -50,11 +50,12 @@ export class App {
             this.loader.loadAll();
             this.library = this.loader.listAll();
             this.cdr.detectChanges();
+            this.selectVis(0);
         });
     }
 
     selectVis(id: number): void {
-        this.vis = this.loader.getVisualization(id);
+        this.vis = this.loader.getVisualization(id);  
     }
 
     setInputDeviceId(id: number): void {

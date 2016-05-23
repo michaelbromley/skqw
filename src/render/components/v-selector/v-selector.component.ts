@@ -7,6 +7,7 @@ import {Component, Input, EventEmitter, Output} from '@angular/core';
 }) 
 export class VSelector {
     @Input() library: { id: number; name: string; }[];
+    @Output() selectLibraryDir = new EventEmitter<boolean>();
     @Output() select = new EventEmitter<number>();
     
     inputChanged(event: any): void {
