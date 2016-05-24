@@ -4,8 +4,8 @@
  * { ft: fourier transform array, ts: time series array }
  */
 export interface ISample {
-    ft: any;
-    ts: any;
+    ft: number[];
+    ts: number[];
 }
 
 export interface IParameter {

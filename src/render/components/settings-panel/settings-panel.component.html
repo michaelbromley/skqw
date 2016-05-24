@@ -10,6 +10,7 @@
             <h1 class="title">SKQW : SETTINGS</h1>
         </div>
         <v-selector [library]="library"
+                    [libraryDir]="libraryDir"
                     (selectLibraryDir)="selectLibraryDir.emit($event)"
                     (select)="selectVisId.emit($event)"></v-selector>
         <parameter-controls [params]="currentVis?.params" (updateParam)="updateParam.emit($event)"></parameter-controls>

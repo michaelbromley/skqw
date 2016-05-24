@@ -1,6 +1,6 @@
 <label class="label">Visualization</label>
 <div class="control has-addons">
-    <button class="button is-light" (click)="selectLibraryDir.emit(true)">Select Library Dir</button>
+    <button class="button" (click)="selectLibraryDir.emit(true)">Select Library Dir</button>
     <div class="select">
         <select (change)="inputChanged($event)">
             <option *ngIf="library.length === 0">No visualizations found...</option>
@@ -8,3 +8,4 @@
         </select>
     </div>
 </div>
+<div class="library-dir">Looking in: {{ libraryDir }}</div>

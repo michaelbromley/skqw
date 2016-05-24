@@ -13,6 +13,7 @@ import {IVisualization, IParamUpdate} from '../../../common/models';
 export class SettingsPanel {
     @Input() inputDevices:  { [id: number]: string } = {}; 
     @Input() library: { id: number; name: string }[];
+    @Input() libraryDir: string; 
     @Input() currentVis: IVisualization;
     @Output() changeInputDeviceId = new EventEmitter<number>();
     @Output() selectVisId = new EventEmitter<number>(); 
