@@ -13,20 +13,25 @@ export class Loader {
     }
 
     loadAll() {
+        const isJsFile = file => /\.js$/.test(file);
         this.library = [];
+
         require("fs").readdirSync(this.visPath).forEach(file => {
+            if (!isJsFile(file)) {
+                return;
+            }
             let visFactory = (<any> global).require(path.join(this.visPath, file));
             if (typeof visFactory === 'function') {
-                // TODO: more validation of the object shape
+                // TODO: more validation of the object shape 
                 let vis = visFactory();
-                let normalized = this.normalizeParams(vis);
-                if (vis.name) {
+                if (vis && vis.name) {
+                    let normalized = this.normalizeParams(vis);
                     this.library.push(normalized);
                 }
             } 
         });
     }
-    
+     
     listAll(): { id: number, name: string }[] {
         return this.library.map((v, i) => ({ id: i, name: v.name }));
     }

@@ -7,6 +7,7 @@ import {IParamUpdate, ISample, IVisualization} from '../common/models';
 const ipcRenderer = require('electron').ipcRenderer;
 const {app, dialog} = require('electron').remote;
 const path = require('path');
+const storage = require('electron-json-storage');
 
 require('./styles/app.scss');
 
@@ -17,7 +18,7 @@ require('./styles/app.scss');
 })
 export class App {
 
-    private sample: ISample = { ft: new Float32Array([]), ts: new Float32Array([]) };
+    private sample: ISample = { ft: [], ts: [] };
     private library: { id: number; name: string; }[] = [];
     private libraryDir: string;
     private vis: IVisualization;
@@ -25,7 +26,12 @@ export class App {
 
     constructor(private loader: Loader,
                 private cdr: ChangeDetectorRef) {
-        this.libraryDir = path.join(process.cwd());
+        storage.get('libraryDir', (err, data) => {
+            this.libraryDir = data.libraryDir;
+            if (this.libraryDir) {
+                this.loadLibrary(this.libraryDir);
+            }
+        });
     }
 
     ngOnInit(): void {
@@ -43,14 +49,15 @@ export class App {
     selectLibraryDir() {
         dialog.showOpenDialog({
             title: 'Select Visualization Library Folder',
-            defaultPath: this.libraryDir,
+            defaultPath: this.libraryDir || path.join(process.cwd()),
             properties: ['openDirectory']
         }, (paths: string[]) => {
-            this.loader.setPath(paths[0]);
-            this.loader.loadAll();
-            this.library = this.loader.listAll();
-            this.cdr.detectChanges();
-            this.selectVis(0);
+            if (paths.length === 1) {
+                let dir = paths[0];
+                storage.set('libraryDir', {libraryDir: dir});
+                this.libraryDir = dir;
+                this.loadLibrary(dir);
+            }
         });
     }
 
@@ -64,5 +71,13 @@ export class App {
 
     updateParamValue(update: IParamUpdate): void {
         this.vis.params[update.paramKey].value = update.newValue;
+    }
+
+    private loadLibrary(dir: string): void {
+        this.loader.setPath(dir);
+        this.loader.loadAll();
+        this.library = this.loader.listAll();
+        this.cdr.detectChanges();
+        this.selectVis(0);
     }
 }
