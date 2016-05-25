@@ -29,15 +29,17 @@ export class Visualizer {
     private skqw;
     private canvases: HTMLCanvasElement[] = [];
     private dimensions: IDimensions = { width: 0, height: 0 };
-    private resizeTimer: number;
+    private resizeTimer: any;
     private isRunning: boolean = false;
+    private onResizeFn: Function;  
 
 
     constructor(private elementRef: ElementRef) {
         this.skqw = {
             createCanvas: () => this.createCanvas(),
             sample: (): ISample => this.sample,
-            dimensions: (): IDimensions => this.dimensions
+            dimensions: (): IDimensions => this.dimensions,
+            onResize: (fn: Function) => this.onResizeFn = fn
         };
     }
 
@@ -64,6 +66,7 @@ export class Visualizer {
     stop() {
         this.isRunning = false;
         this.removeCanvases();
+        this.onResizeFn = null;
     }
 
     tick(timestamp) {
@@ -92,7 +95,12 @@ export class Visualizer {
      */
     resizeHandler() {
         clearTimeout(this.resizeTimer);
-        this.resizeTimer = setTimeout(this.updateDimensions(), 100);
+        this.resizeTimer = setTimeout(() => {
+            this.updateDimensions();
+            if (typeof this.onResizeFn === 'function') {
+                this.onResizeFn.call(this.visualization, this.skqw);
+            }
+        }, 100);
     }
 
     /**

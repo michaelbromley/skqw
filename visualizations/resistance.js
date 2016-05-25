@@ -1,85 +1,82 @@
-module.exports = function vis() {
-    var tileSize,
-        tiles = [],
-        stars = [],
-        fgCanvas,
-        fgCtx,
-        fgRotation = 0.001,
-        bgCanvas,
-        bgCtx,
-        sfCanvas,
-        sfCtx,
-        ft,
-        ts,
-        volume,
-        w,
-        h,
-        params = {
-            sensitivity: {
-                value: 20,
-                type: 'range',
-                label: 'Sesntitivity'
-            },
-            depth: {
-                value: 20,
-                type: 'range',
-                label: 'Depth'
-            }
-        };
+let tiles = [];
+let stars = [];
+let fgCanvas;
+let fgCtx;
+const ROTATION_STEP = 0.001;
+let bgCanvas;
+let bgCtx;
+let sfCanvas;
+let sfCtx;
+let volume;
+let params = {
+    sensitivity: {
+        value: 50,
+        type: 'range',
+        label: 'Sesntitivity'
+    },
+    depth: {
+        value: 20,
+        type: 'range',
+        label: 'Depth'
+    }
+};
 
-    function init(skqw) {
-        // background image layer
-        bgCanvas = skqw.createCanvas();
-        bgCtx = bgCanvas.getContext("2d");
+function init(skqw) {
 
-        // foreground hexagons layer
-        fgCanvas = skqw.createCanvas();
-        fgCtx = fgCanvas.getContext("2d");
+    // foreground hexagons layer
+    fgCanvas = skqw.createCanvas();
+    fgCtx = fgCanvas.getContext("2d");
 
-        // middle starfield layer
-        sfCanvas = skqw.createCanvas();
-        sfCtx = sfCanvas.getContext("2d");
+    // background image layer
+    bgCanvas = skqw.createCanvas();
+    bgCtx = bgCanvas.getContext("2d");
 
-        fgCtx.translate(fgCanvas.width/2,fgCanvas.height/2);
-        sfCtx.translate(fgCanvas.width/2,fgCanvas.height/2);
-        tileSize = fgCanvas.width > fgCanvas.height ? fgCanvas.width / 25 : fgCanvas.height / 25;
+    // middle starfield layer
+    /*sfCanvas = skqw.createCanvas();
+     sfCtx = sfCanvas.getContext("2d");*/
 
-        makePolygonArray();
-        makeStarArray();
+    // makeStarArray();
+    skqw.onResize(resizeHandler);
+    setTimeout(() => resizeHandler(skqw));
+}
+
+var i = 0;
+function tick(skqw) {
+    let {width, height} = skqw.dimensions();
+    let {ft, ts} = skqw.sample();
+
+    volume = Array.prototype.reduce.call(ft, function(a, b) {
+        return a + b;
+    });
+    volume = Math.abs(volume) * params.sensitivity.value * 15;
+
+    i++;
+    if (i % 60 === 0) {
+        console.log('volume', volume);
     }
 
-    function tick(skqw) {
-        w = skqw.dimensions().width;
-        h = skqw.dimensions().height;
-        ft = skqw.sample().ft;
-        ts = skqw.sample().ts;
+    fgCtx.clearRect(-width / 2, -height / 2, width, height);
+    // sfCtx.clearRect(-fgCanvas.width/2, -fgCanvas.height/2, fgCanvas.width, fgCanvas.height);
 
-        volume = Array.prototype.reduce.call(ft, function(a, b) {
-            return a + b;
-        });
-        volume = Math.abs(volume) * params.sensitivity.value;
+    /*stars.forEach(function(star) {
+        star.drawStar();
+    });*/
 
-        fgCtx.clearRect(-fgCanvas.width, -fgCanvas.height, fgCanvas.width*2, fgCanvas.height *2);
-        sfCtx.clearRect(-fgCanvas.width/2, -fgCanvas.height/2, fgCanvas.width, fgCanvas.height);
+    drawBg(width, height);
+    rotateForeground();
+    tiles.forEach(function(tile) {
+        tile.render(ft);
+    });
+    tiles.forEach(function(tile) {
+        if (tile.highlight > 0) {
+            tile.drawHighlight();
+        }
+    });
+}
 
-        stars.forEach(function(star) {
-            star.drawStar();
-        });
+class Polygon {
 
-        drawBg();
-        rotateForeground();
-
-        tiles.forEach(function(tile) {
-            tile.drawPolygon();
-        });
-        tiles.forEach(function(tile) {
-            if (tile.highlight > 0) {
-                tile.drawHighlight();
-            }
-        });
-    }
-
-    function Polygon(sides, x, y, tileSize, ctx, num) {
+    constructor(sides, x, y, tileSize, ctx, num) {
         this.sides = sides;
         this.tileSize = tileSize;
         this.ctx = ctx;
@@ -87,43 +84,50 @@ module.exports = function vis() {
         this.high = 0; // the highest colour value, which then fades out
         this.decay = this.num > 42 ? 1.5 : 2; // increase this value to fade out faster.
         this.highlight = 0; // for highlighted stroke effect;
+
         // figure out the x and y coordinates of the center of the polygon based on the
         // 60 degree XY axis coordinates passed in
-        var step = Math.round(Math.cos(Math.PI/6)*tileSize*2);
-        this.y = Math.round(step * Math.sin(Math.PI/3) * -y  );
-        this.x = Math.round(x * step + y * step/2 );
+        let step = Math.round(Math.cos(Math.PI / 6) * tileSize * 2);
+        this.y = Math.round(step * Math.sin(Math.PI / 3) * -y);
+        this.x = Math.round((x * step) + (y * step / 2));
 
         // calculate the vertices of the polygon
         this.vertices = [];
-        for (var i = 1; i <= this.sides;i += 1) {
-            x = this.x + this.tileSize * Math.cos(i * 2 * Math.PI / this.sides + Math.PI/6);
-            y = this.y + this.tileSize * Math.sin(i * 2 * Math.PI / this.sides + Math.PI/6);
-            this.vertices.push([x, y]);
+        for (let i = 1; i <= this.sides;i += 1) {
+            let _x = this.x + this.tileSize * Math.cos(i * 2 * Math.PI / this.sides + Math.PI/6);
+            let _y = this.y + this.tileSize * Math.sin(i * 2 * Math.PI / this.sides + Math.PI/6);
+            this.vertices.push([_x, _y]);
         }
     }
-    Polygon.prototype.rotateVertices = function() {
-        // rotate all the vertices to achieve the overall rotational effect
-        var rotation = fgRotation;
+
+    /**
+     * Rotate all the vertices to achieve the overall rotational effect
+     */
+    rotateVertices() {
+        let rotation = ROTATION_STEP;
         rotation -= volume > 10000 ? Math.sin(volume/800000) : 0;
-        for (var i = 0; i <= this.sides-1;i += 1) {
+        for (let i = 0; i <= this.sides-1;i += 1) {
             this.vertices[i][0] = this.vertices[i][0] -  this.vertices[i][1] * Math.sin(rotation);
             this.vertices[i][1] = this.vertices[i][1] +  this.vertices[i][0] * Math.sin(rotation);
         }
-    };
-    Polygon.prototype.calculateOffset = function(coords) {
-        var angle = Math.atan(coords[1]/coords[0]);
-        var distance = Math.sqrt(Math.pow(coords[0], 2) + Math.pow(coords[1], 2)); // a bit of pythagoras
-        var mentalFactor = Math.min(Math.max((Math.tan(volume/60000000) * 0.5), -20), 2); // this factor makes the visualization go crazy wild
-        var offsetFactor = Math.pow(distance/3, 2) * (volume * params.depth.value / 50) * (Math.pow(this.high, 1.3)/300) * mentalFactor;
-        var offsetX = Math.cos(angle) * offsetFactor;
-        var offsetY = Math.sin(angle) * offsetFactor;
+    }
+
+    calculateOffset(coords) {
+        let angle = Math.atan(coords[1]/coords[0]);
+        let distance = Math.sqrt(Math.pow(coords[0], 2) + Math.pow(coords[1], 2)); // a bit of pythagoras
+        let mentalFactor = Math.min(Math.max((Math.tan(volume/6000) * 0.5), -20), 2); // this factor makes the visualization go crazy wild
+        let offsetFactor = Math.pow(distance/3, 2) * (volume * params.depth.value / 100000) * (Math.pow(this.high, 1.3)/300) * mentalFactor;
+        let offsetX = Math.cos(angle) * offsetFactor;
+        let offsetY = Math.sin(angle) * offsetFactor;
         offsetX *= (coords[0] < 0) ? -1 : 1;
         offsetY *= (coords[0] < 0) ? -1 : 1;
         return [offsetX, offsetY];
     };
-    Polygon.prototype.drawPolygon = function() {
-        var bucket = Math.ceil(ft.length/tiles.length*this.num);
-        var val = ft[bucket] * params.sensitivity.value;
+
+    render(ft) {
+        let bucket = Math.ceil(ft.length/tiles.length*this.num);
+        //let val = ft[bucket] * params.sensitivity.value * 5;
+        let val = Math.pow((ft[bucket]/25),2)*255;
         val *= this.num > 42 ? 1.1 : 1;
         // establish the value for this tile
         if (val > this.high) {
@@ -134,13 +138,13 @@ module.exports = function vis() {
         }
 
         // figure out what colour to fill it and then draw the polygon
-        var r, g, b, a;
+        let r, g, b, a;
         if (val > 0) {
             this.ctx.beginPath();
-            var offset = this.calculateOffset(this.vertices[0]);
+            let offset = this.calculateOffset(this.vertices[0]);
             this.ctx.moveTo(this.vertices[0][0] + offset[0], this.vertices[0][1] + offset[1]);
             // draw the polygon
-            for (var i = 1; i <= this.sides-1;i += 1) {
+            for (let i = 1; i <= this.sides-1;i += 1) {
                 offset = this.calculateOffset(this.vertices[i]);
                 this.ctx.lineTo (this.vertices[i][0] + offset[0], this.vertices[i][1] + offset[1]);
             }
@@ -168,7 +172,7 @@ module.exports = function vis() {
                 this.highlight = 100; // add the highlight effect if it's pretty loud
             }
             // set the alpha
-            var e = 2.7182;
+            let e = 2.7182;
             a = (0.5/(1 + 40 * Math.pow(e, -val/8))) + (0.5/(1 + 40 * Math.pow(e, -val/20)));
 
             this.ctx.fillStyle = "rgba(" +
@@ -179,184 +183,109 @@ module.exports = function vis() {
             this.ctx.fill();
             // stroke
             if (val > 20) {
-                var strokeVal = 20;
+                let strokeVal = 20;
                 this.ctx.strokeStyle =  "rgba(" + strokeVal + ", " + strokeVal + ", " + strokeVal + ", 0.5)";
                 this.ctx.lineWidth = 1;
                 this.ctx.stroke();
             }
         }
-        // display the tile number for debug purposes
-        /*this.ctx.font = "bold 12px sans-serif";
-         this.ctx.fillStyle = 'grey';
-         this.ctx.fillText(this.num, this.vertices[0][0], this.vertices[0][1]);*/
-    };
-    Polygon.prototype.drawHighlight = function() {
+    }
+
+    drawHighlight() {
         this.ctx.beginPath();
         // draw the highlight
-        var offset = this.calculateOffset(this.vertices[0]);
+        let offset = this.calculateOffset(this.vertices[0]);
         this.ctx.moveTo(this.vertices[0][0] + offset[0], this.vertices[0][1] + offset[1]);
         // draw the polygon
-        for (var i = 0; i <= this.sides-1;i += 1) {
+        for (let i = 0; i <= this.sides-1;i += 1) {
             offset = this.calculateOffset(this.vertices[i]);
             this.ctx.lineTo (this.vertices[i][0] + offset[0], this.vertices[i][1] + offset[1]);
         }
         this.ctx.closePath();
-        var a = this.highlight/100;
+        let a = this.highlight/100;
         this.ctx.strokeStyle =  "rgba(255, 255, 255, " + a + ")";
         this.ctx.lineWidth = 1;
         this.ctx.stroke();
         this.highlight -= 0.5;
-    };
+    }
+}
 
-    function makePolygonArray() {
-        tiles = [];
-        /**
-         * Arrange into a grid x, y, with the y axis at 60 degrees to the x, rather than
-         * the usual 90.
-         * @type {number}
-         */
-        var i = 0; // unique number for each tile
-        tiles.push(new Polygon(6, 0, 0, tileSize, fgCtx, i)); // the centre tile
-        i++;
-        for (var layer = 1; layer < 7; layer++) {
-            tiles.push(new Polygon(6, 0, layer, tileSize, fgCtx, i)); i++;
-            tiles.push(new Polygon(6, 0, -layer, tileSize, fgCtx, i)); i++;
-            for(var x = 1; x < layer; x++) {
-                tiles.push(new Polygon(6, x, -layer, tileSize, fgCtx, i)); i++;
-                tiles.push(new Polygon(6, -x, layer, tileSize, fgCtx, i)); i++;
-                tiles.push(new Polygon(6, x, layer-x, tileSize, fgCtx, i)); i++;
-                tiles.push(new Polygon(6, -x, -layer+x, tileSize, fgCtx, i)); i++;
-            }
-            for(var y = -layer; y <= 0; y++) {
-                tiles.push(new Polygon(6, layer, y, tileSize, fgCtx, i)); i++;
-                tiles.push(new Polygon(6, -layer, -y, tileSize, fgCtx, i)); i++;
-            }
+/**
+ * Create an array of Polygon objects, arranged into a grid x, y, with the y axis at 60 degrees to the x, rather than
+ * the usual 90.
+ */
+function makePolygonArray(tileSize, ctx) {
+    tiles = [];
+    let i = 0; // unique number for each tile
+    tiles.push(new Polygon(6, 0, 0, tileSize, ctx, i)); // the centre tile
+    i++;
+    for (let layer = 1; layer < 7; layer++) {
+        tiles.push(new Polygon(6, 0, layer, tileSize, ctx, i)); i++;
+        tiles.push(new Polygon(6, 0, -layer, tileSize, ctx, i)); i++;
+        for(let x = 1; x < layer; x++) {
+            tiles.push(new Polygon(6, x, -layer, tileSize, ctx, i)); i++;
+            tiles.push(new Polygon(6, -x, layer, tileSize, ctx, i)); i++;
+            tiles.push(new Polygon(6, x, layer-x, tileSize, ctx, i)); i++;
+            tiles.push(new Polygon(6, -x, -layer+x, tileSize, ctx, i)); i++;
+        }
+        for(let y = -layer; y <= 0; y++) {
+            tiles.push(new Polygon(6, layer, y, tileSize, ctx, i)); i++;
+            tiles.push(new Polygon(6, -layer, -y, tileSize, ctx, i)); i++;
         }
     }
+}
 
-    function Star(x, y, starSize, ctx) {
-        this.x = x;
-        this.y = y;
-        this.angle = Math.atan(Math.abs(y)/Math.abs(x));
-        this.starSize = starSize;
-        this.ctx = ctx;
-        this.high = 0;
+
+function drawBg(w, h) {
+    bgCtx.clearRect(0, 0, w, h);
+    let r, g, b, a;
+    let val = (volume || 0) / 10;
+    r = 20 + (Math.sin(val) + 1) * 28;
+    g = val * 2;
+    b = val * 8;
+    bgCtx.beginPath();
+    bgCtx.rect(0, 0, w, h);
+    // create radial gradient
+    let grd = bgCtx.createRadialGradient(w / 2, h / 2, val, w / 2, h / 2, w - Math.min(Math.pow(val, 1.7), w - 20));
+    grd.addColorStop(0, 'rgba(0,0,0,1)');// centre is transparent black
+    grd.addColorStop(1, "rgba(" +
+        Math.round(r) + ", " +
+        Math.round(g) + ", " +
+        Math.round(b) + ", 1)"); // edges are reddish
+
+    bgCtx.fillStyle = grd;
+    bgCtx.fill();
+}
+
+function resizeHandler(skqw) {
+    if (fgCanvas) {
+        let {width, height} = skqw.dimensions();
+        // resize the foreground canvas
+        fgCtx.translate(width/2, height/2);
+        console.log('resizeHandler');
+        // resize the bg canvas
+
+        /* sfCtx.translate(fgCanvas.width/2,fgCanvas.height/2);*/
+
+        let tileSize = width > height ? width / 25 : height / 25;
+
+        drawBg(width, height);
+        makePolygonArray(tileSize, fgCtx);
+        // makeStarArray()
     }
-    Star.prototype.drawStar = function() {
-        var distanceFromCentre = Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+}
 
-        // stars as lines
-        var brightness = 200 + Math.min(Math.round(this.high * 5), 55);
-        this.ctx.lineWidth= 0.5 + distanceFromCentre/2000 * Math.max(this.starSize/2, 1);
-        this.ctx.strokeStyle='rgba(' + brightness + ', ' + brightness + ', ' + brightness + ', 1)';
-        this.ctx.beginPath();
-        this.ctx.moveTo(this.x,this.y);
-        var lengthFactor = 1 + Math.min(Math.pow(distanceFromCentre,2)/3000 * Math.pow(volume, 2)/6000000, distanceFromCentre);
-        var toX = Math.cos(this.angle) * -lengthFactor;
-        var toY = Math.sin(this.angle) * -lengthFactor;
-        toX *= this.x > 0 ? 1 : -1;
-        toY *= this.y > 0 ? 1 : -1;
-        this.ctx.lineTo(this.x + toX, this.y + toY);
-        this.ctx.stroke();
-        this.ctx.closePath();
-
-        // starfield movement coming towards the camera
-        var speed = lengthFactor/20 * this.starSize;
-        this.high -= Math.max(this.high - 0.00000001, 0);
-        if (speed > this.high) {
-            this.high = speed;
-        }
-        var dX = Math.cos(this.angle) * this.high;
-        var dY = Math.sin(this.angle) * this.high;
-        this.x += this.x > 0 ? dX : -dX;
-        this.y += this.y > 0 ? dY : -dY;
-
-        var limitY = fgCanvas.height/2 + 500;
-        var limitX = fgCanvas.width/2 + 500;
-        if ((this.y > limitY || this.y < -limitY) || (this.x > limitX || this.x < -limitX)) {
-            // it has gone off the edge so respawn it somewhere near the middle.
-            this.x = (Math.random() - 0.5) * fgCanvas.width/3;
-            this.y = (Math.random() - 0.5) * fgCanvas.height/3;
-            this.angle = Math.atan(Math.abs(this.y)/Math.abs(this.x));
-        }
-    };
-
-    function makeStarArray() {
-        var x, y, starSize;
-        stars = [];
-        var limit = fgCanvas.width / 15; // how many stars?
-        for (var i = 0; i < limit; i ++) {
-            x = (Math.random() - 0.5) * fgCanvas.width;
-            y = (Math.random() - 0.5) * fgCanvas.height;
-            starSize = (Math.random()+0.1)*3;
-            stars.push(new Star(x, y, starSize, sfCtx));
-        }
-    }
+function rotateForeground() {
+    tiles.forEach(function(tile) {
+        tile.rotateVertices();
+    });
+}
 
 
-    function drawBg() {
-        bgCtx.clearRect(0, 0, w, h);
-        var r, g, b, a;
-        var val = volume/100;
-        r = 20 + (Math.sin(val) + 1) * 28;
-        g = val * 2;
-        b = val * 8;
-        bgCtx.beginPath();
-        bgCtx.rect(0, 0, w, h);
-        // create radial gradient
-        var grd = bgCtx.createRadialGradient(bgCanvas.width/2, bgCanvas.height/2, val, bgCanvas.width/2, bgCanvas.height/2, bgCanvas.width-Math.min(Math.pow(val, 1.7), bgCanvas.width - 20));
-        grd.addColorStop(0, 'rgba(0,0,0,1)');// centre is transparent black
-        grd.addColorStop(1, "rgba(" +
-            Math.round(r) + ", " +
-            Math.round(g) + ", " +
-            Math.round(b) + ", 1)"); // edges are reddish
-
-        bgCtx.fillStyle = grd;
-        bgCtx.fill();
-        // debug data
-        /*bgCtx.font = "bold 30px sans-serif";
-         bgCtx.fillStyle = 'grey';
-         bgCtx.fillText("val: " + val, 30, 30);
-         bgCtx.fillText("r: " + r , 30, 60);
-         bgCtx.fillText("g: " + g , 30, 90);
-         bgCtx.fillText("b: " + b , 30, 120);
-         bgCtx.fillText("a: " + a , 30, 150);*/
-    }
-
-    function resizeCanvas() {
-        if (fgCanvas) {
-            // resize the foreground canvas
-            fgCanvas.width = window.innerWidth;
-            fgCanvas.height = window.innerHeight;
-            fgCtx.translate(fgCanvas.width/2,fgCanvas.height/2);
-
-            // resize the bg canvas
-            bgCanvas.width = window.innerWidth;
-            bgCanvas.height = window.innerHeight;
-            // resize the starfield canvas
-            sfCanvas.width = window.innerWidth;
-            sfCanvas.height = window.innerHeight;
-            sfCtx.translate(fgCanvas.width/2,fgCanvas.height/2);
-
-            tileSize = fgCanvas.width > fgCanvas.height ? fgCanvas.width / 25 : fgCanvas.height / 25;
-
-            drawBg();
-            makePolygonArray();
-            makeStarArray()
-        }
-    }
-
-    function rotateForeground() {
-        tiles.forEach(function(tile) {
-            tile.rotateVertices();
-        });
-    }
-
-    return {
-        name: 'The Resistance',
-        author: 'Michael Bromley',
-        init: init,
-        tick: tick,
-        params: params
-    };
+module.exports = {
+    name: 'The Resistance',
+    author: 'Michael Bromley',
+    init: init,
+    tick: tick,
+    params: params
 };

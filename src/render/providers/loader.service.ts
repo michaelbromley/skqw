@@ -14,28 +14,25 @@ export class Loader {
 
     loadAll() {
         const isJsFile = file => /\.js$/.test(file);
+        const isVisObject = v => v && v.name && v.init && v.tick;
         this.library = [];
 
         require("fs").readdirSync(this.visPath).forEach(file => {
             if (!isJsFile(file)) {
                 return;
-            }
-            let visFactory = (<any> global).require(path.join(this.visPath, file));
-            if (typeof visFactory === 'function') {
-                // TODO: more validation of the object shape 
-                let vis = visFactory();
-                if (vis && vis.name) {
-                    let normalized = this.normalizeParams(vis);
-                    this.library.push(normalized);
-                }
             } 
+            let vis = (<any> global).require(path.join(this.visPath, file));
+            if (isVisObject(vis)) {
+                let normalized = this.normalizeParams(vis);
+                this.library.push(normalized);
+            }
         });
     }
-     
+
     listAll(): { id: number, name: string }[] {
         return this.library.map((v, i) => ({ id: i, name: v.name }));
     }
-    
+ 
     getVisualization(id: number): IVisualization {
         if (0 <= id && id < this.library.length) {
             return this.library[id];
@@ -53,7 +50,7 @@ export class Loader {
         }
         return vis;
     }
-    
+
     private normalizeParam(param: IParameter): IParameter {
         if (param.type === 'range') {
             if (param.min === undefined) {
