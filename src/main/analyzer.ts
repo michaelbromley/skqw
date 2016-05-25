@@ -1,13 +1,14 @@
 import {Subject} from 'rxjs';
 import {ISample} from '../common/models';
 const coreAudio = require('node-core-audio');
-const FFT = require('fft');
+const fourierTransform = require('fourier-transform');
 const engine: any = coreAudio.createNewAudioEngine();
-const BUFFER_SIZE = 128;
+const BUFFER_SIZE = 256;
 const DEFAULT_OPTIONS = {
     framesPerBuffer: BUFFER_SIZE,
     inputDevice: 0,
-    interleaved: false
+    interleaved: false,
+    sampleRate: 8000
 };
 engine.setOptions(DEFAULT_OPTIONS);
 
@@ -22,8 +23,6 @@ export class Analyzer {
 
     private isActive: boolean = false;
     private inputBuffer: number[][];
-    private fft = new FFT.complex( BUFFER_SIZE / 2, false );
-    private fftBuffer = new Float32Array(BUFFER_SIZE);
     private fpsFilter: number = 50;
     private now: number;
     private lastUpdate: number;
@@ -32,7 +31,7 @@ export class Analyzer {
     constructor() {
         engine.addAudioCallback(this.processAudio.bind(this));
         this.lastUpdate = +new Date() * 1;
-        
+
         let numDevices = engine.getNumDevices();
         for (let i = 0; i < numDevices; i ++) {
             this.devices[i] = engine.getDeviceName(i);
@@ -68,17 +67,36 @@ export class Analyzer {
     listAudioDevices(): any {
         return this.devices;
     }
- 
+
     /**
      * Apply a Fast Fourier Transform (fft) to the time series data provided
      * by the core-audio module
      */
     private sendSample() {
         let ts = (this.inputBuffer[0]);
-        this.fft.simple(this.fftBuffer, ts, 'complex');
-        let ft = Array.prototype.slice.call(this.fftBuffer.slice(0, BUFFER_SIZE / 2));
+        let ft = fourierTransform(ts);
+        this.normalize(ft);
+        this.sample$.next({ft, ts});
+    }
 
-        this.sample$.next({ ft, ts });
+    private normalize(ft: number[]): void {
+        var control = this.mean(ft);
+        for (var i = 0; i < ft.length; i++) {
+            var delta = control - ft[i];
+            var factor = Math.max(delta * 300, 1);
+            ft[i] += ft[i] * factor * 100;
+
+            /*let factor = (control / ft[i]);
+             ft[i] = ft[i] * 10 + ft[i] * factor * 10;*/
+        }
+    }
+
+    private mean(arr: number[]): number {
+        let sum = 0;
+        for (let i = 0; i < arr.length; i++) {
+            sum += arr[i];
+        }
+        return sum / arr.length;
     }
 
     private processAudio(_inputBuffer) {
