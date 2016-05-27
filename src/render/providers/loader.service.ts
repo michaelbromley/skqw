@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {IVisualization, IParameter} from '../../common/models';
 const path = require('path');
+const fs = require("fs");
 
 @Injectable()
 export class Loader {
@@ -13,20 +14,21 @@ export class Loader {
     }
 
     loadAll() {
-        const isJsFile = file => /\.js$/.test(file);
+        const isDir = p => fs.statSync(path.join(this.visPath, p)).isDirectory();
+        const hasIndex = p => fs.statSync(path.join(this.visPath, p, 'index.js')).isFile();
         const isVisObject = v => v && v.name && v.init && v.tick;
         this.library = [];
 
-        require("fs").readdirSync(this.visPath).forEach(file => {
-            if (!isJsFile(file)) {
+        fs.readdirSync(this.visPath).forEach(p => {
+            if (!isDir(p) || !hasIndex(p)) {
                 return;
-            } 
-            let vis = (<any> global).require(path.join(this.visPath, file));
+            }
+            let vis = (<any> global).require(path.join(this.visPath, p, 'index.js'));
             if (isVisObject(vis)) {
                 let normalized = this.normalizeParams(vis);
                 this.library.push(normalized);
             }
-        });
+        }); 
     }
 
     listAll(): { id: number, name: string }[] {

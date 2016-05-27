@@ -63,7 +63,7 @@ function drawWave(w, h, ts) {
         width = w / length;
 
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-    ctx.lineWidth = 5;
+    ctx.lineWidth = h / 150;
 
 
     for(let i = 0; i < ts.length; i++) {
