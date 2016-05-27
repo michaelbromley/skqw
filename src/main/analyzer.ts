@@ -3,7 +3,7 @@ import {ISample} from '../common/models';
 const coreAudio = require('node-core-audio');
 const fourierTransform = require('fourier-transform');
 const engine: any = coreAudio.createNewAudioEngine();
-const BUFFER_SIZE = 256;
+const BUFFER_SIZE = 256; 
 const DEFAULT_OPTIONS = {
     framesPerBuffer: BUFFER_SIZE,
     inputDevice: 0,

@@ -41,6 +41,7 @@ module.exports = {
 
 function init(skqw) {
     ctx = skqw.createCanvas().getContext('2d');
+    ctx.lineCap = 'round';
 }
 
 function tick(skqw) {
@@ -63,6 +64,7 @@ function drawWave(w, h, ts) {
 
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
     ctx.lineWidth = 5;
+
 
     for(let i = 0; i < ts.length; i++) {
         let val = ts[i];
@@ -88,9 +90,9 @@ function drawBars(w, h, ft) {
     for(let i = 0; i < ft.length; i++) {
         let val = ft[i];
         let x = i * width;
-        let height = val * params.sensitivity.value / 2;
+        let height = val * params.sensitivity.value;
         let y = h - height;
 
-        ctx.fillRect(x, y, width / 3, height);
+        ctx.fillRect(x, y, width - 2, height);
     }
 }

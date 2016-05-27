@@ -15,7 +15,7 @@ app.on('ready', () => {
 });
 
 app.on('before-quit', () => {
-    sampleSubscription.unsubscribe();
+   sampleSubscription.unsubscribe();
 });
 
 let sampleSubscription = analyzer.sample$.subscribe(sample => {
@@ -23,7 +23,6 @@ let sampleSubscription = analyzer.sample$.subscribe(sample => {
         mainWindow.send(SAMPLE, sample);
     }
 });
-
 
 ipcMain.on(START_ANALYZER, () => {
     analyzer.start();
