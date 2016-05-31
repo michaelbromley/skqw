@@ -50,7 +50,7 @@ function tick(skqw) {
     let ft = skqw.sample().ft;
     let ts = skqw.sample().ts;
 
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 1)';
     ctx.fillRect(0, 0, w, h);
     drawBars(w, h, ft);
     if (params.showLines.value === true) {
