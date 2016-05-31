@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {IVisualization, IParameter} from '../../common/models';
 const path = require('path');
 const fs = require("fs");
+const nativeRequire = (<any> global).require;
 
 @Injectable()
 export class Loader {
@@ -9,21 +10,32 @@ export class Loader {
     private library: IVisualization[] = [];
     private visPath: string = __dirname;
 
+    /**
+     * Set the path where the visualizations are located.
+     */
     setPath(absolutePath: string) {
         this.visPath = absolutePath;
     }
 
+    /**
+     * Load all visualizations which reside in the folder specified by setPath().
+     * Visualizations should reside in their own folders, with the main entry point
+     * named `index.js`.
+     */
     loadAll() {
         const isDir = p => fs.statSync(path.join(this.visPath, p)).isDirectory();
         const hasIndex = p => fs.statSync(path.join(this.visPath, p, 'index.js')).isFile();
         const isVisObject = v => v && v.name && v.init && v.tick;
         this.library = [];
 
+        this.flushVisCache();
+
         fs.readdirSync(this.visPath).forEach(p => {
             if (!isDir(p) || !hasIndex(p)) {
                 return;
             }
-            let vis = (<any> global).require(path.join(this.visPath, p, 'index.js'));
+            let visPath = path.join(this.visPath, p, 'index.js');
+            let vis = nativeRequire(visPath);
             if (isVisObject(vis)) {
                 let normalized = this.normalizeParams(vis);
                 this.library.push(normalized);
@@ -31,14 +43,29 @@ export class Loader {
         }); 
     }
 
+    /**
+     * Get a list of the names and ids of all loaded visualizations.
+     */
     listAll(): { id: number, name: string }[] {
         return this.library.map((v, i) => ({ id: i, name: v.name }));
     }
- 
+
+    /**
+     * Returns a visualization object given by the id (the index in the library array)
+     */
     getVisualization(id: number): IVisualization {
         if (0 <= id && id < this.library.length) {
             return this.library[id];
         }
+    }
+
+    /**
+     * Delete the cached entries in the node "require" cache, so that the visualizations can be
+     * refreshed on the fly without reloading the entire app.
+     */
+    private flushVisCache(): void {
+        let cacheKeys = Object.keys(nativeRequire.cache).filter(k => -1 < k.indexOf(this.visPath));
+        cacheKeys.forEach(key => delete nativeRequire.cache[key]);
     }
 
     /**

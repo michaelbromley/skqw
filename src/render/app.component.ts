@@ -1,4 +1,4 @@
-import {Component, ChangeDetectorRef} from '@angular/core';
+import {Component, ChangeDetectorRef, HostListener} from '@angular/core';
 import {START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID} from '../common/constants';
 import {Visualizer} from './components/visualizer/visualizer.component';
 import {SettingsPanel} from './components/settings-panel/settings-panel.component';
@@ -62,12 +62,27 @@ export class App {
     }
 
     selectVis(id: number): void {
-        this.vis = this.loader.getVisualization(id);  
+        this.vis = this.loader.getVisualization(id);
+    }
+
+    /**
+     * Reload the current visualization files from disk.
+     */
+    @HostListener('document:keydown', ['$event'])
+    reloadVis(e: KeyboardEvent): void {
+        if (e.altKey === true && e.which === 82) {
+            if (!this.vis) {
+                return;
+            }
+            this.loader.loadAll();
+            let id = this.library.filter(item => item.name === this.vis.name)[0].id;
+            this.vis = this.loader.getVisualization(id);
+        }
     }
 
     setInputDeviceId(id: number): void {
         ipcRenderer.send(SET_INPUT_DEVICE_ID, id);
-    }
+    } 
 
     updateParamValue(update: IParamUpdate): void {
         this.vis.params[update.paramKey].value = update.newValue;
