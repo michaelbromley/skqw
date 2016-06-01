@@ -28,6 +28,7 @@ var externalsFn =  (function () {
 })();
 
 module.exports = [
+    // Render process app
     function makeWebpackConfig() {
         var config = {};
 
@@ -96,8 +97,8 @@ module.exports = [
                 },
 
                 // copy those assets to output
-                {test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/, loader: 'file?name=fonts/[name].[ext]?'},
-
+                {test: /\.(png|jpe?g|gif|woff|woff2|ttf|eot|ico)$/, loader: 'file?name=fonts/[name].[ext]?'},
+                {test: /\.svg$/, loader: 'svg-inline'},
                 // all css required in src/app files will be merged in js files
                 {test: /\.css$/, loader: 'raw'},
 
@@ -169,6 +170,7 @@ module.exports = [
 
         return config;
     }(),
+    // Main process app
     {
         name: 'main',
         target: 'node',
