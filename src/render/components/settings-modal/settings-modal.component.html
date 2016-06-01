@@ -1,0 +1,9 @@
+<div class="settings-modal" [ngClass]="{ visible: visible }">
+    <div class="close-button"
+         [innerHTML]="icon_close"
+         (click)="close.emit(false)"></div>
+
+    <div class="content">
+        <ng-content></ng-content>
+    </div>
+</div>

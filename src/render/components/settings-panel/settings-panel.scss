@@ -1,34 +1,46 @@
-.settings-panel {
+.icons {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 0;
   right: 0;
-  padding: 20px;
-  background-color: rgba(255, 255, 255, 0.6);
-  opacity: 0;
-  transition: opacity 0.5s;
-
-  h1 {}
-
-  &.visible {
-    opacity: 1;
-  }
-}
-
-.toggle-button {
-  position: absolute;
-  top: 20px;
-  right: 20px;
   display: block;
-  width: 40px;
-  height: 40px;
+  width: 50px;
   z-index: 10;
 
-  svg {
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    fill: rgba(200, 200, 200, 0.3);
+  &.visible {
+    .icon:nth-child(1) {
+      transform: translateX(0);
+      transition: transform 0.3s 0s, opacity 0.4s;
+      opacity: 0.8;
+    }
+    .icon:nth-child(2) {
+      transform: translateX(0);
+      transition: transform 0.3s 0.1s, opacity 0.4s;
+      opacity: 0.8;
+    }
+    .icon:nth-child(3) {
+      transform: translateX(0);
+      transition: transform 0.3s 0.2s, opacity 0.4s;
+      opacity: 0.8;
+    }
+  }
+
+  .icon {
+    padding: 30px 0;
+    opacity: 0;
+    transform: translateX(50px);
+    transition: transform 0.2s, opacity 0.2s;
+    svg {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      fill: rgba(200, 200, 200, 0.3);
+      transition: fill 0.3s;
+      cursor: pointer;
+
+      &:hover {
+        fill: rgba(200, 200, 200, 0.6);
+      }
+    }
   }
 }
