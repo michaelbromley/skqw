@@ -1,0 +1,5 @@
+<div class="title">Visualization Library Path</div>
+<div class="title is-5 subtitle">{{ libraryDir }}
+    <button class="button is-small is-dark" (click)="selectLibraryDir.emit(true)">SELECT...</button>
+</div>
+<div class="title is-4" [ngClass]="{ 'none-found': library.length === 0 }">{{ library.length }} visualizations found</div>

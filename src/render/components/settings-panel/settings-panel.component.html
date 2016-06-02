@@ -1,17 +1,27 @@
 <div class="icons" [ngClass]="{ visible: iconsVisible }">
     <div class="icon">
-        <div [innerHTML]="icon_inputs" (click)="showModal()"></div>
+        <div [innerHTML]="icon_settings" (click)="showModal('settings')"></div>
     </div>
-    <div class="icon">
-        <div [innerHTML]="getVolumeIcon()"></div>
+    <div class="icon" (click)="showModal('gain')">
+        <div [innerHTML]="icon_gain"></div>
     </div>
-    <div class="icon">
+    <div class="icon" (click)="showModal('info')">
         <div [innerHTML]="icon_info"></div>
     </div>
 </div>
 
-<settings-modal [visible]="modalVisible" (close)="hideModal()">
+<settings-modal [visible]="visibleModal === 'settings'" (close)="hideModal('settings')">
+    <library-path-selector [library]="library"
+                           [libraryDir]="libraryDir"
+                           (selectLibraryDir)="selectLibraryDir.emit($event)"></library-path-selector>
+</settings-modal>
+
+<settings-modal [visible]="visibleModal === 'gain'" (close)="hideModal('gain')">
     <h1 class="title">YO!</h1>
+</settings-modal>
+
+<settings-modal [visible]="visibleModal === 'info'" (close)="hideModal('info')">
+    SKQW by Michael Bromley
 </settings-modal>
 
 <!--<div class="settings-panel" [ngClass]="{ visible: isVisible }">

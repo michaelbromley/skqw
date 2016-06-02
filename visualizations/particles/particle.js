@@ -59,7 +59,7 @@ class Particle {
 
         // draw point
         let hue = this.radius * 10;
-        this.ctx.fillStyle = `hsla(${hue}, 40%, 50%, ${this.radius / 200})`;
+        this.ctx.fillStyle = `hsla(${hue}, 70%, 50%, ${this.radius / 200})`;
         this.ctx.beginPath();
         this.ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
         this.ctx.fill();
