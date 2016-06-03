@@ -38,6 +38,7 @@ export class Loader {
             let vis = nativeRequire(visPath);
             if (isVisObject(vis)) {
                 let normalized = this.normalizeParams(vis);
+                // TODO: check for duplicate names and error if found.
                 this.library.push(normalized);
             }
         }); 

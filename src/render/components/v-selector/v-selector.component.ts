@@ -1,6 +1,8 @@
 import {Component, HostListener, Input, EventEmitter, Output} from '@angular/core';
 import {IVisualization} from '../../../common/models';
 import {ParameterControls} from '../parameter-controls/parameter-controls.component';
+import {KEYCODE_RIGHT_ARROW, KEYCODE_LEFT_ARROW} from '../../constants';
+import {IState} from '../../providers/state.service.';
 
 @Component({
     selector: 'v-selector',
@@ -9,20 +11,62 @@ import {ParameterControls} from '../parameter-controls/parameter-controls.compon
     directives: [ParameterControls]
 })
 export class VSelector {
-    @Input() library: { id: number; name: string; }[];
+    @Input() state: IState;
     @Input() current: IVisualization;
-    @Input() visible: boolean = false;
-    @Output() selectLibraryDir = new EventEmitter<boolean>();
     @Output() select = new EventEmitter<number>();
-    @Output() toggleVisible = new EventEmitter<boolean>()
-
-    @HostListener('document:mouseover')
-    show(): void {
-        this.toggleVisible.emit(true);
+    private icon_arrow = require('../../../assets/icons/play_arrow.svg');
+    
+    @HostListener('document:keydown', ['$event'])
+    reloadVis(e: KeyboardEvent): void {
+        switch (e.which) {
+            case KEYCODE_RIGHT_ARROW:
+                this.selectNext();
+                break;
+            case KEYCODE_LEFT_ARROW:
+                this.selectPrev();
+                break;
+        }
     }
 
-    @HostListener('document:mouseout')
-    hide(): void {
-        this.toggleVisible.emit(false);
+    /**
+     * Select the next visualization in the library
+     */
+    selectNext(): void {
+        let currentIndex = this.getCurrentIndex();
+        if (currentIndex === -1) {
+            return;
+        }
+        let nextIndex;
+        if (currentIndex < this.state.library.length - 1) {
+            nextIndex = currentIndex + 1;
+        } else {
+            nextIndex = 0;
+        }
+        this.select.emit(nextIndex);
+    }
+
+    /**
+     * Select the previous visualization in the library
+     */
+    selectPrev(): void {
+        let currentIndex = this.getCurrentIndex();
+        if (currentIndex === -1) {
+            return;
+        }
+        let nextIndex;
+        if (currentIndex === 0) {
+            nextIndex = this.state.library.length - 1;
+        } else {
+            nextIndex = currentIndex - 1;
+        }
+        this.select.emit(nextIndex);
+    }
+
+    private getCurrentIndex(): number {
+        let library = this.state.library;
+        if (library && library instanceof Array && this.current) {
+            return library.map(v => v.name).indexOf(this.current.name);
+        }
+        return -1;
     }
 }

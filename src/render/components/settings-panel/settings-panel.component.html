@@ -10,19 +10,21 @@
     </div>
 </div>
 
-<settings-modal [visible]="visibleModal === 'settings'" (close)="hideModal('settings')">
-    <library-path-selector [library]="library"
-                           [libraryDir]="libraryDir"
+<settings-modal [visible]="state.settingsModal === 'settings'" (close)="hideModal('settings')">
+    <library-path-selector [library]="state.library"
+                           [libraryDir]="state.libraryDir"
                            (selectLibraryDir)="selectLibraryDir.emit($event)"></library-path-selector>
     <hr>
-    <input-selector [inputs]="inputDevices" (inputChange)="changeInputDeviceId.emit($event)"></input-selector>
+    <input-selector [inputs]="state.inputDevices"
+                    [selectedId]="state.selectedInputId"
+                    (inputChange)="changeInputDeviceId.emit($event)"></input-selector>
 </settings-modal>
 
-<settings-modal [visible]="visibleModal === 'gain'" (close)="hideModal('gain')">
+<settings-modal [visible]="state.settingsModal === 'gain'" (close)="hideModal('gain')">
     <h1 class="title">YO!</h1>
 </settings-modal>
 
-<settings-modal [visible]="visibleModal === 'info'" (close)="hideModal('info')">
+<settings-modal [visible]="state.settingsModal === 'info'" (close)="hideModal('info')">
     SKQW by Michael Bromley
 </settings-modal>
 

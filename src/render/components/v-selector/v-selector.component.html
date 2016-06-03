@@ -1,4 +1,13 @@
-<div class="v-selector-container" [ngClass]="{ visible: visible }">
-    <div class="title">{{ current?.name || 'none selected' }}</div>
+<div class="v-selector-container" [ngClass]="{ visible: state.vSelectorVisible && 0 < state.library.length }">
+    <div class="title-row">
+        <div class="prev-icon icon">
+            <div [innerHTML]="icon_arrow" (click)="selectPrev()"></div>
+        </div>
+        <div class="title">{{ current?.name || 'none selected' }}</div>
+        <div class="next-icon icon" (click)="selectNext()">
+            <div [innerHTML]="icon_arrow"></div>
+        </div>
+    </div>
+
     <div class="title is-5" *ngIf="current?.author">By {{ current?.author }}</div>
 </div>

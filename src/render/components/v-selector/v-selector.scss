@@ -8,9 +8,27 @@
   opacity: 0;
   background-color: rgba(255, 255, 255, 0.5);
   transition: opacity 0.5s;
+  -webkit-user-select: none;
 
   &.visible {
     opacity: 1;
+  }
 
+  .title-row {
+    & > div {
+      display: inline-block;
+    }
+
+    .title {
+      margin: 10px 20px;
+    }
+
+    .icon {
+      margin-top: 5px;
+    }
+
+    .prev-icon svg {
+      transform: rotateZ(180deg) translateX(7px);
+    }
   }
 }

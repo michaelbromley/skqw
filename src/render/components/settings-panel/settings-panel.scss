@@ -31,13 +31,8 @@
     transform: translateX(50px);
     transition: transform 0.2s, opacity 0.2s;
     svg {
-      display: inline-block;
-      width: 32px;
-      height: 32px;
       fill: rgba(200, 200, 200, 0.3);
       transition: fill 0.3s;
-      cursor: pointer;
-
       &:hover {
         fill: rgba(200, 200, 200, 0.6);
       }

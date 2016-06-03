@@ -2,6 +2,7 @@ import {Component, HostListener, Input, EventEmitter, Output} from '@angular/cor
 import {InputSelector} from '../input-selector/input-selector.component';
 import {SettingsModal} from '../settings-modal/settings-modal.component';
 import {LibraryPathSelector} from '../library-path-selector/library-path-selector.component';
+import {IState} from '../../providers/state.service.';
   
 @Component({
     selector: 'settings-panel',
@@ -10,21 +11,19 @@ import {LibraryPathSelector} from '../library-path-selector/library-path-selecto
     directives: [SettingsModal, InputSelector, LibraryPathSelector]
 })
 export class SettingsPanel {
-    @Input() inputDevices:  { [id: number]: string } = {}; 
-    @Input() library: { id: number; name: string }[];
-    @Input() libraryDir: string;
+    @Input() state: IState;
     @Output() changeInputDeviceId = new EventEmitter<number>();
     @Output() selectLibraryDir = new EventEmitter<boolean>();
     @Output() toggleModal = new EventEmitter<string>();
     private iconsVisible: boolean = false;
-    private visibleModal: string = '';
+    
     private icon_settings = require('../../../assets/icons/settings.svg');
     private icon_info = require('../../../assets/icons/info_outline.svg');
     private icon_gain = require('../../../assets/icons/equalizer.svg');
 
     @HostListener('document:mouseover') 
     showIcons(): void {
-        if (this.visibleModal === '' && !this.iconsVisible) {
+        if (this.state.settingsModal === '' && !this.iconsVisible) {
             this.iconsVisible = true;
         }
     }
@@ -37,14 +36,12 @@ export class SettingsPanel {
     }
 
     showModal(which: string) {
-        this.visibleModal = which;
         this.hideIcons();
-        this.toggleModal.emit(this.visibleModal)
+        this.toggleModal.emit(which);
     }
 
     hideModal() {
-        this.visibleModal = '';
         this.showIcons();
-        this.toggleModal.emit(this.visibleModal)
+        this.toggleModal.emit('');
     }
 } 

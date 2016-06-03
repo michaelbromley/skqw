@@ -4,7 +4,6 @@ let tiles = [];
 let stars = [];
 let fgCanvas;
 let fgCtx;
-const ROTATION_STEP = 0.001;
 let bgCanvas;
 let bgCtx;
 let sfCanvas;
@@ -49,7 +48,7 @@ function tick(skqw) {
 
     volume = Array.prototype.reduce.call(ft, function(a, b) {
         return a + b;
-    });
+    }, 0);
     volume = Math.abs(volume) * params.sensitivity.value * 15;
 
     i++;
@@ -67,7 +66,7 @@ function tick(skqw) {
     drawBg(width, height);
     rotateForeground();
     tiles.forEach(function(tile) {
-        tile.render(ft, volume);
+        tile.render(ft, volume, tiles.length);
     });
     tiles.forEach(function(tile) {
         if (tile.highlight > 0) {

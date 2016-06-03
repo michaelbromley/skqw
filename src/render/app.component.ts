@@ -5,6 +5,7 @@ import {SettingsPanel} from './components/settings-panel/settings-panel.componen
 import {Loader} from './providers/loader.service';
 import {IParamUpdate, ISample, IVisualization} from '../common/models';
 import {VSelector} from './components/v-selector/v-selector.component';
+import {State} from './providers/state.service.';
 const ipcRenderer = require('electron').ipcRenderer;
 const {app, dialog} = require('electron').remote;
 const path = require('path');
@@ -20,19 +21,16 @@ require('./styles/app.scss');
 export class App {
 
     private sample: ISample = { ft: [], ts: [] };
-    private library: { id: number; name: string; }[] = [];
-    private libraryDir: string;
     private vis: IVisualization;
-    private inputDevices: { [id: number]: string } = {};
-    private vSelectorVisible: boolean = false;
-    private settingsModalVisible: string = '';
 
     constructor(private loader: Loader,
+                private state: State,
                 private cdr: ChangeDetectorRef) {
+        
         storage.get('libraryDir', (err, data) => {
-            this.libraryDir = data.libraryDir;
-            if (this.libraryDir) {
-                this.loadLibrary(this.libraryDir);
+            if (data.libraryDir) {
+                this.state.setLibraryDir(data.libraryDir);
+                this.loadLibrary(data.libraryDir);
             }
         });
     }
@@ -40,7 +38,7 @@ export class App {
     ngOnInit(): void {
         ipcRenderer.send(REQUEST_DEVICE_LIST);
         ipcRenderer.on(RECEIVE_DEVICE_LIST, (event, list) => {
-            this.inputDevices = list;
+            this.state.setInputDevices(list);
         });
 
         // ipcRenderer.send(START_ANALYZER);
@@ -49,16 +47,19 @@ export class App {
         });
     }
 
+    /**
+     * Display a dialog for seleting the library dir.
+     */
     selectLibraryDir() {
         dialog.showOpenDialog({
             title: 'Select Visualization Library Folder',
-            defaultPath: this.libraryDir || path.join(process.cwd()),
+            defaultPath: this.state.getValue().libraryDir || path.join(process.cwd()),
             properties: ['openDirectory']
         }, (paths: string[]) => {
             if (paths.length === 1) {
                 let dir = paths[0];
                 storage.set('libraryDir', {libraryDir: dir});
-                this.libraryDir = dir;
+                this.state.setLibraryDir(dir);
                 this.loadLibrary(dir);
             }
         });
@@ -78,36 +79,54 @@ export class App {
                 return;
             }
             this.loader.loadAll();
-            let id = this.library.filter(item => item.name === this.vis.name)[0].id;
+            let id = this.state.getValue().library
+                .filter(item => item.name === this.vis.name)[0].id;
             this.vis = this.loader.getVisualization(id);
         }
     }
 
+    @HostListener('document:mouseenter')
+    onMouseOver(): void {
+        this.toggleVSelector(true);
+    }
+
+    @HostListener('document:mouseleave')
+    onMouseOut(): void {
+        this.toggleVSelector(false);
+    }
+
+
     setInputDeviceId(id: number): void {
+        this.state.setSelectedInputId(id);
         ipcRenderer.send(SET_INPUT_DEVICE_ID, id);
-    } 
+    }
 
     updateParamValue(update: IParamUpdate): void {
         this.vis.params[update.paramKey].value = update.newValue;
     }
 
     settingModalChanged(val: string) {
-        this.settingsModalVisible = val;
-        if (val !== '' && this.vSelectorVisible) {
-            this.vSelectorVisible = false;
+        this.state.setSettingsModal(val);
+        if (val !== '' && this.state.getValue().vSelectorVisible) {
+            this.state.setVSelectorVisible(false);
+        } else {
+            this.state.setVSelectorVisible(true); 
         }
     }
 
+    /**
+     * Toggle the visibility of the VSelector.
+     */
     toggleVSelector(visible: boolean) {
-        if (this.settingsModalVisible === '') {
-            this.vSelectorVisible = visible;
+        if (this.state.getValue().settingsModal === '') {
+            this.state.setVSelectorVisible(visible);
         }
     }
 
     private loadLibrary(dir: string): void {
         this.loader.setPath(dir);
-        this.loader.loadAll(); 
-        this.library = this.loader.listAll();
+        this.loader.loadAll();
+        this.state.setLibrary(this.loader.listAll());
         this.cdr.detectChanges();
         this.selectVis(0);
     }

@@ -4,3 +4,18 @@ html {
   overflow-y: hidden;
   background-color: black;
 }
+
+.icon {
+  svg {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    fill: rgba(55, 55, 55, 1);
+    transition: fill 0.3s;
+    cursor: pointer;
+
+    &:hover {
+      fill: rgba(100, 100, 100, 1);
+    }
+  }
+}

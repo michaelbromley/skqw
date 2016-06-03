@@ -1,16 +1,12 @@
-<visualizer [sample]="sample" [visualization]="vis" [ngClass]="{ obscured: settingsVisible }"></visualizer>
+<visualizer [sample]="sample" [visualization]="vis"></visualizer>
 
 <settings-panel
-        [library]="library"
-        [inputDevices]="inputDevices"
-        [libraryDir]="libraryDir"
+        [state]="state.stateChanges$ | async"
         (toggleModal)="settingModalChanged($event)"
         (selectLibraryDir)="selectLibraryDir()"
         (changeInputDeviceId)="setInputDeviceId($event)"></settings-panel>
 
 <v-selector [current]="vis"
-            [library]="library"
-            [visible]="vSelectorVisible"
-            (toggleVisible)="toggleVSelector($event)"
-            (selectVisId)="selectVis($event)"
+            [state]="state.stateChanges$ | async"
+            (select)="selectVis($event)"
             (updateParam)="updateParamValue($event)"></v-selector>

@@ -1,3 +1,5 @@
+const ROTATION_STEP = 0.001;
+
 class Polygon {
 
     constructor(sides, x, y, tileSize, ctx, num) {
@@ -48,8 +50,8 @@ class Polygon {
         return [offsetX, offsetY];
     };
 
-    render(ft, volume) {
-        let bucket = Math.ceil(ft.length/tiles.length*this.num);
+    render(ft, volume, tileCount) {
+        let bucket = Math.ceil(ft.length / tileCount * this.num);
         //let val = ft[bucket] * params.sensitivity.value * 5;
         let val = Math.pow((ft[bucket]/25),2)*255;
         val *= this.num > 42 ? 1.1 : 1;
