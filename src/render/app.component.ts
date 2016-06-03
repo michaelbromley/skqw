@@ -4,6 +4,7 @@ import {Visualizer} from './components/visualizer/visualizer.component';
 import {SettingsPanel} from './components/settings-panel/settings-panel.component';
 import {Loader} from './providers/loader.service';
 import {IParamUpdate, ISample, IVisualization} from '../common/models';
+import {VSelector} from './components/v-selector/v-selector.component';
 const ipcRenderer = require('electron').ipcRenderer;
 const {app, dialog} = require('electron').remote;
 const path = require('path');
@@ -14,7 +15,7 @@ require('./styles/app.scss');
 @Component({
     selector: 'app',
     template: require('./app.component.html'),
-    directives: [Visualizer, SettingsPanel]
+    directives: [Visualizer, SettingsPanel, VSelector]
 })
 export class App {
 
@@ -23,6 +24,8 @@ export class App {
     private libraryDir: string;
     private vis: IVisualization;
     private inputDevices: { [id: number]: string } = {};
+    private vSelectorVisible: boolean = false;
+    private settingsModalVisible: string = '';
 
     constructor(private loader: Loader,
                 private cdr: ChangeDetectorRef) {
@@ -40,7 +43,7 @@ export class App {
             this.inputDevices = list;
         });
 
-        ipcRenderer.send(START_ANALYZER);
+        // ipcRenderer.send(START_ANALYZER);
         ipcRenderer.on(SAMPLE, (event, sample: ISample) => {
             this.sample = sample;
         });
@@ -88,9 +91,22 @@ export class App {
         this.vis.params[update.paramKey].value = update.newValue;
     }
 
+    settingModalChanged(val: string) {
+        this.settingsModalVisible = val;
+        if (val !== '' && this.vSelectorVisible) {
+            this.vSelectorVisible = false;
+        }
+    }
+
+    toggleVSelector(visible: boolean) {
+        if (this.settingsModalVisible === '') {
+            this.vSelectorVisible = visible;
+        }
+    }
+
     private loadLibrary(dir: string): void {
         this.loader.setPath(dir);
-        this.loader.loadAll();
+        this.loader.loadAll(); 
         this.library = this.loader.listAll();
         this.cdr.detectChanges();
         this.selectVis(0);

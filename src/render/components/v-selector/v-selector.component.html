@@ -1,11 +1,4 @@
-<label class="label">Visualization</label>
-<div class="control has-addons">
-    <button class="button" (click)="selectLibraryDir.emit(true)">Select Library Dir</button>
-    <div class="select">
-        <select (change)="inputChanged($event)">
-            <option *ngIf="library.length === 0">No visualizations found...</option>
-            <option *ngFor="let item of library" [value]="item.id">{{ item.name }}</option>
-        </select>
-    </div>
+<div class="v-selector-container" [ngClass]="{ visible: visible }">
+    <div class="title">{{ current?.name || 'none selected' }}</div>
+    <div class="title is-5" *ngIf="current?.author">By {{ current?.author }}</div>
 </div>
-<div class="library-dir">Looking in: {{ libraryDir }}</div>

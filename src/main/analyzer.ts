@@ -34,7 +34,10 @@ export class Analyzer {
 
         let numDevices = engine.getNumDevices();
         for (let i = 0; i < numDevices; i ++) {
-            this.devices[i] = engine.getDeviceName(i);
+            let name = engine.getDeviceName(i).trim();
+            if (name && name !== '') { 
+                this.devices[i] = name;
+            }
         }
     }
 

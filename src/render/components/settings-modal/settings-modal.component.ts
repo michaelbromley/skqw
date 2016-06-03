@@ -13,3 +13,5 @@ export class SettingsModal {
     @Input() visible: boolean;
     @Output() close = new EventEmitter<boolean>();
 }
+
+ 

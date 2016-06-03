@@ -14,6 +14,8 @@
     <library-path-selector [library]="library"
                            [libraryDir]="libraryDir"
                            (selectLibraryDir)="selectLibraryDir.emit($event)"></library-path-selector>
+    <hr>
+    <input-selector [inputs]="inputDevices" (inputChange)="changeInputDeviceId.emit($event)"></input-selector>
 </settings-modal>
 
 <settings-modal [visible]="visibleModal === 'gain'" (close)="hideModal('gain')">
@@ -35,6 +37,5 @@
                     (select)="selectVisId.emit($event)"></v-selector>
         <parameter-controls [params]="currentVis?.params" (updateParam)="updateParam.emit($event)"></parameter-controls>
         <hr>
-        <input-selector [inputs]="inputDevices" (inputChange)="changeInputDeviceId.emit($event)"></input-selector>
     </div>
 </div>-->

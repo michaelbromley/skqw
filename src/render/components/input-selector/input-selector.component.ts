@@ -8,7 +8,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 export class InputSelector {
 
     @Input() inputs: { [id: number]: string };
-    @Output() inputChange = new EventEmitter<number>();
+    @Output() inputChange = new EventEmitter<number>(); 
     private inputArray: { id: string; name: string; }[] = [];
 
     ngOnChanges(): void {

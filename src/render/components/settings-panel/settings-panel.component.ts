@@ -15,12 +15,12 @@ export class SettingsPanel {
     @Input() libraryDir: string;
     @Output() changeInputDeviceId = new EventEmitter<number>();
     @Output() selectLibraryDir = new EventEmitter<boolean>();
+    @Output() toggleModal = new EventEmitter<string>();
     private iconsVisible: boolean = false;
-    private visibleModal: string = '';  
+    private visibleModal: string = '';
     private icon_settings = require('../../../assets/icons/settings.svg');
     private icon_info = require('../../../assets/icons/info_outline.svg');
     private icon_gain = require('../../../assets/icons/equalizer.svg');
-
 
     @HostListener('document:mouseover') 
     showIcons(): void {
@@ -28,7 +28,7 @@ export class SettingsPanel {
             this.iconsVisible = true;
         }
     }
-
+ 
     @HostListener('document:mouseout') 
     hideIcons(): void {
         if (this.iconsVisible) {
@@ -39,10 +39,12 @@ export class SettingsPanel {
     showModal(which: string) {
         this.visibleModal = which;
         this.hideIcons();
+        this.toggleModal.emit(this.visibleModal)
     }
 
     hideModal() {
         this.visibleModal = '';
         this.showIcons();
+        this.toggleModal.emit(this.visibleModal)
     }
 } 
