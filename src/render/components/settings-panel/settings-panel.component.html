@@ -1,9 +1,9 @@
 <div class="icons" [ngClass]="{ visible: state.settingsIconsVisible }">
-    <div class="icon">
-        <div [innerHTML]="icon_settings" (click)="showModal('settings')"></div>
-    </div>
     <div class="icon" (click)="showModal('info')">
         <div [innerHTML]="icon_info"></div>
+    </div>
+    <div class="icon">
+        <div [innerHTML]="icon_settings" (click)="showModal('settings')"></div>
     </div>
 </div>
 
@@ -19,5 +19,18 @@
 </settings-modal>
 
 <settings-modal [visible]="state.settingsModal === 'info'" (close)="hideModal('info')">
-    SKQW by Michael Bromley
+    <h1 class="title is-1">SKQW</h1>
+    <p class="title is-5">
+        An audio visualizer by Michael Bromley.
+        <a href="https://github.com/michaelbromley/skqw" target="_blank">Code on GitHub</a>
+    </p>
+    <hr>
+    <h3 class="title">Keyboard Shortcuts</h3>
+    <ul class="shortcuts">
+        <li><code>▲</code> - Increase gain</li>
+        <li><code>▼</code> - Decrease gain</li>
+        <li><code>►</code> - Load next visualization</li>
+        <li><code>◄</code> - Load previous visualization</li>
+        <li><code>alt</code> + <code>r</code> - Reload current visualization</li>
+    </ul>
 </settings-modal>

@@ -10,6 +10,11 @@ export const SET_INPUT_DEVICE_ID = 'SET_INPUT_DEVICE_ID';
 export const SET_GAIN = 'SET_GAIN';
 export const TOGGLE_NORMALIZATION = 'TOGGLE_NORMALIZATION';
 
+/**
+ * App settings
+ */
+export const MAX_GAIN = 500;
+export const MIN_GAIN = 0;
 
 /**
  * Keycodes

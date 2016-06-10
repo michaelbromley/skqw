@@ -2,7 +2,7 @@ import {
     START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
     SET_GAIN, TOGGLE_NORMALIZATION
 } from '../common/constants';
-const {app, BrowserWindow, ipcMain} = require('electron');
+const {app, BrowserWindow, ipcMain, shell} = require('electron');
 
 import {Analyzer} from './analyzer';
 
@@ -15,6 +15,12 @@ app.on('ready', () => {
         width: 800
     });
     mainWindow.loadUrl('file://' + __dirname + '/dist/index.html');
+    
+    // open external (target="_blank") links in browser.
+    mainWindow.webContents.on('new-window', (e, url) => {
+      e.preventDefault();
+      shell.openExternal(url);
+    });
 });
 
 app.on('before-quit', () => {

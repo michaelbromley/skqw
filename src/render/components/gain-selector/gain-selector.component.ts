@@ -1,5 +1,6 @@
 import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {IState} from '../../providers/state.service.';
+import {MAX_GAIN, MIN_GAIN} from '../../../common/constants';
 
 @Component({
     selector: 'gain-selector',
@@ -9,6 +10,8 @@ import {IState} from '../../providers/state.service.';
 export class GainSelector {
     @Input() state: IState;
     @Output() setGain = new EventEmitter<number>();
-    @Output() toggleNormalization = new EventEmitter<boolean>(); 
+    @Output() toggleNormalization = new EventEmitter<boolean>();
+    maxGain = MAX_GAIN;
+    minGain = MIN_GAIN;
 }
  

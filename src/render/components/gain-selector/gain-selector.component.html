@@ -5,8 +5,8 @@
         <input type="range"
                (input)="setGain.emit($event.target.value)"
                [value]="state.gain"
-               [min]="0"
-               [max]="500">
+               [min]="minGain"
+               [max]="maxGain">
     </div>
 
     <div class="skqw-control">

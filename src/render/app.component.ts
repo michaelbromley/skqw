@@ -1,7 +1,7 @@
 import {Component, ChangeDetectorRef, HostListener} from '@angular/core';
 import {
     START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
-    SET_GAIN, TOGGLE_NORMALIZATION
+    SET_GAIN, TOGGLE_NORMALIZATION, MAX_GAIN, MIN_GAIN
 } from '../common/constants';
 import {Visualizer} from './components/visualizer/visualizer.component';
 import {SettingsPanel} from './components/settings-panel/settings-panel.component';
@@ -79,6 +79,7 @@ export class App {
     @HostListener('document:keydown', ['$event'])
     reloadVis(e: KeyboardEvent): void {
         if (e.altKey === true && e.which === 82) {
+            // Handle alt + R - reload current visualization.
             if (!this.vis) {
                 return;
             }
@@ -86,6 +87,15 @@ export class App {
             let id = this.state.getValue().library
                 .filter(item => item.name === this.vis.name)[0].id;
             this.vis = this.loader.getVisualization(id);
+        }
+        if (e.which === 38) {
+            // increase the gain
+            this.setGain(this.state.getValue().gain + 1);
+        }
+
+        if (e.which === 40) {
+            // decrease the gain
+            this.setGain(this.state.getValue().gain - 1);
         }
     }
 
@@ -141,15 +151,15 @@ export class App {
             if (this.state.getValue().vSelectorVisible) {
                 this.state.setVSelectorVisible(false);
             }
-            //if (this.state.getValue().settingsIconsVisible) {
             this.state.setSettingsIconsVisible(false);
-            //}
         }
     }
 
     setGain(val: number) {
-        this.state.setGain(val);
-        ipcRenderer.send(SET_GAIN, val);
+        if (MIN_GAIN <= val && val <= MAX_GAIN) {
+            this.state.setGain(val);
+            ipcRenderer.send(SET_GAIN, val);
+        }
     }
 
     toggleNormalization(val: boolean) {

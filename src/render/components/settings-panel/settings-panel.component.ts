@@ -11,7 +11,7 @@ import {IState} from '../../providers/state.service.';
     directives: [SettingsModal, InputSelector, LibraryPathSelector]
 })
 export class SettingsPanel {
-    @Input() state: IState; 
+    @Input() state: IState;
     @Output() changeInputDeviceId = new EventEmitter<number>();
     @Output() selectLibraryDir = new EventEmitter<boolean>();
     @Output() toggleModal = new EventEmitter<string>();
