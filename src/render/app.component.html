@@ -8,5 +8,8 @@
 
 <v-selector [current]="vis"
             [state]="state.stateChanges$ | async"
+            (setGain)="setGain($event)"
             (select)="selectVis($event)"
+            (toggleExpandClick)="toggleVSelectorExpanded($event)"
+            (toggleNormalization)="toggleNormalization($event)"
             (updateParam)="updateParamValue($event)"></v-selector>

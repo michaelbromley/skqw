@@ -6,8 +6,11 @@ export interface IState {
     libraryDir: string;
     inputDevices: { [id: number]: string };
     selectedInputId: number;
+    settingsIconsVisible: boolean;
     vSelectorVisible: boolean;
+    vSelectorExpanded: boolean;
     settingsModal: string;
+    gain: number;
 }
 
 /**
@@ -22,16 +25,22 @@ export class State {
         libraryDir: '',
         inputDevices: {},
         selectedInputId: 0,
+        settingsIconsVisible: false,
         vSelectorVisible: false,
-        settingsModal: ''
+        vSelectorExpanded: false,
+        settingsModal: '',
+        gain: 100
     });
 
     private library: { id: number; name: string; }[] = [];
     private libraryDir: string = '';
     private inputDevices: { [id: number]: string } = {};
     private selectedInputId: number = 0;
+    private settingsIconsVisible: boolean = false;
     private vSelectorVisible: boolean = false;
+    private vSelectorExpanded: boolean = false;
     private settingsModal: string = '';
+    private gain: number = 100;
 
     /**
      * Returns the current state.
@@ -60,13 +69,28 @@ export class State {
         this.emitStateChange();
     }
     
+    setSettingsIconsVisible(val: boolean): void {
+        this.settingsIconsVisible = val;
+        this.emitStateChange();
+    }
+    
     setVSelectorVisible(val: boolean): void {
         this.vSelectorVisible = val;
+        this.emitStateChange();
+    }
+
+    setVSelectorExpanded(val: boolean): void {
+        this.vSelectorExpanded = val;
         this.emitStateChange();
     }
     
     setSettingsModal(val: string): void {
         this.settingsModal = val;
+        this.emitStateChange();
+    }
+    
+    setGain(val: number): void {
+        this.gain = val;
         this.emitStateChange();
     }
 
@@ -79,8 +103,11 @@ export class State {
             libraryDir: this.libraryDir,
             inputDevices: this.clone(this.inputDevices),
             selectedInputId: this.selectedInputId,
+            settingsIconsVisible: this.settingsIconsVisible,
             vSelectorVisible: this.vSelectorVisible,
-            settingsModal: this.settingsModal
+            vSelectorExpanded: this.vSelectorExpanded,
+            settingsModal: this.settingsModal,
+            gain: this.gain
         });
     }
 

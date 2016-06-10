@@ -2,24 +2,20 @@
 
     <div class="parameter" *ngFor="let item of paramsArray">
 
-        <div *ngIf="item.param.type === 'range'">
-            <labal class="label">{{ item.param.label }}</labal>
-            <div class="control">
-                <input type="range"
-                       (input)="updateValue(item.key, $event.target.value)"
-                       [value]="item.param.value"
-                       [min]="item.param.min"
-                       [max]="item.param.max">
-            </div>
+        <div *ngIf="item.param.type === 'range'" class="skqw-control">
+            <label>{{ item.param.label }}</label>
+            <input type="range"
+                   (input)="updateValue(item.key, $event.target.value)"
+                   [value]="item.param.value"
+                   [min]="item.param.min"
+                   [max]="item.param.max">
         </div>
 
-        <div *ngIf="item.param.type === 'boolean'" class="control">
-            <label class="checkbox">
-                <input type="checkbox"
-                       (change)="updateValue(item.key, $event.target.checked)"
-                       [checked]="item.param.value">
-                {{ item.param.label }}
-            </label>
+        <div *ngIf="item.param.type === 'boolean'" class="skqw-control">
+            <label> {{ item.param.label }}</label>
+            <input type="checkbox"
+                   (change)="updateValue(item.key, $event.target.checked)"
+                   [checked]="item.param.value">
         </div>
     </div>
 

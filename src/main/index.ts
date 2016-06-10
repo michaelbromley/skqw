@@ -1,4 +1,7 @@
-import {START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID} from '../common/constants';
+import {
+    START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
+    SET_GAIN, TOGGLE_NORMALIZATION
+} from '../common/constants';
 const {app, BrowserWindow, ipcMain} = require('electron');
 
 import {Analyzer} from './analyzer';
@@ -34,4 +37,12 @@ ipcMain.on(REQUEST_DEVICE_LIST, (event) => {
 
 ipcMain.on(SET_INPUT_DEVICE_ID, (event, id) => {
     analyzer.setOptions({ inputDevice: id });
+});
+
+ipcMain.on(SET_GAIN, (event, val) => {
+    analyzer.setGain(val);
+});
+
+ipcMain.on(TOGGLE_NORMALIZATION, (event, val) => { 
+    analyzer.toggleNormalization(val);
 });

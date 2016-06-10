@@ -1,4 +1,8 @@
-<div class="v-selector-container" [ngClass]="{ visible: state.vSelectorVisible && 0 < state.library.length }">
+<div class="v-selector-container" [ngClass]="{
+        visible: state.vSelectorVisible && 0 < state.library.length,
+        expanded: state.vSelectorExpanded && 0 < state.library.length
+    }"
+    [attr.style]="offsetTop">
     <div class="title-row">
         <div class="prev-icon icon">
             <div [innerHTML]="icon_arrow" (click)="selectPrev()"></div>
@@ -9,5 +13,14 @@
         </div>
     </div>
 
-    <div class="title is-5" *ngIf="current?.author">By {{ current?.author }}</div>
+    <div class="expand-toggle"  (click)="toggleExpandClick.emit(!state.vSelectorExpanded)">
+        <span class="icon"><div [innerHTML]="icon_caret"></div></span>
+    </div>
+
+    <gain-selector [state]="state"
+                   (toggleNormalization)="toggleNormalization.emit($event)"
+                   (setGain)="setGain.emit($event)"></gain-selector>
+
+    <parameter-controls [params]="current?.params"
+                        (updateParam)="updateParam.emit($event)"></parameter-controls>
 </div>

@@ -1,9 +1,6 @@
-<div class="icons" [ngClass]="{ visible: iconsVisible }">
+<div class="icons" [ngClass]="{ visible: state.settingsIconsVisible }">
     <div class="icon">
         <div [innerHTML]="icon_settings" (click)="showModal('settings')"></div>
-    </div>
-    <div class="icon" (click)="showModal('gain')">
-        <div [innerHTML]="icon_gain"></div>
     </div>
     <div class="icon" (click)="showModal('info')">
         <div [innerHTML]="icon_info"></div>
@@ -11,6 +8,7 @@
 </div>
 
 <settings-modal [visible]="state.settingsModal === 'settings'" (close)="hideModal('settings')">
+    <h1 class="title is-1">Settings</h1>
     <library-path-selector [library]="state.library"
                            [libraryDir]="state.libraryDir"
                            (selectLibraryDir)="selectLibraryDir.emit($event)"></library-path-selector>
@@ -20,24 +18,6 @@
                     (inputChange)="changeInputDeviceId.emit($event)"></input-selector>
 </settings-modal>
 
-<settings-modal [visible]="state.settingsModal === 'gain'" (close)="hideModal('gain')">
-    <h1 class="title">YO!</h1>
-</settings-modal>
-
 <settings-modal [visible]="state.settingsModal === 'info'" (close)="hideModal('info')">
     SKQW by Michael Bromley
 </settings-modal>
-
-<!--<div class="settings-panel" [ngClass]="{ visible: isVisible }">
-    <div class="column is-half is-offset-one-quarter">
-        <div class="is-centered">
-            <h1 class="title">SKQW : SETTINGS</h1>
-        </div>
-        <v-selector [library]="library"
-                    [libraryDir]="libraryDir"
-                    (selectLibraryDir)="selectLibraryDir.emit($event)"
-                    (select)="selectVisId.emit($event)"></v-selector>
-        <parameter-controls [params]="currentVis?.params" (updateParam)="updateParam.emit($event)"></parameter-controls>
-        <hr>
-    </div>
-</div>-->

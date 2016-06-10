@@ -1,5 +1,8 @@
 import {Component, ChangeDetectorRef, HostListener} from '@angular/core';
-import {START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID} from '../common/constants';
+import {
+    START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
+    SET_GAIN, TOGGLE_NORMALIZATION
+} from '../common/constants';
 import {Visualizer} from './components/visualizer/visualizer.component';
 import {SettingsPanel} from './components/settings-panel/settings-panel.component';
 import {Loader} from './providers/loader.service';
@@ -22,11 +25,12 @@ export class App {
 
     private sample: ISample = { ft: [], ts: [] };
     private vis: IVisualization;
+    private hoverTimer: any;
 
     constructor(private loader: Loader,
                 private state: State,
                 private cdr: ChangeDetectorRef) {
-        
+
         storage.get('libraryDir', (err, data) => {
             if (data.libraryDir) {
                 this.state.setLibraryDir(data.libraryDir);
@@ -41,7 +45,7 @@ export class App {
             this.state.setInputDevices(list);
         });
 
-        // ipcRenderer.send(START_ANALYZER);
+        ipcRenderer.send(START_ANALYZER);
         ipcRenderer.on(SAMPLE, (event, sample: ISample) => {
             this.sample = sample;
         });
@@ -87,12 +91,35 @@ export class App {
 
     @HostListener('document:mouseenter')
     onMouseOver(): void {
-        this.toggleVSelector(true);
+        this.displayUiElements();
+    }
+
+    @HostListener('document:mousemove')
+    onMouseMove(): void {
+        this.displayUiElements();
     }
 
     @HostListener('document:mouseleave')
     onMouseOut(): void {
-        this.toggleVSelector(false);
+        this.state.setVSelectorVisible(false);
+    }
+
+    /**
+     * Display the UI controls (visualization selector, settings icons) and set a timeout
+     * to hide them again after a delay.
+     */
+    displayUiElements(): void {
+        if (this.state.getValue().settingsModal === '') {
+            this.state.setVSelectorVisible(true);
+            this.state.setSettingsIconsVisible(true);
+        }
+        clearTimeout(this.hoverTimer);
+        this.hoverTimer = setTimeout(() => {
+            this.state.setSettingsIconsVisible(false);
+            if (!this.state.getValue().vSelectorExpanded) {
+                this.state.setVSelectorVisible(false);
+            }
+        }, 3000);
     }
 
 
@@ -105,22 +132,32 @@ export class App {
         this.vis.params[update.paramKey].value = update.newValue;
     }
 
+    /**
+     * Handle the event fired when the settings modal is changed.
+     */
     settingModalChanged(val: string) {
         this.state.setSettingsModal(val);
-        if (val !== '' && this.state.getValue().vSelectorVisible) {
-            this.state.setVSelectorVisible(false);
-        } else {
-            this.state.setVSelectorVisible(true); 
+        if (val !== '') {
+            if (this.state.getValue().vSelectorVisible) {
+                this.state.setVSelectorVisible(false);
+            }
+            //if (this.state.getValue().settingsIconsVisible) {
+            this.state.setSettingsIconsVisible(false);
+            //}
         }
     }
 
-    /**
-     * Toggle the visibility of the VSelector.
-     */
-    toggleVSelector(visible: boolean) {
-        if (this.state.getValue().settingsModal === '') {
-            this.state.setVSelectorVisible(visible);
-        }
+    setGain(val: number) {
+        this.state.setGain(val);
+        ipcRenderer.send(SET_GAIN, val);
+    }
+
+    toggleNormalization(val: boolean) {
+        ipcRenderer.send(TOGGLE_NORMALIZATION, val)
+    }
+
+    toggleVSelectorExpanded(expanded: boolean): void {
+        this.state.setVSelectorExpanded(expanded);
     }
 
     private loadLibrary(dir: string): void {

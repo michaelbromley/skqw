@@ -1,0 +1,18 @@
+<div class="gain-selector-container">
+
+    <div class="skqw-control">
+        <label> Gain: {{ state.gain }}</label>
+        <input type="range"
+               (input)="setGain.emit($event.target.value)"
+               [value]="state.gain"
+               [min]="0"
+               [max]="500">
+    </div>
+
+    <div class="skqw-control">
+        <label>
+            Normalize
+        </label>
+        <input type="checkbox" (change)="toggleNormalization.emit($event.target.checked)" checked>
+    </div>
+</div>
