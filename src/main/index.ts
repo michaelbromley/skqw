@@ -15,16 +15,16 @@ app.on('ready', () => {
         width: 800
     });
     mainWindow.loadUrl('file://' + __dirname + '/dist/index.html');
-    
+
     // open external (target="_blank") links in browser.
     mainWindow.webContents.on('new-window', (e, url) => {
-      e.preventDefault();
-      shell.openExternal(url);
+        e.preventDefault();
+        shell.openExternal(url);
     });
 });
 
 app.on('before-quit', () => {
-   sampleSubscription.unsubscribe();
+    sampleSubscription.unsubscribe();
 });
 
 let sampleSubscription = analyzer.sample$.subscribe(sample => {
@@ -49,6 +49,6 @@ ipcMain.on(SET_GAIN, (event, val) => {
     analyzer.setGain(val);
 });
 
-ipcMain.on(TOGGLE_NORMALIZATION, (event, val) => { 
+ipcMain.on(TOGGLE_NORMALIZATION, (event, val) => {
     analyzer.toggleNormalization(val);
 });

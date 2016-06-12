@@ -26,6 +26,7 @@ export class App {
     private sample: ISample = { ft: [], ts: [] };
     private vis: IVisualization;
     private hoverTimer: any;
+    private saveGainTimer: any;
 
     constructor(private loader: Loader,
                 private state: State,
@@ -35,6 +36,16 @@ export class App {
             if (data.libraryDir) {
                 this.state.setLibraryDir(data.libraryDir);
                 this.loadLibrary(data.libraryDir);
+            }
+        });
+        storage.get('gain', (err, data) => {
+            if (data.gain) {
+                this.state.setGain(data.gain);
+            }
+        });
+        storage.get('gain', (err, data) => {
+            if (data.gain) {
+                this.state.setGain(data.gain);
             }
         });
     }
@@ -62,7 +73,7 @@ export class App {
         }, (paths: string[]) => {
             if (paths.length === 1) {
                 let dir = paths[0];
-                storage.set('libraryDir', {libraryDir: dir});
+                storage.set('libraryDir', { libraryDir: dir });
                 this.state.setLibraryDir(dir);
                 this.loadLibrary(dir);
             }
@@ -77,7 +88,7 @@ export class App {
      * Reload the current visualization files from disk.
      */
     @HostListener('document:keydown', ['$event'])
-    reloadVis(e: KeyboardEvent): void {
+    onKeydown(e: KeyboardEvent): void {
         if (e.altKey === true && e.which === 82) {
             // Handle alt + R - reload current visualization.
             if (!this.vis) {
@@ -160,6 +171,8 @@ export class App {
             this.state.setGain(val);
             ipcRenderer.send(SET_GAIN, val);
         }
+        clearTimeout(this.saveGainTimer);
+        this.saveGainTimer = setTimeout(() =>  storage.set('gain', { gain: val }));
     }
 
     toggleNormalization(val: boolean) {
