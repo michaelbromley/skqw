@@ -4,12 +4,12 @@
  */
 let ctx;
 let params = {
-    sensitivity: {
-        value: 250,
+    hue: {
+        value: 120,
         type: 'range',
-        label: 'sensitivity',
+        label: 'hue',
         min: 0,
-        max: 500
+        max: 360
     },
     showLines: {
         value: true,
@@ -17,6 +17,8 @@ let params = {
         label: 'Show time series'
     }
 };
+let highs = [];
+const DECAY = 5;
 
 /**
  * The exported value must be an object with the following required properties:
@@ -62,14 +64,14 @@ function drawWave(w, h, ts) {
     let length = ts.length,
         width = w / length;
 
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+    ctx.strokeStyle = `hsla(${params.hue.value}, 80%, 50%, 0.2)`;
     ctx.lineWidth = h / 150;
 
 
     for(let i = 0; i < ts.length; i++) {
         let val = ts[i];
         let x = i * width;
-        let y = h / 2 + val * params.sensitivity.value * 10;
+        let y = h / 2 + val * 250;
 
         if (i === 0) {
             ctx.beginPath(x, y);
@@ -85,14 +87,19 @@ function drawBars(w, h, ft) {
     let length = ft.length;
     let width = w / length;
 
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-
     for(let i = 0; i < ft.length; i++) {
         let val = ft[i];
         let x = i * width;
-        let height = val * params.sensitivity.value;
-        let y = h - height;
+        let height = val * 250;
+        if (!highs[i] || highs[i] < height) {
+            highs[i] = height;
+        } else {
+            highs[i] -= DECAY;
+        }
+        let y = h - highs[i];
+        let saturation = Math.max(Math.min(highs[i] / h * 100, 100), 20);
+        ctx.fillStyle = `hsla(${params.hue.value}, ${saturation}%, 50%, 0.8)`;
 
-        ctx.fillRect(x, y, width - 2, height);
+        ctx.fillRect(x, y, width - 2, highs[i]);
     }
 }

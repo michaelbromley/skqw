@@ -8,13 +8,18 @@ Work in progress.
 
 ##  Dev Build
 
-(use npm2, not 3. 3 does not work for me when building native node modules for Electron)
+Windows: make sure the node version is 64-bit for building for x64 versions of Windows, and vice-versa.
 
 ```
 npm install
 
 # on Windows
-.\node_modules\.bin\electron-rebuild.cmd
+.\node_modules\.bin\electron-rebuild.cmd -m src/node_modules
 
 npm start
 ```
+
+
+Resources:
+
+http://electron.rocks/electron-builder-explained/

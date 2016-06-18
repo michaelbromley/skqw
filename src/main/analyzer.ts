@@ -11,6 +11,7 @@ const DEFAULT_OPTIONS = {
     sampleRate: 8000
 };
 engine.setOptions(DEFAULT_OPTIONS);
+engine.setSampleRate(2);
 
 /**
  * Low-level interface to the hardware sound device using node-core-audio.

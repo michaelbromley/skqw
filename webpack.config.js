@@ -24,7 +24,7 @@ var externalsFn =  (function () {
             return callback(null, "require('" + request + "')");
         }
         return callback();
-    }; 
+    };
 })();
 
 module.exports = [
@@ -58,7 +58,7 @@ module.exports = [
          * Reference: http://webpack.github.io/docs/configuration.html#output
          */
         config.output = {
-            path: root('dist'),
+            path: root('app'),
             filename: 'js/[name].js'
         };
 
@@ -151,9 +151,16 @@ module.exports = [
 
                 // Copy assets from the public folder
                 // Reference: https://github.com/kevlened/copy-webpack-plugin
-                new CopyWebpackPlugin([{
-                    from: root('src/public')
-                }])
+                new CopyWebpackPlugin([
+                    {
+                        from: root('src/package.json')
+                    }, 
+                    {
+                        context: './src',
+                        from: 'node_modules/**/*',
+                        to: ''
+                    }
+                ])
             );
         }
 
@@ -185,8 +192,8 @@ module.exports = [
             'main': './src/main/index.ts'
         },
         output: {
-            path: root(),
-            filename: '[name].js'
+            path: root('app'),
+            filename: 'index.js'
         },
         module: {
             loaders: [

@@ -1,8 +1,8 @@
 node_modules
+app
 dist
 typings
 .idea
-main.js
 
 # Windows image file caches
 Thumbs.db

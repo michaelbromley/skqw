@@ -1,0 +1,15 @@
+{
+  "name": "app",
+  "version": "0.0.1",
+  "description": "Audio Visualizer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Michael Bromley <michael@michaelbromley.co.uk>",
+  "license": "MIT",
+  "homepage": "https://github.com/michaelbromley/skqw",
+  "dependencies": {
+    "node-core-audio": "github:michaelbromley/node-core-audio"
+  }
+}

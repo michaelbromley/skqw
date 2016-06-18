@@ -14,7 +14,7 @@ app.on('ready', () => {
         height: 600,
         width: 800
     });
-    mainWindow.loadUrl('file://' + __dirname + '/dist/index.html');
+    mainWindow.loadUrl('file://' + __dirname + '/index.html');
 
     // open external (target="_blank") links in browser.
     mainWindow.webContents.on('new-window', (e, url) => {
