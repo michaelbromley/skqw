@@ -6,10 +6,8 @@ export interface IState {
     libraryDir: string;
     inputDevices: { [id: number]: string };
     selectedInputId: number;
-    settingsIconsVisible: boolean;
-    vSelectorVisible: boolean;
-    vSelectorExpanded: boolean;
-    settingsModal: string;
+    settingsIconVisible: boolean;
+    settingsExpanded: boolean;
     gain: number;
 }
 
@@ -25,10 +23,8 @@ export class State {
         libraryDir: '',
         inputDevices: {},
         selectedInputId: 0,
-        settingsIconsVisible: false,
-        vSelectorVisible: false,
-        vSelectorExpanded: false,
-        settingsModal: '',
+        settingsIconVisible: false,
+        settingsExpanded: false,
         gain: 100
     });
 
@@ -36,10 +32,8 @@ export class State {
     private libraryDir: string = '';
     private inputDevices: { [id: number]: string } = {};
     private selectedInputId: number = 0;
-    private settingsIconsVisible: boolean = false;
-    private vSelectorVisible: boolean = false;
-    private vSelectorExpanded: boolean = false;
-    private settingsModal: string = '';
+    private settingsIconVisible: boolean = false;
+    private settingsExpanded: boolean = false;
     private gain: number = 100;
 
     /**
@@ -69,23 +63,13 @@ export class State {
         this.emitStateChange();
     }
     
-    setSettingsIconsVisible(val: boolean): void {
-        this.settingsIconsVisible = val;
+    setSettingsIconVisible(val: boolean): void {
+        this.settingsIconVisible = val;
         this.emitStateChange();
     }
     
-    setVSelectorVisible(val: boolean): void {
-        this.vSelectorVisible = val;
-        this.emitStateChange();
-    }
-
-    setVSelectorExpanded(val: boolean): void {
-        this.vSelectorExpanded = val;
-        this.emitStateChange();
-    }
-    
-    setSettingsModal(val: string): void {
-        this.settingsModal = val;
+    setSettingsExpanded(val: boolean): void {
+        this.settingsExpanded = val;
         this.emitStateChange();
     }
     
@@ -103,10 +87,8 @@ export class State {
             libraryDir: this.libraryDir,
             inputDevices: this.clone(this.inputDevices),
             selectedInputId: this.selectedInputId,
-            settingsIconsVisible: this.settingsIconsVisible,
-            vSelectorVisible: this.vSelectorVisible,
-            vSelectorExpanded: this.vSelectorExpanded,
-            settingsModal: this.settingsModal,
+            settingsIconVisible: this.settingsIconVisible,
+            settingsExpanded: this.settingsExpanded,
             gain: this.gain
         });
     }

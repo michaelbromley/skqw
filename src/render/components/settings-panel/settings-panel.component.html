@@ -1,36 +1,47 @@
-<div class="icons" [ngClass]="{ visible: state.settingsIconsVisible }">
-    <div class="icon" (click)="showModal('info')">
-        <div [innerHTML]="icon_info"></div>
+<div class="panel-container" [ngClass]="{ visible: state.settingsIconVisible, expanded: state.settingsExpanded }">
+    <div class="icon toggle-icon" (click)="toggle.emit(true)">
+        <div [innerHTML]="icon_settings"></div>
     </div>
-    <div class="icon">
-        <div [innerHTML]="icon_settings" (click)="showModal('settings')"></div>
+
+    <div class="panel-body">
+
+        <img src="../../../assets/images/logo.svg">
+
+        <settings-group groupTitle="Visualization" [visible]="true">
+            <v-selector [current]="current"
+                        [state]="state"
+                        (select)="select.emit($event)"></v-selector>
+        </settings-group>
+
+        <settings-group groupTitle="Parameters">
+            <gain-selector [state]="state"
+                           (toggleNormalization)="toggleNormalization.emit($event)"
+                           (setGain)="setGain.emit($event)"></gain-selector>
+
+            <parameter-controls [params]="current?.params"
+                                (updateParam)="updateParam.emit($event)"></parameter-controls>
+        </settings-group>
+
+        <settings-group groupTitle="Library Path">
+            <library-path-selector [library]="state.library"
+                                   [libraryDir]="state.libraryDir"
+                                   (selectLibraryDir)="selectLibraryDir.emit($event)"></library-path-selector>
+        </settings-group>
+
+        <settings-group groupTitle="Input Device">
+            <input-selector [inputs]="state.inputDevices"
+                            [selectedId]="state.selectedInputId"
+                            (inputChange)="changeInputDeviceId.emit($event)"></input-selector>
+        </settings-group>
+
+        <settings-group groupTitle="Keyboard Shortcuts">
+            <ul class="shortcuts">
+                <li><code>▲</code> - Increase gain</li>
+                <li><code>▼</code> - Decrease gain</li>
+                <li><code>►</code> - Load next visualization</li>
+                <li><code>◄</code> - Load previous visualization</li>
+                <li><code>alt</code> + <code>r</code> - Reload current visualization</li>
+            </ul>
+        </settings-group>
     </div>
 </div>
-
-<settings-modal [visible]="state.settingsModal === 'settings'" (close)="hideModal('settings')">
-    <h1 class="title is-1">Settings</h1>
-    <library-path-selector [library]="state.library"
-                           [libraryDir]="state.libraryDir"
-                           (selectLibraryDir)="selectLibraryDir.emit($event)"></library-path-selector>
-    <hr>
-    <input-selector [inputs]="state.inputDevices"
-                    [selectedId]="state.selectedInputId"
-                    (inputChange)="changeInputDeviceId.emit($event)"></input-selector>
-</settings-modal>
-
-<settings-modal [visible]="state.settingsModal === 'info'" (close)="hideModal('info')">
-    <h1 class="title is-1">SKQW</h1>
-    <p class="title is-5">
-        An audio visualizer by Michael Bromley.
-        <a href="https://github.com/michaelbromley/skqw" target="_blank">Code on GitHub</a>
-    </p>
-    <hr>
-    <h3 class="title">Keyboard Shortcuts</h3>
-    <ul class="shortcuts">
-        <li><code>▲</code> - Increase gain</li>
-        <li><code>▼</code> - Decrease gain</li>
-        <li><code>►</code> - Load next visualization</li>
-        <li><code>◄</code> - Load previous visualization</li>
-        <li><code>alt</code> + <code>r</code> - Reload current visualization</li>
-    </ul>
-</settings-modal>

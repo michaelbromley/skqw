@@ -61,6 +61,10 @@ export class App {
             this.sample = sample;
         });
     }
+    
+    toggleSettings(expanded: boolean): void {
+        this.state.setSettingsExpanded(expanded);
+    }
 
     /**
      * Display a dialog for seleting the library dir.
@@ -122,7 +126,7 @@ export class App {
 
     @HostListener('document:mouseleave')
     onMouseOut(): void {
-        this.state.setVSelectorVisible(false);
+        this.state.setSettingsIconVisible(false);
     }
 
     /**
@@ -130,20 +134,17 @@ export class App {
      * to hide them again after a delay.
      */
     displayUiElements(): void {
-        if (this.state.getValue().settingsModal === '') {
-            this.state.setVSelectorVisible(true);
-            this.state.setSettingsIconsVisible(true);
-        }
+           this.state.setSettingsIconVisible(true);
+        
         clearTimeout(this.hoverTimer);
         this.hoverTimer = setTimeout(() => {
-            this.state.setSettingsIconsVisible(false);
-            if (!this.state.getValue().vSelectorExpanded) {
-                this.state.setVSelectorVisible(false);
+            this.state.setSettingsIconVisible(false);
+            if (!this.state.getValue().settingsExpanded) {
+                this.state.setSettingsIconVisible(false);
             }
         }, 3000);
     }
-
-
+    
     setInputDeviceId(id: number): void {
         this.state.setSelectedInputId(id);
         ipcRenderer.send(SET_INPUT_DEVICE_ID, id);
@@ -151,19 +152,6 @@ export class App {
 
     updateParamValue(update: IParamUpdate): void {
         this.vis.params[update.paramKey].value = update.newValue;
-    }
-
-    /**
-     * Handle the event fired when the settings modal is changed.
-     */
-    settingModalChanged(val: string) {
-        this.state.setSettingsModal(val);
-        if (val !== '') {
-            if (this.state.getValue().vSelectorVisible) {
-                this.state.setVSelectorVisible(false);
-            }
-            this.state.setSettingsIconsVisible(false);
-        }
     }
 
     setGain(val: number) {
@@ -177,10 +165,6 @@ export class App {
 
     toggleNormalization(val: boolean) {
         ipcRenderer.send(TOGGLE_NORMALIZATION, val)
-    }
-
-    toggleVSelectorExpanded(expanded: boolean): void {
-        this.state.setVSelectorExpanded(expanded);
     }
 
     private loadLibrary(dir: string): void {

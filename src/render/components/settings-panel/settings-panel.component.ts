@@ -1,30 +1,29 @@
-import {Component, HostListener, Input, EventEmitter, Output} from '@angular/core';
+import {Component, Input, EventEmitter, Output} from '@angular/core';
 import {InputSelector} from '../input-selector/input-selector.component';
-import {SettingsModal} from '../settings-modal/settings-modal.component';
 import {LibraryPathSelector} from '../library-path-selector/library-path-selector.component';
 import {IState} from '../../providers/state.service.';
+import {VSelector} from '../v-selector/v-selector.component';
+import {IParamUpdate, IVisualization} from '../../../common/models';
+import {SettingsGroup} from '../settings-group/settings-group.component';
+import {GainSelector} from '../gain-selector/gain-selector.component';
+import {ParameterControls} from '../parameter-controls/parameter-controls.component';
   
 @Component({
     selector: 'settings-panel',
     template: require('./settings-panel.component.html'),
     styles: [require('./settings-panel.scss').toString()],
-    directives: [SettingsModal, InputSelector, LibraryPathSelector]
+    directives: [VSelector, InputSelector, GainSelector, ParameterControls, LibraryPathSelector, SettingsGroup]
 })
 export class SettingsPanel {
     @Input() state: IState;
+    @Input() current: IVisualization; 
     @Output() changeInputDeviceId = new EventEmitter<number>();
     @Output() selectLibraryDir = new EventEmitter<boolean>();
-    @Output() toggleModal = new EventEmitter<string>();
-    
-    private icon_settings = require('../../../assets/icons/settings.svg');
-    private icon_info = require('../../../assets/icons/info_outline.svg');
-    private icon_gain = require('../../../assets/icons/equalizer.svg');
+    @Output() toggle = new EventEmitter<string>();
 
-    showModal(which: string) {
-        this.toggleModal.emit(which);
-    }
-
-    hideModal() {
-        this.toggleModal.emit('');
-    }
+    @Output() select = new EventEmitter<number>();
+    @Output() setGain = new EventEmitter<number>();
+    @Output() toggleNormalization = new EventEmitter<boolean>();
+    @Output() updateParam = new EventEmitter<IParamUpdate>();
+    private icon_settings = require('!!svg-inline!../../../assets/icons/settings.svg');
 } 

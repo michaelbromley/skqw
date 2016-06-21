@@ -1,0 +1,48 @@
+.settings-group-container {
+  margin-bottom: 20px;
+  color: #333;
+
+  .toggle-icon {
+    transform: rotateZ(-90deg) translateY(-5px);
+    transition: transform 0.2s;
+    margin-left: 3px;
+    margin-top: -2px;
+
+    svg {
+      width: 22px;
+      height: 22px;
+      fill: #6BBBD4;
+    }
+  }
+
+  &.visible {
+    .toggle-icon {
+      transform: rotateZ(0deg) translateX(-7px) translateY(2px);
+    }
+  }
+
+  > .group-title {
+    cursor: pointer;
+    font-size: 14px;
+    letter-spacing: 2px;
+    word-spacing: 3px;
+    text-transform: uppercase;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #6BBBD4;
+    padding: 3px 0 0 6px;
+  }
+
+  > .group-content {
+
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s;
+    padding-top: 10px;
+
+    .content-wrapper {
+      // required so that collapsed margins in child elements
+      // get measured when getting the wrapper's height.
+      border: 1px solid transparent;
+    }
+  }
+}

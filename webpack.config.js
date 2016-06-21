@@ -97,8 +97,7 @@ module.exports = [
                 },
 
                 // copy those assets to output
-                {test: /\.(png|jpe?g|gif|woff|woff2|ttf|eot|ico)$/, loader: 'file?name=fonts/[name].[ext]?'},
-                {test: /\.svg$/, loader: 'svg-inline'},
+                {test: /\.(svg|png|jpe?g|gif|woff|woff2|ttf|eot|ico)$/, loader: 'file?name=assets/[name].[ext]?'},
                 // all css required in src/app files will be merged in js files
                 {test: /\.css$/, loader: 'raw'},
 
@@ -107,7 +106,7 @@ module.exports = [
 
                 // support for .html as raw text
                 // todo: change the loader to something that adds a hash to images
-                {test: /\.html$/, loader: 'raw'}
+                {test: /\.html$/, loader: 'html'}
             ],
             postLoaders: [],
             noParse: [/.+zone\.js\/dist\/.+/, /.+angular2\/bundles\/.+/, /angular2-polyfills\.js/]

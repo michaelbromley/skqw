@@ -5,7 +5,7 @@ import {Component, Input, EventEmitter, Output} from '@angular/core';
     template: require('./library-path-selector.component.html'),
     styles: [`:host { position: relative; }`, require('./library-path-selector.scss').toString()]
 }) 
-export class LibraryPathSelector {
+export class LibraryPathSelector { 
     @Input() library: { id: number; name: string; }[];
     @Input() libraryDir: string;
     @Output() selectLibraryDir = new EventEmitter<boolean>();

@@ -2,14 +2,12 @@
 
 <settings-panel
         [state]="state.stateChanges$ | async"
-        (toggleModal)="settingModalChanged($event)"
+        (toggle)="toggleSettings($event)"
         (selectLibraryDir)="selectLibraryDir()"
-        (changeInputDeviceId)="setInputDeviceId($event)"></settings-panel>
+        (changeInputDeviceId)="setInputDeviceId($event)"
 
-<v-selector [current]="vis"
-            [state]="state.stateChanges$ | async"
-            (setGain)="setGain($event)"
-            (select)="selectVis($event)"
-            (toggleExpandClick)="toggleVSelectorExpanded($event)"
-            (toggleNormalization)="toggleNormalization($event)"
-            (updateParam)="updateParamValue($event)"></v-selector>
+        [current]="vis"
+        (setGain)="setGain($event)"
+        (select)="selectVis($event)"
+        (toggleNormalization)="toggleNormalization($event)"
+        (updateParam)="updateParamValue($event)"></settings-panel>

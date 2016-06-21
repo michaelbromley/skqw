@@ -4,7 +4,7 @@ import {IParameter, IParamUpdate} from '../../../common/models';
 @Component({
     selector: 'parameter-controls',
     template: require('./parameter-controls.component.html'),
-    styles: [`:host { display: inline-block; }`, require('./parameter-controls.scss').toString()]
+    styles: [`:host { display: block; }`, require('./parameter-controls.scss').toString()]
 }) 
 export class ParameterControls {
     @Input() params: { [name: string]: IParameter };

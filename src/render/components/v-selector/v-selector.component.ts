@@ -1,35 +1,20 @@
 import {Component, HostListener, Input, EventEmitter, Output} from '@angular/core';
-import {DomSanitizationService} from '@angular/platform-browser';
-import {IVisualization, IParamUpdate} from '../../../common/models';
-import {ParameterControls} from '../parameter-controls/parameter-controls.component';
+import {IVisualization} from '../../../common/models';
 import {KEYCODE_RIGHT_ARROW, KEYCODE_LEFT_ARROW} from '../../../common/constants';
 import {IState} from '../../providers/state.service.';
-import {GainSelector} from '../gain-selector/gain-selector.component';
 
 @Component({
     selector: 'v-selector',
     template: require('./v-selector.component.html'),
     styles: [require('./v-selector.scss').toString()],
-    directives: [ParameterControls, GainSelector]
+    directives: []
 })
 export class VSelector {
     @Input() state: IState;
     @Input() current: IVisualization;
     @Output() select = new EventEmitter<number>();
-    @Output() setGain = new EventEmitter<number>();
-    @Output() toggleExpandClick = new EventEmitter<boolean>();
-    @Output() toggleNormalization = new EventEmitter<boolean>();    
-    @Output() updateParam = new EventEmitter<IParamUpdate>();
-    private icon_arrow = require('../../../assets/icons/play_arrow.svg');
-    private icon_caret = require('../../../assets/icons/keyboard_arrow_down.svg');
-    private offsetTop: any;
-
-    constructor(private sanitizer: DomSanitizationService) {}
-
-    ngOnInit(): void {
-        this.reposition();
-    }
-
+    private icon_arrow = require('!!svg-inline!../../../assets/icons/play_arrow.svg');
+    
     @HostListener('document:keydown', ['$event'])
     reloadVis(e: KeyboardEvent): void {
         switch (e.which) {
@@ -40,12 +25,6 @@ export class VSelector {
                 this.selectPrev();
                 break;
         }
-    } 
-
-    @HostListener('window:resize')
-    reposition(): void {
-        let height = window.innerHeight;
-        this.offsetTop = this.sanitizer.bypassSecurityTrustStyle(`transform: translateY(${height - 150}px);`);
     }
 
     /**

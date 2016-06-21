@@ -1,0 +1,13 @@
+<div class="settings-group-container" [ngClass]="{ visible: visible }">
+    <div class="group-title" (click)="toggle()">{{ groupTitle }}
+        <div class="icon toggle-icon">
+           <div [innerHTML]="icon_caret"></div>
+       </div>
+    </div>
+
+    <div class="group-content" [style.maxHeight.px]="contentHeight">
+        <div class="content-wrapper" #wrapper>
+            <ng-content></ng-content>
+        </div>
+    </div>
+</div>
