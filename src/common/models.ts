@@ -24,7 +24,7 @@ export interface IVisualization {
     author: string;
     init: (skqw: any) => void,
     tick: (skqw: any, timestamp: number) => void,
-    params: { [name: string]: IParameter }
+    params?: { [name: string]: IParameter }
 }
 
 export interface IParamUpdate {

@@ -1,97 +1,130 @@
+const path = [
+    [
+        [511.48237,492.86963],
+        [0,159.604111],
+        [90.71168,-159.463971]
+    ],
+    [
+        [590.70284,522.97987],
+        [16.00134,-29.56405],
+        [76.56504,0],
+        [-33.48324,57.99467],
+        [-58.62437,101.540391]
+    ],
+    [
+        [383.64286,644.29078],
+        [87.60014,-151.7279],
+        [-76.17157,0],
+        [-11.11771,19.25643]
+    ],
 
-/**
- * An example of the most basic kind of 2D visualization, to illustrate the expected format & API of a
- * skqw visualization plugin.
- */
-export function defaultVis() {
-    let ctx;
-    let ft;
-    let ts;
-    let w;
-    let h;
-    let params = {
-        sensitivity: {
-            value: 250,
-            type: 'range',
-            min: 0,
-            max: 500
-        }
-    };
+    [
+        [476.5,620.35174],
+        [-27.97241,48.44963],
+        [28.6867,0]
+    ],
 
-    /**
-     * The return value must be an object with the following required properties:
-     * - name: the name of this visualization
-     * - author: the author's name
-     * - init: a function that will be called when the vis is started, and performs
-     *         any set-ups that are required by the vis. Typically it would minimally
-     *         make a call to skqw.createCanvas().
-     * - tick: a function that performs the actual animation. This function will be called
-     *         by skqw from a requestAnimationFrame(), and therefore has access to a timestamp.
-     *
-     * Optional properties:
-     * - params: exposes any user-configurable parameters for the vis.
-     * - paramsMetadata: defines metadata for the params - useful for automatic GUI generation.
-     */
-    return {
-        name: 'A Basic Visualization',
-        author: 'Michael Bromley',
-        init: init,
-        tick: tick,
-        params: params
-    };
+    [
+        [249.64286,644.29078],
+        [87.60014,-151.727911],
+        [-87.60014,0]
+    ],
 
-    function init(skqw) {
-        ctx = skqw.createCanvas().getContext('2d');
-    }
+    [
+        [250,653.21935],
+        [52.28113,-90.55357],
+        [48.02197,89.91093]
+    ],
+    [
+        [140.3586,601.36768],
+        [-34.83732,-60.34],
+        [27.97259,-48.44995],
+        [68.76002,0]
+    ],
+    [
+        [384.35714,653.21935],
+        [92.2588,-159.79692],
+        [0,103.0112],
+        [-32.83221,56.86705]
+    ],
+    [
+        [178.85447,543.76456],
+        [34.83733,60.3],
+        [-27.97259,48.44995],
+        [-68.76002,0]
+    ]
+];
 
-    function tick(skqw) {
-        w = skqw.dimensions().width;
-        h = skqw.dimensions().height;
-        ft = skqw.sample().ft;
-        ts = skqw.sample().ts;
+/*const SVG_PATHS = [
+ 'm 415.33604,13.13485 0,159.60405 90.71168,-159.46391 z',
+ 'm 494.55651,43.24509 16.00134,-29.56405 76.56504,0 -33.48324,57.99467 -58.62437,101.54039 z',
+ 'm 287.49653,164.556 87.60014,-151.7279 -76.17157,0 -11.11771,19.25643 z',
+ 'm 380.35367,140.61696 -27.97241,48.44964 28.6867,0 z',
+ 'm 153.49653,164.556 87.60014,-151.7279 -87.60014,0 z',
+ 'M 153.85367,173.4846 206.1348,82.931 254.15677,172.8419 Z',
+ 'm 44.212271,121.6329 -34.83732,-60.34 27.97259,-48.44995 68.760019,0 z',
+ 'm 288.21081,173.4846 92.2588,-159.79695 0,103.0112 -32.83221,56.86705 z',
+ 'm 82.708141,64.02978 34.837329,60.34 -27.972589,48.44992 -68.76002,0 z'
+ ];*/
+const SVG_PATHS = [
+    ['m', [415.33604,13.13485], [0,159.60405], [90.71168,-159.46391], 'z'],
+    ['m', [494.55651,43.24509], [16.00134,-29.56405], [76.56504,0], [-33.48324,57.99467], [-58.62437,101.54039], 'z'],
+    ['m', [287.49653,164.556], [87.60014,-151.7279], [-76.17157,0], [-11.11771,19.25643], 'z'],
+    ['m', [380.35367,140.61696], [-27.97241,48.44964], [28.6867,0], 'z'],
+    ['m', [153.49653,164.556], [87.60014,-151.7279], [-87.60014,0], 'z'],
+    ['M', [153.85367,173.4846], [206.1348,82.931], [254.15677,173.4846], 'Z'],
+    ['m', [44.212271,121.6329], [-34.83732,-60.34], [27.97259,-48.44995], [68.760019,0], 'z'],
+    ['m', [288.21081,173.4846], [92.2588,-159.79695], [0,103.0112], [-32.83221,56.86705], 'z'],
+    ['m', [82.708141,64.02978], [34.837329,60.34], [-27.972589,48.44992], [-68.76002,0], 'z'],
+];
 
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-        ctx.fillRect(0, 0, w, h);
-        drawBars();
-        drawWave();
-    }
+const ORIGINAL_WIDTH = 600;
+const ORIGINAL_HEIGHT = 200;
 
-    function drawWave() {
-        var length = ts.length,
-            width = w / length;
+let ctx;
+let ft;
+let ts;
+let w;
+let h;
 
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-        ctx.lineWidth = 5;
-
-        for(var i = 0; i < ts.length; i++) {
-            var val = ts[i],
-                x = i * width,
-                y = h / 2 + val * params.sensitivity.value * 10;
-
-            if (i === 0) {
-                ctx.beginPath(x, y);
-                ctx.moveTo(x, y);
-            } else {
-                ctx.lineTo(x, y);
-            }
-        }
-        ctx.stroke();
-    }
-
-    function drawBars() {
-        var length = ft.length,
-            width = w / length;
-
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-
-        for(var i = 0; i < ft.length; i++) {
-            var val = ft[i],
-                x = i * width,
-                height = val * params.sensitivity.value / 2,
-                y = h - height;
-
-            ctx.fillRect(x, y, width / 3, height);
-        }
-    }
-
+function init(skqw) {
+    ctx = skqw.createCanvas().getContext('2d');
 }
+
+declare var Path2D: any;
+
+function tick(skqw) {
+    w = skqw.dimensions().width;
+    h = skqw.dimensions().height;
+    ft = skqw.sample().ft;
+    ts = skqw.sample().ts;
+
+    ctx.strokeStyle = 'rgba(0, 200, 100, 1)';
+
+    let scale = w / ORIGINAL_WIDTH;
+    let offsetY = Math.round((h - ORIGINAL_HEIGHT * scale) / 2);
+    ctx.translate(0, offsetY);
+    ctx.lineWidth = scale;
+
+    SVG_PATHS.forEach(path => {
+        let svgPath = path.reduce((str: string, item: any) => {
+                if (typeof item === 'string') {
+                    return str + item;
+                } else {
+                    return str + `${item[0] * scale},${item[1] * scale} `;
+                }
+            }, '');
+
+        let newPath = new Path2D(svgPath);
+
+        ctx.stroke(newPath);
+    });
+    ctx.translate(0, -offsetY);
+}
+
+export const defaultVis = {
+    name: 'Default Visualization',
+    author: 'Michael Bromley',
+    init: init,
+    tick: tick
+};

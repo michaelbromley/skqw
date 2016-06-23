@@ -6,13 +6,18 @@
   display: block;
   width: 500px;
   max-width: 90vw;
-  transform: translateX(0px);
+  transform: translateX(450px);
   z-index: 10;
   transition: transform 0.2s, opacity 0.2s;
-  background-color: rgba(255, 255, 255, 0.5);
-  opacity: 0.5;
+  background-color: rgba(255, 255, 255, 0);
+  opacity: 0;
 
   &.visible {
+    opacity: 1;
+  }
+
+  &.expanded {
+    background-color: rgba(255, 255, 255, 0.5);
     transform: translateX(0px);
     opacity: 1;
   }

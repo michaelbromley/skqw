@@ -1,10 +1,11 @@
 import {Component, ElementRef, Input, SimpleChange} from '@angular/core';
 import {IVisualization, ISample} from '../../../common/models';
+import {defaultVis} from './defaultVisualization';
 
 export interface IDimensions {
     width: number;
     height: number;
-} 
+}
 
 @Component({
     selector: 'visualizer',
@@ -20,7 +21,7 @@ export interface IDimensions {
     :host.obscured {
         
     }
-    `] 
+    `]
 })
 export class Visualizer {
 
@@ -31,7 +32,7 @@ export class Visualizer {
     private dimensions: IDimensions = { width: 0, height: 0 };
     private resizeTimer: any;
     private isRunning: boolean = false;
-    private onResizeFn: Function;  
+    private onResizeFn: Function;
 
 
     constructor(private elementRef: ElementRef) {
@@ -53,7 +54,11 @@ export class Visualizer {
             if (this.visualization && this.visualization.init) {
                 this.visualization.init(this.skqw);
                 this.start();
-            } 
+            } else {
+                this.visualization = defaultVis;
+                this.visualization.init(this.skqw);
+                this.start(); 
+            }
         }
     }
 

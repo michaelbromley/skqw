@@ -1,5 +1,5 @@
 <div class="panel-container" [ngClass]="{ visible: state.settingsIconVisible, expanded: state.settingsExpanded }">
-    <div class="icon toggle-icon" (click)="toggle.emit(true)">
+    <div class="icon toggle-icon" (click)="toggle.emit(!state.settingsExpanded)">
         <div [innerHTML]="icon_settings"></div>
     </div>
 
