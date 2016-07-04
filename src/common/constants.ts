@@ -9,6 +9,7 @@ export const RECEIVE_DEVICE_LIST = 'RECEIVE_DEVICE_LIST';
 export const SET_INPUT_DEVICE_ID = 'SET_INPUT_DEVICE_ID';
 export const SET_GAIN = 'SET_GAIN';
 export const TOGGLE_NORMALIZATION = 'TOGGLE_NORMALIZATION';
+export const TOGGLE_FULLSCREEN = 'TOGGLE_FULLSCREEN';
 
 /**
  * App settings

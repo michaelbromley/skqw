@@ -1,7 +1,7 @@
 import {Component, ChangeDetectorRef, HostListener} from '@angular/core';
 import {
     START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
-    SET_GAIN, TOGGLE_NORMALIZATION, MAX_GAIN, MIN_GAIN
+    SET_GAIN, TOGGLE_NORMALIZATION, MAX_GAIN, MIN_GAIN, TOGGLE_FULLSCREEN
 } from '../common/constants';
 import {Visualizer} from './components/visualizer/visualizer.component';
 import {SettingsPanel} from './components/settings-panel/settings-panel.component';
@@ -102,6 +102,10 @@ export class App {
             let id = this.state.getValue().library
                 .filter(item => item.name === this.vis.name)[0].id;
             this.vis = this.loader.getVisualization(id);
+        }
+        if (e.altKey === true && e.which === 70) {
+            // Handle alt + F - toggle fullscreen.
+            ipcRenderer.send(TOGGLE_FULLSCREEN);
         }
         if (e.which === 38) {
             // increase the gain

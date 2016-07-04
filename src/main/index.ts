@@ -1,13 +1,14 @@
 import {
     START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
-    SET_GAIN, TOGGLE_NORMALIZATION
+    SET_GAIN, TOGGLE_NORMALIZATION, TOGGLE_FULLSCREEN
 } from '../common/constants';
 const {app, BrowserWindow, ipcMain, shell} = require('electron');
-
+ 
 import {Analyzer} from './analyzer';
 
 let mainWindow = null;
 let analyzer = new Analyzer();
+let fullscreen = false;
 
 app.on('ready', () => {
     mainWindow = new BrowserWindow({
@@ -15,6 +16,7 @@ app.on('ready', () => {
         width: 800
     });
     mainWindow.loadUrl('file://' + __dirname + '/index.html');
+    mainWindow.setMenu(null);
 
     // open external (target="_blank") links in browser.
     mainWindow.webContents.on('new-window', (e, url) => {
@@ -51,4 +53,9 @@ ipcMain.on(SET_GAIN, (event, val) => {
 
 ipcMain.on(TOGGLE_NORMALIZATION, (event, val) => {
     analyzer.toggleNormalization(val);
+});
+
+ipcMain.on(TOGGLE_FULLSCREEN, () => {
+    fullscreen = !fullscreen;
+    mainWindow.setFullScreen(fullscreen);
 });
