@@ -3,7 +3,7 @@ import {
     SET_GAIN, TOGGLE_NORMALIZATION, TOGGLE_FULLSCREEN
 } from '../common/constants';
 const {app, BrowserWindow, ipcMain, shell} = require('electron');
- 
+
 import {Analyzer} from './analyzer';
 
 let mainWindow = null;
@@ -13,9 +13,12 @@ let fullscreen = false;
 app.on('ready', () => {
     mainWindow = new BrowserWindow({
         height: 600,
-        width: 800
+        width: 800,
+        minWidth: 600,
+        minHeight: 400,
+        backgroundColor: '#000'
     });
-    mainWindow.loadUrl('file://' + __dirname + '/index.html');
+    mainWindow.loadURL('file://' + __dirname + '/index.html');
     mainWindow.setMenu(null);
 
     // open external (target="_blank") links in browser.
