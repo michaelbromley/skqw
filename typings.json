@@ -1,6 +1,6 @@
 {
-  "ambientDependencies": {
-    "es6-shim": "github:DefinitelyTyped/DefinitelyTyped/es6-shim/es6-shim.d.ts#7de6c3dd94feaeb21f20054b9f30d5dabc5efabd",
-    "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#b8948c7009ae9af08bc2be3ef6b50d4f9a0019ad"
+  "globalDependencies": {
+    "es6-shim": "registry:dt/es6-shim#0.31.2+20160602141504",
+    "node": "registry:dt/node#6.0.0+20160621231320"
   }
 }
