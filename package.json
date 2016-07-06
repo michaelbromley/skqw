@@ -1,12 +1,12 @@
 {
   "name": "skqw",
-  "version": "0.0.0",
-  "description": "Audio visualization via Node",
+  "version": "0.0.1",
+  "description": "A native audio visualizer in JavaScript.",
   "main": "build/index.js",
   "scripts": {
     "typings:install": "typings install",
     "app:watch": "webpack --watch --progress --profile",
-    "app:build": "rimraf app && webpack --progress --profile --bail",
+    "app:build": "rimraf app && webpack --progress --profile",
     "electron:start": ".\\node_modules\\electron-prebuilt\\dist\\electron.exe ./app/index.js",
     "dist:win64": "build --platform win32 --arch x64"
   },

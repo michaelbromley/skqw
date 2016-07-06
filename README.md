@@ -1,25 +1,38 @@
 # SKQW
 
-Yet another audio/canvas thing. 
+![SKQW Logo](src/assets/images/logo.svg)
 
-The aim is to be able to visualize any sound playing on your computer - a universal visualizer than can be programmed in JavaScript.
+A native desktop audio visualizer, built with Electron and Angular 2.
 
-Work in progress.
+SKQW (pronounced "skew") allows you to visualize the audio output of you computer's sound card. Visualizations are written in JavaScript.
 
-##  Dev Build
+## Building From Source
 
-Windows: make sure the node version is 64-bit for building for x64 versions of Windows, and vice-versa.
+I develop SKQW on a Windows machine, so I can only provide instructions for building on Windows for now. I intend to eventually provide builds for OSX and Linux too.
 
-```
-npm install
+### Requirements
 
-# on Windows
-.\node_modules\.bin\electron-rebuild.cmd -m src/node_modules
+- Visual Studio (for compiling the native node modules). You can download the [community edition](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx) for free.
+- [Node](https://nodejs.org/en/). Make sure the node version is 64-bit for building for x64 versions of Windows, and vice-versa.
 
-npm start
-```
+### Steps to Build
 
+1. Clone this repo
+2. `npm install` - installs the dev dependencies
+3. `cd src`
+4. `npm install` - installs the runtime dependencies (native node modules)
+5. `cd ..`
+7. `npm run typings:install` - install global type definitions for TypeScript.
+6. `./node_modules/.bin/electron-rebuild.cmd -m src/node_modules` - rebuild the native modules for electron
+7. `npm run app:build` - build the app
+8. `npm run electron:start` - test the app in dev mode
+8. `npm run dist:win64` - create a Windows 64-bit binary. Will be created in the `dist` folder.
 
-Resources:
+## Roadmap
 
-http://electron.rocks/electron-builder-explained/
+Here is a rough list of things I want to add:
+
+- Hosted binaries for Windows, OSX & Linux
+- A decent library of visualizations
+- Dev guide for visualization authors
+- Chromecast support.
