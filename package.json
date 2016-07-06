@@ -5,7 +5,7 @@
   "main": "build/index.js",
   "scripts": {
     "app:watch": "webpack --watch --progress --profile",
-      "app:build": "rimraf app && webpack --progress --profile --bail",
+    "app:build": "rimraf app && webpack --progress --profile --bail",
     "electron:start": ".\\node_modules\\electron-prebuilt\\dist\\electron.exe ./app/index.js",
     "dist:win64": "build --platform win32 --arch x64"
   },

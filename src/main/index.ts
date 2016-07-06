@@ -3,12 +3,16 @@ import {
     SET_GAIN, TOGGLE_NORMALIZATION, TOGGLE_FULLSCREEN
 } from '../common/constants';
 const {app, BrowserWindow, ipcMain, shell} = require('electron');
-
+import {handleSquirrelEvent} from './squirrel-install';
 import {Analyzer} from './analyzer';
 
 let mainWindow = null;
 let analyzer = new Analyzer();
 let fullscreen = false;
+
+if (handleSquirrelEvent()) {
+    process.exit();
+}
 
 app.on('ready', () => {
     mainWindow = new BrowserWindow({
@@ -26,10 +30,11 @@ app.on('ready', () => {
         e.preventDefault();
         shell.openExternal(url);
     });
-});
 
-app.on('before-quit', () => {
-    sampleSubscription.unsubscribe();
+
+    mainWindow.on('close', () => {
+        sampleSubscription.unsubscribe();
+    });
 });
 
 let sampleSubscription = analyzer.sample$.subscribe(sample => {
