@@ -125,7 +125,20 @@ module.exports = [
                 inject: true,
                 template: 'src/index.html',
                 chunksSortMode: packageSort(['polyfills', 'render'])
-            })
+            }),
+
+            // Copy assets from the public folder
+            // Reference: https://github.com/kevlened/copy-webpack-plugin
+            new CopyWebpackPlugin([
+                {
+                    from: root('src/package.json')
+                },
+                {
+                    context: './src',
+                    from: 'node_modules/**/*',
+                    to: ''
+                }
+            ])
         );
 
         // Add build specific plugins
@@ -137,28 +150,7 @@ module.exports = [
 
                 // Reference: http://webpack.github.io/docs/list-of-plugins.html#dedupeplugin
                 // Dedupe modules in the output
-                new webpack.optimize.DedupePlugin(),
-
-                // Reference: http://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
-                // Minify all javascript, switch loaders to minimizing mode
-                new webpack.optimize.UglifyJsPlugin({
-                    // Angular 2 is broken again, disabling mangle until beta 6 that should fix the thing
-                    // Todo: remove this with beta 6
-                    mangle: false
-                }),
-
-                // Copy assets from the public folder
-                // Reference: https://github.com/kevlened/copy-webpack-plugin
-                new CopyWebpackPlugin([
-                    {
-                        from: root('src/package.json')
-                    }, 
-                    {
-                        context: './src',
-                        from: 'node_modules/**/*',
-                        to: ''
-                    }
-                ])
+                new webpack.optimize.DedupePlugin()
             );
         }
 
@@ -168,7 +160,6 @@ module.exports = [
          * Transforms .scss files to .css
          */
         config.sassLoader = {
-
         };
 
         config.externals = [externalsFn];
