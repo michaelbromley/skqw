@@ -2,16 +2,21 @@
 
   .title-row {
     text-align: center;
+    color: #afafaf;
     & > div {
       display: inline-block;
     }
 
     .title {
       margin: 0 20px;
+      color: #afafaf;
     }
 
     .icon {
       // margin-top: 5px;
+      svg {
+        fill: #afafaf;
+      }
     }
 
     .prev-icon svg {

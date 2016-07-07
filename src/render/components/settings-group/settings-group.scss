@@ -1,6 +1,6 @@
 .settings-group-container {
   margin-bottom: 20px;
-  color: #333;
+  color: #afafaf;
 
   .toggle-icon {
     transform: rotateZ(-90deg) translateY(-5px);
@@ -43,6 +43,7 @@
       // required so that collapsed margins in child elements
       // get measured when getting the wrapper's height.
       border: 1px solid transparent;
+      padding-left: 5px;
     }
   }
 }
