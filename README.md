@@ -1,6 +1,6 @@
 # SKQW
 
-![SKQW Logo](src/assets/images/logo.svg)
+![SKQW Logo](src/assets/images/logo.png)
 
 A native desktop audio visualizer, built with Electron and Angular 2.
 
