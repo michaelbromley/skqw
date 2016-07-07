@@ -5,6 +5,7 @@ import {
 const {app, BrowserWindow, ipcMain, shell} = require('electron');
 import {handleSquirrelEvent} from './squirrel-install';
 import {Analyzer} from './analyzer';
+require('electron-debug')();
 
 let mainWindow = null;
 let analyzer = new Analyzer();
