@@ -10,13 +10,18 @@ It is inspired by my love of the old Winamp plugins like [Milkdrop](https://www.
 
 Visualizations are written in JavaScript and use HTML Canvas (2d or 3d) to render.
 
-## Building From Source
+## Building From Source (Windows)
 
-I develop SKQW on a Windows machine, so I can only provide instructions for building on Windows for now. I intend to eventually provide builds for OSX and Linux too.
+I develop SKQW on a Windows machine, so I can only provide instructions for building on Windows for now. 
+
+I intend to eventually provide instructions and pre-built binaries for Windows, OSX and Linux.
+
+Those who are familiar with compiling electron apps and native node modules on OSX / Linux may be able to follow along with these instructions and modify the platform-specific parts. If you succeed, please let me know how you did it, so I can add instructions for those platforms.
 
 ### Requirements
 
 - Visual Studio (for compiling the native node modules). You can download the [community edition](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx) for free.
+- [Windows SDK version 8.1](https://developer.microsoft.com/en-us/windows/downloads/windows-8-1-sdk) or above - only applicable if you are on Windows 7 or below.
 - [Node](https://nodejs.org/en/). Make sure the node version is 64-bit for building for x64 versions of Windows, and vice-versa.
 
 ### Steps to Build
