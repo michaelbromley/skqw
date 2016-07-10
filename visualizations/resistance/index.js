@@ -1,76 +1,63 @@
 const Polygon = require('./polygon');
+const Star = require('./star');
 
+const BG_DECAY = 200;
+let lastTimestamp;
+let bgValue = 0;
 let tiles = [];
 let stars = [];
-let fgCanvas;
-let fgCtx;
-let bgCanvas;
-let bgCtx;
-let sfCanvas;
-let sfCtx;
+let canvas;
+let ctx;
 let volume;
 let params = {
     sensitivity: {
-        value: 50,
+        value: 30,
         type: 'range',
-        label: 'Sesntitivity'
+        label: 'Sensitivity'
     },
     depth: {
-        value: 20,
+        value: 2,
         type: 'range',
-        label: 'Depth'
+        label: 'Depth',
+        max: 4,
+        min: 0.1,
+        step: 0.01
     }
 };
 
 function init(skqw) {
 
     // foreground hexagons layer
-    fgCanvas = skqw.createCanvas();
-    fgCtx = fgCanvas.getContext("2d");
+    canvas = skqw.createCanvas();
+    ctx = canvas.getContext("2d");
 
-    // background image layer
-    bgCanvas = skqw.createCanvas();
-    bgCtx = bgCanvas.getContext("2d");
-
-    // middle starfield layer
-    /*sfCanvas = skqw.createCanvas();
-     sfCtx = sfCanvas.getContext("2d");*/
-
-    // makeStarArray();
+    makeStarArray();
     skqw.onResize(resizeHandler);
     setTimeout(() => resizeHandler(skqw));
 }
 
-var i = 0;
-function tick(skqw) {
+function tick(skqw, timestamp) {
+    let framesElapsed = getFrames(timestamp);
     let {width, height} = skqw.dimensions();
     let {ft, ts} = skqw.sample();
 
     volume = Array.prototype.reduce.call(ft, function(a, b) {
         return a + b;
     }, 0);
-    volume = Math.abs(volume) * params.sensitivity.value * 15;
+    volume = Math.abs(volume) * params.sensitivity.value;
 
-    i++;
-    if (i % 60 === 0) {
-        console.log('volume', volume);
-    }
-
-    fgCtx.clearRect(-width / 2, -height / 2, width, height);
-    // sfCtx.clearRect(-fgCanvas.width/2, -fgCanvas.height/2, fgCanvas.width, fgCanvas.height);
-
-    /*stars.forEach(function(star) {
-     star.drawStar();
-     });*/
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.01)';
+    ctx.fillRect(-width / 2, -height / 2, width, height);
 
     drawBg(width, height);
+
+    stars.forEach(star => star.drawStar(volume, framesElapsed));
+
     rotateForeground();
-    tiles.forEach(function(tile) {
-        tile.render(ft, volume, tiles.length);
-    });
-    tiles.forEach(function(tile) {
+    tiles.forEach(tile => tile.render(ft, volume, tiles.length, params));
+    tiles.forEach(tile => {
         if (tile.highlight > 0) {
-            tile.drawHighlight();
+            tile.drawHighlight(volume, params);
         }
     });
 }
@@ -101,35 +88,42 @@ function makePolygonArray(tileSize, ctx) {
     }
 }
 
+function makeStarArray() {
+    var x, y, starSize;
+    stars = [];
+    var limit = canvas.width / 15; // how many stars?
+    for (var i = 0; i < limit; i ++) {
+        x = (Math.random() - 0.5) * canvas.width;
+        y = (Math.random() - 0.5) * canvas.height;
+        starSize = (Math.random()+0.1)*3;
+        stars.push(new Star(x, y, starSize, ctx));
+    }
+}
 
 
 function drawBg(w, h) {
-    bgCtx.clearRect(0, 0, w, h);
-    let r, g, b, a;
-    let val = (volume || 0) / 10;
-    r = 20 + (Math.sin(val) + 1) * 28;
-    g = val * 2;
-    b = val * 8;
-    bgCtx.beginPath();
-    bgCtx.rect(0, 0, w, h);
+    if (bgValue < volume) {
+        bgValue = volume;
+    } else if (BG_DECAY <= bgValue) {
+        bgValue -= BG_DECAY;
+    }
+    ctx.beginPath();
     // create radial gradient
-    let grd = bgCtx.createRadialGradient(w / 2, h / 2, val, w / 2, h / 2, w - Math.min(Math.pow(val, 1.7), w - 20));
-    grd.addColorStop(0, 'rgba(0,0,0,1)');// centre is transparent black
-    grd.addColorStop(1, "rgba(" +
-        Math.round(r) + ", " +
-        Math.round(g) + ", " +
-        Math.round(b) + ", 1)"); // edges are reddish
+    const radius = bgValue / 2500 * w;
+    const fillAlpha = 1 - Math.min(bgValue / 6000, 0.9);
+    let grd = ctx.createRadialGradient(0, 0, Math.max(w * 4 - radius, 0), 0, 0, 0);
+    grd.addColorStop(1, `rgba(0,0,0, ${fillAlpha})`);
+    grd.addColorStop(0, `hsla(${Math.log2(bgValue) - 30}, 50%, 50%, ${fillAlpha})`);
 
-    bgCtx.fillStyle = grd;
-    bgCtx.fill();
+    ctx.fillStyle = grd;
+    ctx.fillRect(-w / 2, -h /2, w, h);
 }
 
 function resizeHandler(skqw) {
-    if (fgCanvas) {
+    if (canvas) {
         let {width, height} = skqw.dimensions();
         // resize the foreground canvas
-        fgCtx.translate(width/2, height/2);
-        console.log('resizeHandler');
+        ctx.translate(width/2, height/2);
         // resize the bg canvas
 
         /* sfCtx.translate(fgCanvas.width/2,fgCanvas.height/2);*/
@@ -137,8 +131,8 @@ function resizeHandler(skqw) {
         let tileSize = width > height ? width / 25 : height / 25;
 
         drawBg(width, height);
-        makePolygonArray(tileSize, fgCtx);
-        // makeStarArray()
+        makePolygonArray(tileSize, ctx);
+        makeStarArray()
     }
 }
 
@@ -146,6 +140,22 @@ function rotateForeground() {
     tiles.forEach(function(tile) {
         tile.rotateVertices(volume);
     });
+}
+
+/**
+ * Calculate the number of frames passed since the last tick, based on 60fps.
+ * @param timestamp
+ * @returns {number}
+ */
+function getFrames(timestamp) {
+    if (!lastTimestamp) {
+        lastTimestamp = timestamp;
+        return 1;
+    } else {
+        let frames = 16.6666 / (timestamp - lastTimestamp);
+        lastTimestamp = timestamp;
+        return frames;
+    }
 }
 
 

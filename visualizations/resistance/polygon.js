@@ -31,18 +31,19 @@ class Polygon {
      */
     rotateVertices(volume) {
         let rotation = ROTATION_STEP;
-        rotation -= volume > 10000 ? Math.sin(volume/800000) : 0;
+        rotation -= this.invert(volume) ? Math.sin(Math.log2(volume) / 2000) : 0;
         for (let i = 0; i <= this.sides-1;i += 1) {
             this.vertices[i][0] = this.vertices[i][0] -  this.vertices[i][1] * Math.sin(rotation);
             this.vertices[i][1] = this.vertices[i][1] +  this.vertices[i][0] * Math.sin(rotation);
         }
     }
 
-    calculateOffset(coords, volume) {
+    calculateOffset(coords, volume, params) {
+        let adjustedDepth = this.invert(volume) ? 1 - (params.depth.value - 1) / (params.depth.max - 1) : params.depth.value;
         let angle = Math.atan(coords[1]/coords[0]);
         let distance = Math.sqrt(Math.pow(coords[0], 2) + Math.pow(coords[1], 2)); // a bit of pythagoras
         let mentalFactor = Math.min(Math.max((Math.tan(volume/6000) * 0.5), -20), 2); // this factor makes the visualization go crazy wild
-        let offsetFactor = Math.pow(distance/3, 2) * (volume * params.depth.value / 100000) * (Math.pow(this.radius, 1.3)/300) * mentalFactor;
+        let offsetFactor = Math.pow(distance/3, 2) * (volume * Math.log2(adjustedDepth) / 100000) * (Math.pow(this.radius, 1.3)/500) * mentalFactor;
         let offsetX = Math.cos(angle) * offsetFactor;
         let offsetY = Math.sin(angle) * offsetFactor;
         offsetX *= (coords[0] < 0) ? -1 : 1;
@@ -50,10 +51,10 @@ class Polygon {
         return [offsetX, offsetY];
     };
 
-    render(ft, volume, tileCount) {
+    render(ft, volume, tileCount, params) {
         let bucket = Math.ceil(ft.length / tileCount * this.num);
-        //let val = ft[bucket] * params.sensitivity.value * 5;
-        let val = Math.pow((ft[bucket]/25),2)*255;
+        let val = ft[bucket] * params.sensitivity.value;
+        // let val = Math.pow((ft[bucket]/25),2)*255;
         val *= this.num > 42 ? 1.1 : 1;
         // establish the value for this tile
         if (val > this.radius) {
@@ -67,11 +68,11 @@ class Polygon {
         let r, g, b, a;
         if (val > 0) {
             this.ctx.beginPath();
-            let offset = this.calculateOffset(this.vertices[0], volume);
+            let offset = this.calculateOffset(this.vertices[0], volume, params);
             this.ctx.moveTo(this.vertices[0][0] + offset[0], this.vertices[0][1] + offset[1]);
             // draw the polygon
             for (let i = 1; i <= this.sides-1;i += 1) {
-                offset = this.calculateOffset(this.vertices[i], volume);
+                offset = this.calculateOffset(this.vertices[i], volume, params);
                 this.ctx.lineTo (this.vertices[i][0] + offset[0], this.vertices[i][1] + offset[1]);
             }
             this.ctx.closePath();
@@ -94,12 +95,11 @@ class Polygon {
             if (val > 210) {
                 this.cubed = val; // add the cube effect if it's really loud
             }
-            if (val > 120) {
+            if (val > 100) {
                 this.highlight = 100; // add the highlight effect if it's pretty loud
             }
             // set the alpha
-            let e = 2.7182;
-            a = (0.5/(1 + 40 * Math.pow(e, -val/8))) + (0.5/(1 + 40 * Math.pow(e, -val/20)));
+            a = Math.log2(val) / 30;
 
             this.ctx.fillStyle = "rgba(" +
                 Math.round(r) + ", " +
@@ -117,14 +117,14 @@ class Polygon {
         }
     }
 
-    drawHighlight() {
+    drawHighlight(volume, params) {
         this.ctx.beginPath();
         // draw the highlight
-        let offset = this.calculateOffset(this.vertices[0]);
+        let offset = this.calculateOffset(this.vertices[0], volume, params);
         this.ctx.moveTo(this.vertices[0][0] + offset[0], this.vertices[0][1] + offset[1]);
         // draw the polygon
         for (let i = 0; i <= this.sides-1;i += 1) {
-            offset = this.calculateOffset(this.vertices[i]);
+            offset = this.calculateOffset(this.vertices[i], volume, params);
             this.ctx.lineTo (this.vertices[i][0] + offset[0], this.vertices[i][1] + offset[1]);
         }
         this.ctx.closePath();
@@ -133,6 +133,16 @@ class Polygon {
         this.ctx.lineWidth = 1;
         this.ctx.stroke();
         this.highlight -= 0.5;
+    }
+
+    /**
+     * Returns true is volume is above a certain threshold, which causes
+     * depth and rotation to invert.
+     * @param volume
+     * @returns {boolean}
+     */
+    invert(volume) {
+        return volume > 3500;
     }
 }
 
