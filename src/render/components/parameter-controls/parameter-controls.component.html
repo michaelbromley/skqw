@@ -3,11 +3,12 @@
     <div class="parameter" *ngFor="let item of paramsArray">
 
         <div *ngIf="item.param.type === 'range'" class="skqw-control">
-            <label>{{ item.param.label }}</label>
+            <label>{{ item.param.label }}: {{ item.param.value }}</label>
             <input type="range"
                    (input)="updateValue(item.key, $event.target.value)"
                    [value]="item.param.value"
                    [min]="item.param.min"
+                   [step]="item.param.step"
                    [max]="item.param.max">
         </div>
 

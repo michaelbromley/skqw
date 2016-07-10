@@ -89,6 +89,9 @@ export class Loader {
             if (param.max === undefined) {
                 param.max = Math.round(<number>param.value * 2);
             }
+            if (param.step === undefined) {
+                param.step = 1;
+            }
         }
         return param;
     }

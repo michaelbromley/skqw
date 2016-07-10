@@ -14,6 +14,7 @@ export interface IParameter {
     label: string;
     min?: number;
     max?: number;
+    step?: number;
 }
 
 /** 

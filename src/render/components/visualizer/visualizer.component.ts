@@ -33,7 +33,14 @@ export class Visualizer {
     private resizeTimer: any;
     private isRunning: boolean = false;
     private onResizeFn: Function;
+    private rafId: any;
 
+    private tick = (timestamp) => {
+        if (this.isRunning && this.visualization.tick) {
+            this.visualization.tick(this.skqw, timestamp);
+            this.rafId = requestAnimationFrame(this.tick);
+        }
+    };
 
     constructor(private elementRef: ElementRef) {
         this.skqw = {
@@ -57,7 +64,7 @@ export class Visualizer {
             } else {
                 this.visualization = defaultVis;
                 this.visualization.init(this.skqw);
-                this.start(); 
+                this.start();
             }
         }
     }
@@ -65,20 +72,16 @@ export class Visualizer {
     start() {
         this.isRunning = true;
         this.updateDimensions();
-        requestAnimationFrame(this.tick.bind(this));
+        this.rafId = requestAnimationFrame(this.tick);
     }
 
     stop() {
+        if (this.rafId && this.rafId.data) {
+            cancelAnimationFrame(this.rafId.data.handleId);
+        }
         this.isRunning = false;
         this.removeCanvases();
         this.onResizeFn = null;
-    }
-
-    tick(timestamp) {
-        if (this.isRunning && this.visualization.tick) {
-            this.visualization.tick(this.skqw, timestamp);
-            requestAnimationFrame(this.tick.bind(this));
-        }
     }
 
     /**
