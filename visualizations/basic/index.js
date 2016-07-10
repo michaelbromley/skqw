@@ -18,7 +18,7 @@ let params = {
     }
 };
 let highs = [];
-const DECAY = 5;
+const DECAY = 20;
 
 /**
  * The exported value must be an object with the following required properties:
@@ -64,7 +64,8 @@ function drawWave(w, h, ts) {
     let length = ts.length,
         width = w / length;
 
-    ctx.strokeStyle = `hsla(${params.hue.value}, 80%, 50%, 0.2)`;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = `hsla(${params.hue.value + 30}, 80%, 50%, 0.5)`;
     ctx.lineWidth = h / 150;
 
 
@@ -97,8 +98,8 @@ function drawBars(w, h, ft) {
             highs[i] -= DECAY;
         }
         let y = h - highs[i];
-        let saturation = Math.max(Math.min(highs[i] / h * 100, 100), 20);
-        ctx.fillStyle = `hsla(${params.hue.value}, ${saturation}%, 50%, 0.8)`;
+        let saturation = Math.log2(highs[i]) * 15 - 100;
+        ctx.fillStyle = `hsla(${params.hue.value + saturation}, 50%, 50%, 0.8)`;
 
         ctx.fillRect(x, y, width - 2, highs[i]);
     }
