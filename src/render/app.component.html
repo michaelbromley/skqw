@@ -1,5 +1,7 @@
 <visualizer [sample]="sample" [visualization]="vis"></visualizer>
 
+<notification></notification>
+
 <settings-panel
         [state]="state.stateChanges$ | async"
         (toggle)="toggleSettings($event)"

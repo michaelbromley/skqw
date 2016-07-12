@@ -9,6 +9,8 @@ import {Loader} from './providers/loader.service';
 import {IParamUpdate, ISample, IVisualization} from '../common/models';
 import {VSelector} from './components/v-selector/v-selector.component';
 import {State} from './providers/state.service.';
+import {Notification} from './components/notification/notification.component';
+import {NotificationService} from './providers/notification.service';
 const ipcRenderer = require('electron').ipcRenderer;
 const {app, dialog} = require('electron').remote;
 const path = require('path');
@@ -19,7 +21,7 @@ require('./styles/app.scss');
 @Component({
     selector: 'app',
     template: require('./app.component.html'),
-    directives: [Visualizer, SettingsPanel, VSelector]
+    directives: [Visualizer, SettingsPanel, VSelector, Notification]
 })
 export class App {
 
@@ -30,6 +32,7 @@ export class App {
 
     constructor(private loader: Loader,
                 private state: State,
+                private notification: NotificationService,
                 private cdr: ChangeDetectorRef) {
 
         storage.get('libraryDir', (err, data) => {
@@ -102,6 +105,7 @@ export class App {
             let id = this.state.getValue().library
                 .filter(item => item.name === this.vis.name)[0].id;
             this.vis = this.loader.getVisualization(id);
+            this.notification.notify(`Reloaded visualization`);
         }
         if (e.altKey === true && e.which === 70) {
             // Handle alt + F - toggle fullscreen.
@@ -109,12 +113,15 @@ export class App {
         }
         if (e.which === 38) {
             // increase the gain
-            this.setGain(this.state.getValue().gain + 1);
+            const newValue = this.state.getValue().gain + 1;
+            this.setGain(newValue);
+            this.notification.notify(`Gain: ${newValue}`);
         }
-
         if (e.which === 40) {
             // decrease the gain
-            this.setGain(this.state.getValue().gain - 1);
+            const newValue = this.state.getValue().gain - 1;
+            this.setGain(newValue);
+            this.notification.notify(`Gain: ${newValue}`);
         }
     }
 

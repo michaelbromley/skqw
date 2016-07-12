@@ -2,6 +2,7 @@ import {Component, HostListener, Input, EventEmitter, Output} from '@angular/cor
 import {IVisualization} from '../../../common/models';
 import {KEYCODE_RIGHT_ARROW, KEYCODE_LEFT_ARROW} from '../../../common/constants';
 import {IState} from '../../providers/state.service.';
+import {NotificationService} from '../../providers/notification.service';
 
 @Component({
     selector: 'v-selector',
@@ -14,7 +15,9 @@ export class VSelector {
     @Input() current: IVisualization;
     @Output() select = new EventEmitter<number>();
     private icon_arrow = require('!!svg-inline!../../../assets/icons/play_arrow.svg');
-    
+
+    constructor(private notificationService: NotificationService) {}
+
     @HostListener('document:keydown', ['$event'])
     reloadVis(e: KeyboardEvent): void {
         switch (e.which) {
@@ -42,6 +45,7 @@ export class VSelector {
             nextIndex = 0;
         }
         this.select.emit(nextIndex);
+        this.notificationService.notify(this.state.library[nextIndex].name);
     }
 
     /**
@@ -59,6 +63,7 @@ export class VSelector {
             nextIndex = currentIndex - 1;
         }
         this.select.emit(nextIndex);
+        this.notificationService.notify(this.state.library[nextIndex].name);
     }
 
     private getCurrentIndex(): number {
