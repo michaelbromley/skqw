@@ -76,7 +76,7 @@ function tick(skqw) {
 }
 
 export const defaultVis = {
-    name: 'Default Visualization',
+    name: 'SKQW',
     author: 'Michael Bromley',
     init: init,
     tick: tick

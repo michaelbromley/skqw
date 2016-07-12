@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {IVisualization, IParameter} from '../../common/models';
+import {defaultVis} from '../components/visualizer/defaultVisualization';
 const path = require('path');
 const fs = require("fs");
 const nativeRequire = (<any> global).require;
@@ -26,7 +27,7 @@ export class Loader {
         const isDir = p => fs.statSync(path.join(this.visPath, p)).isDirectory();
         const hasIndex = p => fs.statSync(path.join(this.visPath, p, 'index.js')).isFile();
         const isVisObject = v => v && v.name && v.init && v.tick;
-        this.library = [];
+        this.library = [defaultVis];
 
         this.flushVisCache();
 
