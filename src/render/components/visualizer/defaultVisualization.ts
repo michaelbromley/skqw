@@ -11,12 +11,14 @@ const SVG_PATHS = [
 ];
 const ORIGINAL_WIDTH = 600;
 const ORIGINAL_HEIGHT = 200;
+const VOLUME_GAIN = 1.8;
 
 let ctx: CanvasRenderingContext2D;
 let ft: number[];
 let ts: number[];
 let w: number;
 let h: number;
+let kickPeak = 0;
 
 function init(skqw) {
     ctx = skqw.createCanvas().getContext('2d');
@@ -32,9 +34,21 @@ function tick(skqw) {
 
     let baseScale = w / (ORIGINAL_WIDTH + 600);
     let volume = 0;
+    // just the high frequencies
+    let volumeHigh = 0;
+    let kickVol = 0;
     for (let i = 0; i < ft.length; i ++) {
         volume += ft[i];
+        if (ft.length / 2 < i) {
+            volumeHigh += ft[i];
+        }
+        if (i < 6) {
+            kickVol += ft[i];
+        }
     }
+    // arbitrary adjustment.
+    volume *= VOLUME_GAIN;
+    kickVol = kickVol / 6 * VOLUME_GAIN;
 
     // center the path
     let imageWidth = ORIGINAL_WIDTH * baseScale;
@@ -46,33 +60,92 @@ function tick(skqw) {
     let widthDelta = imageWidth * volumeScale - imageWidth;
     let heightDelta = imageHeight * volumeScale - imageHeight;
 
-    ctx.fillStyle = `rgba(0, 0, 0, ${1 / (volumeScale * 5)})`;
+    let compositeOp = 'source-over';
+    if (800 < volume) {
+        compositeOp = 'source-over';
+    } else if (200 < volume) {
+        // allow some random "source-over" to prevent the screen going white.
+        if (0.2 < Math.random()) {
+            compositeOp = 'color-dodge';
+        } else {
+            compositeOp = 'destination-in';
+        }
+    } else if (180 < volume) {
+        compositeOp = 'overlay';
+    }
+    ctx.globalCompositeOperation = compositeOp;
+
+    kickCircle(w, h, volume, kickVol);
+    trebleSquare(w, h, volume, volumeHigh);
+
+    let bgBrightness = 170 < volume ? 10 : 0;
+    let bgAlpha = 170 < volume ? 0.7 : 1 / (volumeScale * 10);
+    ctx.fillStyle = `hsla(${165 + volumeScale}, ${bgBrightness}%, ${bgBrightness}%, ${bgAlpha})`;
     ctx.fillRect(0, 0, w, h);
-    ctx.strokeStyle = `hsla(${160 + volume * 2}, 50%, 50%, ${0.2 + Math.min(volume / 100, 0.8)})`;
+    ctx.strokeStyle = `hsla(${160 + volume * 0.5}, 50%, 50%, ${0.2 + Math.min(volume / 100, 0.8)})`;
 
     ctx.save();
- 
-    ctx.translate(offsetX - widthDelta / 2, offsetY - heightDelta / 2);
-    ctx.scale(volumeScale, volumeScale);
+
+    ctx.setTransform(volumeScale, 0, 0, volumeScale, offsetX - widthDelta / 2, offsetY - heightDelta / 2);
 
     ctx.lineWidth = baseScale;
 
     SVG_PATHS.forEach(path => {
-        let svgPath = path.reduce((str: string, item: any) => {
+        let svgPath = path.reduce((str: string, item: any, i: number) => {
             if (typeof item === 'string') {
                 return str + item;
             } else {
-                return str + `${item[0] * baseScale},${item[1] * baseScale} `;
+                let sign = Math.sin(ft[i]);
+                let skew = Math.pow(ft[i], 1.3) * sign;
+                return str + `${item[0] * baseScale + skew},${item[1] * baseScale + skew} `;
             }
         }, '');
 
         let newPath = new Path2D(svgPath);
 
+        ctx.fillStyle = `hsla(${240 - volume / 2}, 50%, ${50 + Math.min(volume / 6, 40)}%, ${Math.min(volumeHigh / 500, 0.2)})`;
+        ctx.fill(newPath);
+
         // the TS lib does not know about Path2D.
         (<any> ctx).stroke(newPath);
+
     });
 
     ctx.restore();
+
+}
+
+function kickCircle(w, h, volume, kickVol) {
+    const DEC = 0.05;
+    const mean = volume / ft.length;
+
+    if (50 < volume && mean * 5 < kickVol) {
+        kickPeak = kickVol;
+        ctx.beginPath();
+        ctx.fillStyle = `hsla(0, 0%, 100%, ${Math.log2(1 + kickPeak) / 300})`;
+        ctx.strokeStyle = `hsla(0, 0%, 100%, 0.2)`;
+        ctx.arc(w / 2, h / 2, Math.log2((1 + kickPeak * 1000)) * w / 50 , 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+    }
+
+    if (DEC < kickPeak) {
+        kickPeak -= DEC;
+    }
+}
+
+function trebleSquare(w, h, volume, volumeHigh) {
+    if (100 < volume && volume / 6 < volumeHigh) {
+        const volLog = Math.log2(1 + volumeHigh);
+        const length = volLog * w / 10;
+
+        ctx.beginPath();
+        ctx.fillStyle = `hsla(165, 50%, 80%, ${volLog / 300})`;
+        ctx.strokeStyle = `hsla(0, 0%, 100%, 0.15)`;
+        ctx.rect(w / 2 - length / 2, h / 2 - length / 2, length, length);
+        ctx.fill();
+        ctx.stroke();
+    }
 }
 
 export const defaultVis = {

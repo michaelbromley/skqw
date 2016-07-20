@@ -104,7 +104,7 @@ function makeStarArray() {
 function drawBg(w, h) {
     if (bgValue < volume) {
         bgValue = volume;
-    } else if (BG_DECAY + 1 <= bgValue) {
+    } else if (BG_DECAY + 1 < bgValue) {
         bgValue -= BG_DECAY;
     }
     ctx.beginPath();

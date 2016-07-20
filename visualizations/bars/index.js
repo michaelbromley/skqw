@@ -34,7 +34,7 @@ const DECAY = 20;
  * - params: exposes any user-configurable parameters for the vis.
  */
 module.exports = {
-    name: 'A Basic Visualization',
+    name: 'Bars',
     author: 'Michael Bromley',
     init: init,
     tick: tick,
