@@ -1,19 +1,22 @@
+import {logToFile} from './utils';
+import {handleSquirrelEvent} from './squirrel-install';
+
+logToFile('starting SKQW...');
+if (handleSquirrelEvent()) {
+    process.exit(0);
+}
+
 import {
     START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
     SET_GAIN, TOGGLE_NORMALIZATION, TOGGLE_FULLSCREEN
 } from '../common/constants';
 const {app, BrowserWindow, ipcMain, shell} = require('electron');
-import {handleSquirrelEvent} from './squirrel-install';
 import {Analyzer} from './analyzer';
 require('electron-debug')();
 
 let mainWindow = null;
 let analyzer = new Analyzer();
 let fullscreen = false;
-
-if (handleSquirrelEvent()) {
-    process.exit();
-}
 
 app.on('ready', () => {
     mainWindow = new BrowserWindow({
@@ -31,7 +34,6 @@ app.on('ready', () => {
         e.preventDefault();
         shell.openExternal(url);
     });
-
 
     mainWindow.on('close', () => {
         sampleSubscription.unsubscribe();

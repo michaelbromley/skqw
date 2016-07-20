@@ -46,6 +46,13 @@ Currently there are only some work-in-progress tests, but that should give you a
 Here is a rough list of things I want to add:
 
 - Hosted binaries for Windows, OSX & Linux
+- Test with WebGL / Three.js 
 - A decent library of visualizations
 - Dev guide for visualization authors
-- Chromecast support.
+- Built-in beat detection.
+- Chromecast support? 
+
+## Troubleshooting (Windows)
+
+#### Visualizations don't react to audio
+In the Windows "sound" dialog (right click icon in system tray), go to "recording devices" tab and make sure "stereo mix" is enabled and not muted.

@@ -1,9 +1,11 @@
+import {logToFile} from './utils';
 const {app} = require('electron');
 
 /**
  * Handle Squirrel Windows installer events, to create shortcuts etc.
  */
 export function handleSquirrelEvent() {
+    logToFile(`handleSquirrelEvent(), args: ${JSON.stringify(process.argv)}`);
     if (process.argv.length === 1) {
         return false;
     }
@@ -31,6 +33,7 @@ export function handleSquirrelEvent() {
     };
 
     const squirrelEvent = process.argv[1];
+    logToFile(`squirrelEvent: ${JSON.stringify(squirrelEvent)}`);
     switch (squirrelEvent) {
         case '--squirrel-install':
         case '--squirrel-updated':
