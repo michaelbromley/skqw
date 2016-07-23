@@ -22,9 +22,10 @@ const buffer = [];
 module.exports = {
     name: 'Circle',
     author: 'Michael Bromley',
-    init: init,
-    tick: tick,
-    params: params
+    init,
+    tick,
+    resize,
+    params
 };
 
 function init(skqw) {
@@ -32,16 +33,15 @@ function init(skqw) {
     ctx2 = document.createElement('canvas').getContext('2d');
     canvas2 = ctx2.canvas;
 
-    skqw.onResize(resizeHandler);
-    setTimeout(() => resizeHandler(skqw));
+    setTimeout(() => resize(skqw));
     ctx.lineCap = 'round';
 }
 
 function tick(skqw) {
-    const w = skqw.dimensions().width;
-    const h = skqw.dimensions().height;
-    const ft = skqw.sample().ft;
-    buffer.unshift(skqw.sample().ts);
+    const w = skqw.dimensions.width;
+    const h = skqw.dimensions.height;
+    const ft = skqw.sample.ft;
+    buffer.unshift(skqw.sample.ts);
     if (DELAY * 2 + 2 < buffer.length) {
         buffer.pop();
     }
@@ -137,13 +137,13 @@ function barPoint(length, i, r) {
     return { x, y };
 }
 
-function resizeHandler(skqw) {
+function resize(skqw) {
     if (ctx) {
-        let {width, height} = skqw.dimensions();
+        let {width, height} = skqw.dimensions;
         ctx.lineWidth = width / 600;
         ctx.translate(width/2, height/2);
 
-        canvas2.width = skqw.dimensions().width;
-        canvas2.height = skqw.dimensions().height;
+        canvas2.width = skqw.dimensions.width;
+        canvas2.height = skqw.dimensions.height;
     }
 }

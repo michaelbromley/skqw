@@ -32,14 +32,13 @@ function init(skqw) {
     ctx = canvas.getContext("2d");
 
     makeStarArray();
-    skqw.onResize(resizeHandler);
-    setTimeout(() => resizeHandler(skqw));
+    setTimeout(() => resize(skqw));
 }
 
 function tick(skqw, timestamp) {
     let framesElapsed = getFrames(timestamp);
-    let {width, height} = skqw.dimensions();
-    let {ft, ts} = skqw.sample();
+    let {width, height} = skqw.dimensions;
+    let {ft, ts} = skqw.sample;
 
     volume = Array.prototype.reduce.call(ft, function(a, b) {
         return a + b;
@@ -119,9 +118,9 @@ function drawBg(w, h) {
     ctx.fillRect(-w / 2, -h /2, w, h);
 }
 
-function resizeHandler(skqw) {
+function resize(skqw) {
     if (canvas) {
-        let {width, height} = skqw.dimensions();
+        let {width, height} = skqw.dimensions;
         // resize the foreground canvas
         ctx.translate(width/2, height/2);
         // resize the bg canvas
@@ -162,7 +161,8 @@ function getFrames(timestamp) {
 module.exports = {
     name: 'The Resistance',
     author: 'Michael Bromley',
-    init: init,
-    tick: tick,
-    params: params
+    init,
+    tick,
+    resize,
+    params
 };

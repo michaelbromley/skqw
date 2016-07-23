@@ -36,21 +36,24 @@ const DECAY = 20;
 module.exports = {
     name: 'Bars',
     author: 'Michael Bromley',
-    init: init,
-    tick: tick,
-    params: params
+    init,
+    tick,
+    resize,
+    destroy,
+    params
 };
 
 function init(skqw) {
+    console.log('init');
     ctx = skqw.createCanvas().getContext('2d');
     ctx.lineCap = 'round';
 }
 
 function tick(skqw) {
-    let w = skqw.dimensions().width;
-    let h = skqw.dimensions().height;
-    let ft = skqw.sample().ft;
-    let ts = skqw.sample().ts;
+    let w = skqw.dimensions.width;
+    let h = skqw.dimensions.height;
+    let ft = skqw.sample.ft;
+    let ts = skqw.sample.ts;
 
     ctx.fillStyle = 'rgba(0, 0, 0, 1)';
     ctx.fillRect(0, 0, w, h);
@@ -58,6 +61,14 @@ function tick(skqw) {
     if (params.showLines.value === true) {
         drawWave(w, h, ts);
     }
+}
+
+function destroy(skqw) {
+    console.log('destroy');
+}
+
+function resize(skqw) {
+    console.log('resize');
 }
 
 function drawWave(w, h, ts) {

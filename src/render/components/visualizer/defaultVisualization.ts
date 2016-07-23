@@ -27,10 +27,10 @@ function init(skqw) {
 declare var Path2D: any;
 
 function tick(skqw) {
-    w = skqw.dimensions().width;
-    h = skqw.dimensions().height;
-    ft = skqw.sample().ft;
-    ts = skqw.sample().ts;
+    w = skqw.dimensions.width;
+    h = skqw.dimensions.height;
+    ft = skqw.sample.ft;
+    ts = skqw.sample.ts;
 
     let baseScale = w / (ORIGINAL_WIDTH + 600);
     let volume = 0;

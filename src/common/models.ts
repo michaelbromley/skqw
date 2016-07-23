@@ -23,8 +23,11 @@ export interface IParameter {
 export interface IVisualization {
     name: string;
     author: string;
-    init: (skqw: any) => void,
-    tick: (skqw: any, timestamp: number) => void,
+    init: (skqw: any) => void;
+    tick: (skqw: any, timestamp: number) => void;
+    resize?: (skqw: any) => void;
+    destroy?: (skqw: any) => void;
+    paramChanged?: (change: { [paramName: string]: any }) => void;
     params?: { [name: string]: IParameter }
 }
 

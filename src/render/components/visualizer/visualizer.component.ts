@@ -17,10 +17,6 @@ export interface IDimensions {
         right: 0;
         bottom: 0;
     }
-    
-    :host.obscured {
-        
-    }
     `]
 })
 export class Visualizer {
@@ -43,11 +39,11 @@ export class Visualizer {
     };
 
     constructor(private elementRef: ElementRef) {
+        const self = this;
         this.skqw = {
             createCanvas: () => this.createCanvas(),
-            sample: (): ISample => this.sample,
-            dimensions: (): IDimensions => this.dimensions,
-            onResize: (fn: Function) => this.onResizeFn = fn
+            get sample(): ISample { return self.sample },
+            get dimensions(): IDimensions { return self.dimensions }
         };
     }
 
@@ -57,7 +53,7 @@ export class Visualizer {
 
     ngOnChanges(changes: {[key: string]: SimpleChange}): void {
         if (changes['visualization']) {
-            this.stop();
+            this.stop(changes['visualization'].previousValue);
             if (this.visualization && this.visualization.init) {
                 this.visualization.init(this.skqw);
                 this.start();
@@ -75,9 +71,12 @@ export class Visualizer {
         this.rafId = requestAnimationFrame(this.tick);
     }
 
-    stop() {
+    stop(visualization?: IVisualization) {
         if (this.rafId && this.rafId.data) {
             cancelAnimationFrame(this.rafId.data.handleId);
+        }
+        if (visualization && typeof visualization.destroy === 'function') {
+            visualization.destroy(this.skqw);
         }
         this.isRunning = false;
         this.removeCanvases();
@@ -105,8 +104,8 @@ export class Visualizer {
         clearTimeout(this.resizeTimer);
         this.resizeTimer = setTimeout(() => {
             this.updateDimensions();
-            if (typeof this.onResizeFn === 'function') {
-                this.onResizeFn.call(this.visualization, this.skqw);
+            if (this.visualization && typeof this.visualization.resize === 'function') {
+                this.visualization.resize(this.skqw);
             }
         }, 100);
     }

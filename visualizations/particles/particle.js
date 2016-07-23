@@ -1,95 +1,39 @@
-const POINT_DECAY = 0.6;
-const HALO_DECAY = 0.3;
-const ACC = 0.99;
-const MAX_V = 1;
+const TOP_SPEED = 2;
+const DECELERATION = 5;
 
 class Particle {
 
-    constructor(ctx, canvasWidth, canvasHeight) {
+    constructor(ctx, width, height, id) {
+        this.id = id;
         this.ctx = ctx;
-        this.radius = 0;
-        this.haloRadius = 0;
-        this.dx = Math.random() - 0.5;
-        this.dy = Math.random() - 0.5;
-        this.v = 0.1;
-        this.resize(canvasWidth, canvasHeight);
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.radius = 5;
+        this.vx = (Math.random() - 0.5) * 1;
+        this.vy = (Math.random() - 0.5) * 1;
     }
 
-    resize(canvasWidth, canvasHeight) {
-        this.canvasWidth = canvasWidth;
-        this.canvasHeight = canvasHeight;
-        this.x = Math.random() * canvasWidth;
-        this.y = Math.random() * canvasHeight;
-    }
-
-    /**
-     * Move the particle to the next position
-     */
-    step() {
-        let nextX = this.x + this.dx;
-        let nextY = this.y + this.dy;
-        if (nextX < 0 || this.canvasWidth < nextX) {
-            this.dx *= -1;
-        }
-        if (nextY < 0 || this.canvasHeight < nextY) {
-            this.dy *= -1;
-        }
-
-        this.x += (this.dx * this.v);
-        this.y += (this.dy * this.v);
-    }
-
-    /**
-     * Render the particle.
-     * @param value
-     */
-    render(value = 10) {
-        let val = value * 0.5;
-        this.radius = this.getNewRadius(this.radius, val);
-        this.haloRadius = this.getNewHaloRadius(this.haloRadius, val);
-        this.v = this.getNewSpeed(this.v, val);
-
-        // draw halo
-        this.ctx.strokeStyle = `rgba(255, 255, 255, ${Math.min(this.haloRadius / 50, 0.8)})`;
-        // this.ctx.fillStyle = 'rgb(0, 0, 0)';
+    render() {
         this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.haloRadius, 0, 2 * Math.PI);
-        // this.ctx.fill();
-        this.ctx.stroke();
-
-        // draw point
-        let hue = this.radius * 10;
-        this.ctx.fillStyle = `hsla(${hue}, 70%, 50%, ${this.radius / 200})`;
-        this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+        this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         this.ctx.fill();
     }
 
-    getNewRadius(current, val) {
-        if (current < val) {
-            return val;
-        } else if (POINT_DECAY < current) {
-            return current - POINT_DECAY;
+    tick(timestamp) {
+        if (!this.lastTimestamp) {
+            this.lastTimestamp = timestamp;
         }
-        return val;
-    }
+        let frames = (timestamp - this.lastTimestamp) / 16.666;
+        this.x += this.vx * frames;
+        this.y += this.vy * frames;
+        this.lastTimestamp = timestamp;
+        if (TOP_SPEED < Math.abs(this.vx)) {
+            this.vx *= DECELERATION;
+        }
+        if (TOP_SPEED < Math.abs(this.vy)) {
+            this.vy *= DECELERATION;
+        }
 
-    getNewHaloRadius(current, val) {
-        if (current < val) {
-            return val;
-        } else if (HALO_DECAY < current) {
-            return current - HALO_DECAY;
-        }
-        return val;
-    }
-
-    getNewSpeed(current, val) {
-        let speed = val * 0.0005;
-        if (current < MAX_V) {
-            current += speed;
-        }
-        current *= ACC;
-        return current;
     }
 }
 
