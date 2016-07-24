@@ -1,6 +1,8 @@
 /**
- * An example of the most basic kind of 2D visualization, to illustrate the expected format & API of a
- * skqw visualization plugin.
+ * A pretty simple visualization.
+ *
+ * Author: Michael Bromley
+ * Version: 1
  */
 let ctx;
 let params = {
@@ -20,60 +22,30 @@ let params = {
 let highs = [];
 const DECAY = 20;
 
-/**
- * The exported value must be an object with the following required properties:
- * - name: the name of this visualization
- * - author: the author's name
- * - init: a function that will be called when the vis is started, and performs
- *         any set-ups that are required by the vis. Typically it would minimally
- *         make a call to skqw.createCanvas().
- * - tick: a function that performs the actual animation. This function will be called
- *         by skqw from a requestAnimationFrame(), and therefore has access to a timestamp.
- *
- * Optional properties:
- * - params: exposes any user-configurable parameters for the vis.
- */
-module.exports = {
-    name: 'Bars',
-    author: 'Michael Bromley',
-    init,
-    tick,
-    resize,
-    destroy,
-    params
-};
-
 function init(skqw) {
-    console.log('init');
     ctx = skqw.createCanvas().getContext('2d');
     ctx.lineCap = 'round';
 }
 
 function tick(skqw) {
-    let w = skqw.dimensions.width;
-    let h = skqw.dimensions.height;
-    let ft = skqw.sample.ft;
-    let ts = skqw.sample.ts;
+    const { width, height } = skqw.dimensions;
+    const { ft, ts } = skqw.sample;
 
     ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-    ctx.fillRect(0, 0, w, h);
-    drawBars(w, h, ft);
+    ctx.fillRect(0, 0, width, height);
+    drawBars(width, height, ft);
     if (params.showLines.value === true) {
-        drawWave(w, h, ts);
+        drawWave(width, height, ts);
     }
 }
 
-function destroy(skqw) {
-    console.log('destroy');
-}
-
-function resize(skqw) {
-    console.log('resize');
+function paramChange(change) {
+    params[change.paramKey].value = change.newValue;
 }
 
 function drawWave(w, h, ts) {
-    let length = ts.length,
-        width = w / length;
+    const length = ts.length;
+    const width = w / length;
 
     ctx.lineCap = 'round';
     ctx.strokeStyle = `hsla(${params.hue.value + 30}, 80%, 50%, 0.5)`;
@@ -81,9 +53,9 @@ function drawWave(w, h, ts) {
 
 
     for(let i = 0; i < ts.length; i++) {
-        let val = ts[i];
-        let x = i * width;
-        let y = h / 2 + val * 250;
+        const val = ts[i];
+        const x = i * width;
+        const y = h / 2 + val * 250;
 
         if (i === 0) {
             ctx.beginPath(x, y);
@@ -96,22 +68,30 @@ function drawWave(w, h, ts) {
 }
 
 function drawBars(w, h, ft) {
-    let length = ft.length;
-    let width = w / length;
+    const length = ft.length;
+    const width = w / length;
 
     for(let i = 0; i < ft.length; i++) {
-        let val = ft[i];
-        let x = i * width;
-        let height = val * 250;
+        const val = ft[i];
+        const x = i * width;
+        const height = val * 250;
         if (!highs[i] || highs[i] < height) {
             highs[i] = height;
         } else {
             highs[i] -= DECAY;
         }
-        let y = h - highs[i];
-        let saturation = Math.log2(highs[i]) * 15 - 100;
+        const y = h - highs[i];
+        const saturation = Math.log2(highs[i]) * 15 - 100;
         ctx.fillStyle = `hsla(${params.hue.value + saturation}, 50%, 50%, 0.8)`;
 
         ctx.fillRect(x, y, width - 2, highs[i]);
     }
 }
+
+module.exports = {
+    name: 'Bars',
+    init,
+    tick,
+    paramChange,
+    params
+};

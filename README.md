@@ -49,6 +49,7 @@ Here is a rough list of things I want to add:
 - Test with WebGL / Three.js 
 - A decent library of visualizations
 - Dev guide for visualization authors
+- Saving of presets
 - Built-in beat detection.
 - Chromecast support? 
 

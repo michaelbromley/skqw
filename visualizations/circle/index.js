@@ -1,10 +1,8 @@
 /**
- * An example of the most basic kind of 2D visualization, to illustrate the expected format & API of a
- * skqw visualization plugin.
+ * Author: Michael Bromley
+ * Version: 1
  */
 let ctx;
-let ctx2;
-let canvas2;
 let params = {
     sensitivity: {
         value: 50,
@@ -15,32 +13,27 @@ let params = {
     },
 };
 let colorOffset = 0;
+let initDone = false;
 const DELAY = 1;
 const buffer = [];
 
-
-module.exports = {
-    name: 'Circle',
-    author: 'Michael Bromley',
-    init,
-    tick,
-    resize,
-    params
-};
-
 function init(skqw) {
     ctx = skqw.createCanvas().getContext('2d');
-    ctx2 = document.createElement('canvas').getContext('2d');
-    canvas2 = ctx2.canvas;
 
-    setTimeout(() => resize(skqw));
+    setTimeout(() => {
+        resize(skqw);
+        initDone = true;
+    });
     ctx.lineCap = 'round';
 }
 
 function tick(skqw) {
-    const w = skqw.dimensions.width;
-    const h = skqw.dimensions.height;
+    if (!initDone) {
+        return;
+    }
+    const { width, height } = skqw.dimensions;
     const ft = skqw.sample.ft;
+
     buffer.unshift(skqw.sample.ts);
     if (DELAY * 2 + 2 < buffer.length) {
         buffer.pop();
@@ -55,20 +48,20 @@ function tick(skqw) {
     // clear frame
     ctx.globalCompositeOperation = 'source-over';
     ctx.fillStyle = `rgba(0, 0, 0, ${overlayOpacity})`;
-    ctx.fillRect(-w / 2, -h / 2, w, h);
+    ctx.fillRect(-width / 2, -height / 2, width, height);
 
     ctx.globalCompositeOperation = 'lighten';
 
-    drawBars(h, ft, volume);
+    drawBars(height, ft, volume);
 
     ctx.strokeStyle = `hsla(${volume / 3 + colorOffset}, ${saturation}%, 50%, 1)`;
-    drawCircle(h, buffer[0], volume);
+    drawCircle(height, buffer[0], volume);
 
     ctx.strokeStyle = `hsla(${volume / 2 + colorOffset}, ${saturation}%, 50%, 1)`;
-    drawCircle(h, buffer[DELAY + 1], volume);
+    drawCircle(height, buffer[DELAY + 1], volume);
 
     ctx.strokeStyle = `hsla(${volume + colorOffset}, ${saturation}%, 50%, 1)`;
-    drawCircle(h, buffer[DELAY * 2 + 1], volume);
+    drawCircle(height, buffer[DELAY * 2 + 1], volume);
     colorOffset += 0.1;
 }
 
@@ -81,11 +74,11 @@ function drawCircle(h, ts, volume) {
     let p1 = circlePoint(ts, length - 2, r, volume);
     let p2 = circlePoint(ts, length - 1, r, volume);
     let mid = midPoint(p1, p2);
-    const start = midPoint(p1, p2);;
+    const start = midPoint(p1, p2);
     ctx.beginPath();
     ctx.moveTo(start.x, start.y);
 
-    for(var i = 2; i < length; i++) {
+    for(let i = 2; i < length; i++) {
         mid = midPoint(p1, p2);
         ctx.quadraticCurveTo(p1.x, p1.y, mid.x, mid.y);
         p1 = circlePoint(ts, i, r, volume);
@@ -142,8 +135,23 @@ function resize(skqw) {
         let {width, height} = skqw.dimensions;
         ctx.lineWidth = width / 600;
         ctx.translate(width/2, height/2);
-
-        canvas2.width = skqw.dimensions.width;
-        canvas2.height = skqw.dimensions.height;
     }
 }
+
+function paramChange(change) {
+    params[change.paramKey].value = change.newValue;
+}
+
+function destroy() {
+    initDone = false;
+}
+
+module.exports = {
+    name: 'Circle',
+    init,
+    tick,
+    resize,
+    paramChange,
+    destroy,
+    params
+};

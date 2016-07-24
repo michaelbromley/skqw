@@ -22,7 +22,6 @@ export interface IParameter {
  */
 export interface IVisualization {
     name: string;
-    author: string;
     init: (skqw: any) => void;
     tick: (skqw: any, timestamp: number) => void;
     resize?: (skqw: any) => void;

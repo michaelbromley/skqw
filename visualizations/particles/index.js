@@ -47,14 +47,6 @@ let params = {
     }
 };
 
-module.exports = {
-    name: 'Particle Graph',
-    author: 'Michael Bromley',
-    init: init,
-    tick: tick,
-    params: params
-};
-
 function init(skqw) {
     let {width, height} = skqw.dimensions;
     ctx = skqw.createCanvas().getContext('2d');
@@ -226,3 +218,19 @@ function distance(p, q) {
     let dy = p.y - q.y;
     return Math.sqrt(dx*dx + dy*dy);
 }
+
+function resize(skqw) {
+
+}
+
+function paramChange(change) {
+    params[change.paramKey].value = change.newValue;
+}
+
+module.exports = {
+    name: 'Particle Graph',
+    init,
+    tick,
+    paramChange,
+    params
+};

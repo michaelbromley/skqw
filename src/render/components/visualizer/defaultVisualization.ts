@@ -150,7 +150,6 @@ function trebleSquare(w, h, volume, volumeHigh) {
 
 export const defaultVis = {
     name: 'SKQW',
-    author: 'Michael Bromley',
     init: init,
     tick: tick
 };

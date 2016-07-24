@@ -112,7 +112,7 @@ function drawBg(w, h) {
     const fillAlpha = 1 - Math.min(bgValue / 6000, 0.9);
     let grd = ctx.createRadialGradient(0, 0, Math.max(w * 4 - radius, 0), 0, 0, 0);
     grd.addColorStop(1, `rgba(0,0,0, ${fillAlpha})`);
-    grd.addColorStop(0, `hsla(${Math.log2(bgValue) - 30}, 50%, 50%, ${fillAlpha})`);
+    grd.addColorStop(0, `hsla(${Math.log2(bgValue + 1) - 30}, 50%, 50%, ${fillAlpha})`);
 
     ctx.fillStyle = grd;
     ctx.fillRect(-w / 2, -h /2, w, h);
@@ -157,10 +157,8 @@ function getFrames(timestamp) {
     }
 }
 
-
 module.exports = {
     name: 'The Resistance',
-    author: 'Michael Bromley',
     init,
     tick,
     resize,
