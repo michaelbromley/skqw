@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, SimpleChange} from '@angular/core';
-import {IVisualization, ISample} from '../../../common/models';
+import {IVisualization, ISample, IParamUpdate} from '../../../common/models';
 import {defaultVis} from './defaultVisualization';
 
 export interface IDimensions {
@@ -41,7 +41,7 @@ export class Visualizer {
     constructor(private elementRef: ElementRef) {
         const self = this;
         this.skqw = {
-            createCanvas: () => this.createCanvas(),
+            createCanvas: this.createCanvas.bind(this),
             get sample(): ISample { return self.sample },
             get dimensions(): IDimensions { return self.dimensions }
         };
@@ -83,11 +83,17 @@ export class Visualizer {
         this.onResizeFn = null;
     }
 
+    updateParam(paramUpdate: IParamUpdate): void {
+        if (this.visualization && typeof this.visualization.paramChange === 'function') {
+            this.visualization.paramChange(paramUpdate);
+        }
+    }
+
     /**
      * Creates a canvas element for the visualization to render onto.
      */
-    createCanvas(): HTMLCanvasElement {
-        let canvas = document.createElement('canvas');
+    createCanvas(userSuppliedCanvas?: HTMLCanvasElement): HTMLCanvasElement {
+        let canvas = userSuppliedCanvas || document.createElement('canvas');
         let container = this.elementRef.nativeElement;
         this.elementRef.nativeElement.appendChild(canvas);
         canvas.width = container.offsetWidth;

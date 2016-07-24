@@ -7,7 +7,9 @@ import {IParamUpdate, IVisualization} from '../../../common/models';
 import {SettingsGroup} from '../settings-group/settings-group.component';
 import {GainSelector} from '../gain-selector/gain-selector.component';
 import {ParameterControls} from '../parameter-controls/parameter-controls.component';
-  
+
+declare var VERSION: string;
+
 @Component({
     selector: 'settings-panel',
     template: require('./settings-panel.component.html'),
@@ -26,4 +28,5 @@ export class SettingsPanel {
     @Output() toggleNormalization = new EventEmitter<boolean>();
     @Output() updateParam = new EventEmitter<IParamUpdate>();
     private icon_settings = require('!!svg-inline!../../../assets/icons/settings.svg');
+    private version: string = VERSION;
 } 

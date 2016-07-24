@@ -138,7 +138,10 @@ module.exports = [
                     from: 'node_modules/**/*',
                     to: ''
                 }
-            ])
+            ]),
+            new webpack.DefinePlugin({
+                VERSION: JSON.stringify(require('./package.json').version)
+            })
         );
 
         // Add build specific plugins

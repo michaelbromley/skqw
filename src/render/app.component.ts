@@ -1,4 +1,4 @@
-import {Component, ChangeDetectorRef, HostListener} from '@angular/core';
+import {Component, ChangeDetectorRef, ViewChild, HostListener} from '@angular/core';
 import {
     START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
     SET_GAIN, TOGGLE_NORMALIZATION, MAX_GAIN, MIN_GAIN, TOGGLE_FULLSCREEN
@@ -29,6 +29,7 @@ export class App {
     private vis: IVisualization;
     private hoverTimer: any;
     private saveGainTimer: any;
+    @ViewChild(Visualizer) private visualizer: Visualizer;
 
     constructor(private loader: Loader,
                 private state: State,
@@ -162,7 +163,7 @@ export class App {
     }
 
     updateParamValue(update: IParamUpdate): void {
-        this.vis.params[update.paramKey].value = update.newValue;
+        this.visualizer.updateParam(update);
     }
 
     setGain(val: number) {

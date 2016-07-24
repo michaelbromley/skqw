@@ -71,18 +71,22 @@ export class Loader {
     }
 
     /**
-     * Ensure the parameters contain the expected data.
+     * Ensure the parameters contain the expected data, and clone the object to eliminate
+     * references when the user changes params.
      */
     private normalizeParams(vis: IVisualization): IVisualization {
-        for(let paramName in vis.params) {
-            if (vis.params.hasOwnProperty(paramName)) {
-                vis.params[paramName] = this.normalizeParam(vis.params[paramName]);
+        const params = Object.assign({}, vis.params);
+        for(let paramName in params) {
+            if (params.hasOwnProperty(paramName)) {
+                params[paramName] = this.normalizeParam(params[paramName]);
             }
         }
+        vis.params = params;
         return vis;
     }
 
     private normalizeParam(param: IParameter): IParameter {
+
         if (param.type === 'range') {
             if (param.min === undefined) {
                 param.min = 0;
