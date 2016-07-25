@@ -70,3 +70,7 @@ ipcMain.on(TOGGLE_FULLSCREEN, () => {
     fullscreen = !fullscreen;
     mainWindow.setFullScreen(fullscreen);
 });
+
+ipcMain.on(TOGGLE_FULLSCREEN, () => {
+    mainWindow.webContents.toggleDevTools();
+});

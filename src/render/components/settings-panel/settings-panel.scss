@@ -56,8 +56,13 @@ ul.shortcuts {
   code {
     color: #333;
     padding: 2px 6px;
-    background-color: rgba(200, 200, 200, 0.8);
+    background-color: rgba(150, 150, 150, 0.8);
     border-radius: 2px;
-    border: 1px solid rgb(150, 150, 150);
+    border: 1px solid rgb(100, 100, 100);
+    font-weight: bold;
+  }
+
+  .key {
+    margin-left: 15px;
   }
 }

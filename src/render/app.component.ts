@@ -1,7 +1,7 @@
 import {Component, ChangeDetectorRef, ViewChild, HostListener} from '@angular/core';
 import {
     START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
-    SET_GAIN, TOGGLE_NORMALIZATION, MAX_GAIN, MIN_GAIN, TOGGLE_FULLSCREEN
+    SET_GAIN, TOGGLE_NORMALIZATION, MAX_GAIN, MIN_GAIN, TOGGLE_FULLSCREEN, TOGGLE_DEVTOOLS
 } from '../common/constants';
 import {Visualizer} from './components/visualizer/visualizer.component';
 import {SettingsPanel} from './components/settings-panel/settings-panel.component';
@@ -40,11 +40,6 @@ export class App {
             if (data.libraryDir) {
                 this.state.setLibraryDir(data.libraryDir);
                 this.loadLibrary(data.libraryDir);
-            }
-        });
-        storage.get('gain', (err, data) => {
-            if (data.gain) {
-                this.state.setGain(data.gain);
             }
         });
         storage.get('gain', (err, data) => {
@@ -111,6 +106,10 @@ export class App {
         if (e.altKey === true && e.which === 70) {
             // Handle alt + F - toggle fullscreen.
             ipcRenderer.send(TOGGLE_FULLSCREEN);
+        }
+        if (e.ctrlKey=== true && e.shiftKey && e.which === 73) {
+            // Handle ctrl + shift + i - toggle devtools.
+            ipcRenderer.send(TOGGLE_DEVTOOLS);
         }
         if (e.which === 38) {
             // increase the gain
