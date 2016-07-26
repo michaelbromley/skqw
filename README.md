@@ -10,6 +10,10 @@ It is inspired by my love of the old Winamp plugins like [Milkdrop](https://www.
 
 Visualizations are written in JavaScript and use HTML Canvas (2d or 3d) to render.
 
+## Writing Visualizations
+
+See the [developer guide](./docs/dev-guide.md).
+
 ## Building From Source (Windows)
 
 I develop SKQW on a Windows machine, so I can only provide instructions for building on Windows for now. 
@@ -46,11 +50,11 @@ Currently there are only some work-in-progress tests, but that should give you a
 Here is a rough list of things I want to add:
 
 - Hosted binaries for Windows, OSX & Linux
-- Test with WebGL / Three.js 
+- ~~Test with WebGL / Three.js ~~
 - A decent library of visualizations
 - Dev guide for visualization authors
 - Saving of presets
-- Built-in beat detection.
+- Built-in beat detection?
 - Chromecast support? 
 
 ## Troubleshooting (Windows)
