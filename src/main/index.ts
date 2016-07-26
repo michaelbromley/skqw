@@ -8,7 +8,7 @@ if (handleSquirrelEvent()) {
 
 import {
     START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
-    SET_GAIN, TOGGLE_NORMALIZATION, TOGGLE_FULLSCREEN
+    SET_GAIN, TOGGLE_NORMALIZATION, TOGGLE_FULLSCREEN, TOGGLE_DEVTOOLS
 } from '../common/constants';
 const {app, BrowserWindow, ipcMain, shell} = require('electron');
 import {Analyzer} from './analyzer';
@@ -71,6 +71,6 @@ ipcMain.on(TOGGLE_FULLSCREEN, () => {
     mainWindow.setFullScreen(fullscreen);
 });
 
-ipcMain.on(TOGGLE_FULLSCREEN, () => {
+ipcMain.on(TOGGLE_DEVTOOLS, () => {
     mainWindow.webContents.toggleDevTools();
 });
