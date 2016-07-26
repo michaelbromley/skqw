@@ -4,6 +4,8 @@
 html {
   overflow-y: hidden;
   background-color: black;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .icon {
