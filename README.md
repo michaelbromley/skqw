@@ -12,7 +12,8 @@ Visualizations are written in JavaScript and use HTML Canvas (2d or 3d) to rende
 
 ## Writing Visualizations
 
-See the [developer guide](./docs/dev-guide.md).
+- [SKQW developer guide - intro](./docs/dev-guide.md)
+- [SKQW API Docs](./docs/api.md)
 
 ## Building From Source (Windows)
 

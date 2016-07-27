@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, SimpleChange} from '@angular/core';
-import {IVisualization, ISample, IParamUpdate} from '../../../common/models';
+import {IVisualization, ISample, IParamUpdate, ISkqw} from '../../../common/models';
 import {defaultVis} from './defaultVisualization';
 
 export interface IDimensions {
@@ -23,7 +23,7 @@ export class Visualizer {
 
     @Input() sample: ISample;
     @Input() visualization: IVisualization;
-    private skqw;
+    private skqw: ISkqw;
     private canvases: HTMLCanvasElement[] = [];
     private dimensions: IDimensions = { width: 0, height: 0 };
     private resizeTimer: any;

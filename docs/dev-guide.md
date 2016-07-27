@@ -6,6 +6,21 @@ recent versions of Node and Chrome, you are free to use (most) ES2015
 language features. One notable exception is that module imports and 
 exports must be in the [Node commonjs](https://nodejs.org/docs/latest/api/modules.html) (`module.exports` and `require()`) format.
 
+## File Location & Naming
+
+A visualization main file must be located in a subdirectory of the 
+"library path" (as set in the UI), and must be named "index.js":
+
+```
+// "visualizations" is set as the library path in the app.
+
+- visualizations/
+    |
+    |- myVis/
+    |   |- index.js
+    |
+```
+
 ## Basic Example
 
 Here is a bare-bones visualization:
@@ -92,9 +107,9 @@ red bar whose height is proportional to the value of that frequency.
 
 #### `module.exports` 
 Finally, we export the required information as a [Node commonjs](https://nodejs.org/docs/latest/api/modules.html) module.
-There are more functions and properties which SKQW can read, which lets
-us write richer visualizations, but the three shown are the bare minimum
-required for things to work.
+There are more functions and properties which SKQW can read (see the 
+[API docs](./api.md)), which lets us write richer visualizations, but the 
+three shown are the bare minimum required for things to work.
 
 ## Parameters
 
@@ -170,10 +185,10 @@ SKQW knows about them.
 ## Next Steps
 
 Now you should know enough to start playing around with SKQW 
-visualizations and creating some cool visuals.
+visualizations and creating some cool visuals!
 
 There are a few more parts of the API not covered above. For a full
-rundown of all APIs, see the API Reference.
+rundown of all APIs, see the [API Reference](./api.md).
 
-Another great way to learn is to take a look at the source code of the
-standard library of visualizations. 
+Another great way to learn is to take a look at the [source code of the
+standard library of visualizations](../visualizations). 

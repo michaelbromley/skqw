@@ -8,6 +8,18 @@ export interface ISample {
     ts: number[];
 }
 
+export interface ISkqw {
+    createCanvas: (domElement?: HTMLCanvasElement) => HTMLCanvasElement;
+    dimensions: {
+        width: number;
+        height: number;
+    };
+    sample: {
+        ts: number[];
+        ft: number[];
+    }
+}
+
 export interface IParameter {
     value: number | boolean;
     type: 'range' | 'boolean';
@@ -22,11 +34,11 @@ export interface IParameter {
  */
 export interface IVisualization {
     name: string;
-    init: (skqw: any) => void;
-    tick: (skqw: any, timestamp: number) => void;
-    resize?: (skqw: any) => void;
-    destroy?: (skqw: any) => void;
-    paramChange?: (change: { [paramKey: string]: any }) => void;
+    init: (skqw: ISkqw) => void;
+    tick: (skqw: ISkqw, timestamp: number) => void;
+    resize?: (skqw: ISkqw) => void;
+    destroy?: (skqw: ISkqw) => void;
+    paramChange?: (change: IParamUpdate) => void;
     params?: { [name: string]: IParameter }
 }
 
