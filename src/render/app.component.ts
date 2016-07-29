@@ -1,4 +1,4 @@
-import {Component, ChangeDetectorRef, ViewChild, HostListener} from '@angular/core';
+import {Component, ChangeDetectorRef, ViewChild, HostListener, ViewEncapsulation} from '@angular/core';
 import {
     START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
     SET_GAIN, TOGGLE_NORMALIZATION, MAX_GAIN, MIN_GAIN, TOGGLE_FULLSCREEN, TOGGLE_DEVTOOLS
@@ -16,11 +16,12 @@ const {app, dialog} = require('electron').remote;
 const path = require('path');
 const storage = require('electron-json-storage');
 
-require('./styles/app.scss');
+require('style!./styles/app.scss');
 
 @Component({
     selector: 'app',
     template: require('./app.component.html'),
+    encapsulation: ViewEncapsulation.None,
     directives: [Visualizer, SettingsPanel, VSelector, Notification]
 })
 export class App {

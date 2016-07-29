@@ -5,7 +5,7 @@ import {MAX_GAIN, MIN_GAIN} from '../../../common/constants';
 @Component({
     selector: 'gain-selector',
     template: require('./gain-selector.component.html'),
-    styles: [`:host { display: block; }`, require('./gain-selector.scss').toString()]
+    styles: [require('./gain-selector.scss')]
 })
 export class GainSelector {
     @Input() state: IState;

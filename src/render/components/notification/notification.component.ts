@@ -5,7 +5,7 @@ import {NotificationService} from '../../providers/notification.service';
 @Component({
     selector: 'notification',
     template: `<div class="notification-message" [class.visible]="visible">{{ message }}</div>`,
-    styles: [require('./notification.scss').toString()]
+    styles: [require('./notification.scss')]
 })
 export class Notification {
     private visible: boolean = false;

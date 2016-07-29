@@ -3,7 +3,7 @@ import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 @Component({
     selector: 'settings-group',
     template: require('./settings-group.component.html'),
-    styles: [require('./settings-group.scss').toString()]
+    styles: [require('./settings-group.scss')]
 })
 
 export class SettingsGroup {

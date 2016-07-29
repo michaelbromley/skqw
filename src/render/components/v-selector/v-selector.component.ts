@@ -7,7 +7,7 @@ import {NotificationService} from '../../providers/notification.service';
 @Component({
     selector: 'v-selector',
     template: require('./v-selector.component.html'),
-    styles: [require('./v-selector.scss').toString()],
+    styles: [require('./v-selector.scss')],
     directives: []
 })
 export class VSelector {

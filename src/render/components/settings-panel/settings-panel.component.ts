@@ -13,7 +13,7 @@ declare var VERSION: string;
 @Component({
     selector: 'settings-panel',
     template: require('./settings-panel.component.html'),
-    styles: [require('./settings-panel.scss').toString()],
+    styles: [require('./settings-panel.scss')],
     directives: [VSelector, InputSelector, GainSelector, ParameterControls, LibraryPathSelector, SettingsGroup]
 })
 export class SettingsPanel {
