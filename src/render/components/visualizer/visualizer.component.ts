@@ -78,7 +78,7 @@ export class Visualizer {
 
     updateParam(paramUpdate: IParamUpdate): void {
         if (this.visualization && typeof this.visualization.paramChange === 'function') {
-            this.visualization.paramChange(paramUpdate);
+            this.visualization.paramChange(this.skqw, paramUpdate);
         }
     }
 

@@ -38,7 +38,7 @@ export interface IVisualization {
     tick: (skqw: ISkqw, timestamp: number) => void;
     resize?: (skqw: ISkqw) => void;
     destroy?: (skqw: ISkqw) => void;
-    paramChange?: (change: IParamUpdate) => void;
+    paramChange?: (skqw: ISkqw, change: IParamUpdate) => void;
     params?: { [name: string]: IParameter }
 }
 

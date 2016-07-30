@@ -78,7 +78,7 @@ Then we set the fillStyle property, since we don't plan to change it in this
 simple example.
 
 #### `skqw` object
-This object is passed as a parameter to most of the visualization
+This object is passed as the first parameter to each of the visualization
 lifecycle functions. It has a single method, `createCanvas()`, which 
 will create an HTML canvas element which we can then draw on to.
 

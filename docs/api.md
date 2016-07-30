@@ -4,7 +4,7 @@ This is a description of the APIs for authoring visualizations in SKQW.
 For a general overview, see the [dev guide](./dev-guide.md).
 
 ## `skqw` object
-The `skqw` object is passed as an argument to most of the lifecycle 
+The `skqw` object is passed as the first argument of each of the lifecycle 
 functions (see Visualization interface below). 
 
 ```TypeScript
@@ -59,7 +59,7 @@ interface IVisualization {
     tick: (skqw: ISkqw, timestamp: number) => void;
     resize?: (skqw: ISkqw) => void;
     destroy?: (skqw: ISkqw) => void;
-    paramChange?: (change: IParamUpdate) => void;
+    paramChange?: (skqw: ISkqw, change: IParamUpdate) => void;
     params?: { [name: string]: IParameter }
 }
 
@@ -102,7 +102,7 @@ Called whenever the app window is resized.
 Called just before unloading the visualization, as when a different 
 visualization is selected in the UI.
 
-#### `visualization.paramChange(change)`
+#### `visualization.paramChange(skqw, change)`
 
 Called whenever the user changes a param in the UI.
 
