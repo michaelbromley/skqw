@@ -75,7 +75,7 @@ export class App {
             defaultPath: this.state.getValue().libraryDir || path.join(process.cwd()),
             properties: ['openDirectory']
         }, (paths: string[]) => {
-            if (paths.length === 1) {
+            if (paths && paths.length === 1) {
                 let dir = paths[0];
                 storage.set('libraryDir', { libraryDir: dir });
                 this.state.setLibraryDir(dir);

@@ -26,7 +26,11 @@ export class Visualizer {
 
     private tick = (timestamp) => {
         if (this.isRunning && this.visualization.tick) {
-            this.visualization.tick(this.skqw, timestamp);
+            try {
+                this.visualization.tick(this.skqw, timestamp);
+            } catch (e) {
+                console.log(e);
+            }
             this.rafId = requestAnimationFrame(this.tick);
         }
     };
@@ -48,7 +52,11 @@ export class Visualizer {
         if (changes['visualization']) {
             this.stop(changes['visualization'].previousValue);
             if (this.visualization && this.visualization.init) {
-                this.visualization.init(this.skqw);
+                try {
+                    this.visualization.init(this.skqw);
+                } catch (e) {
+                    console.log(e);
+                }
                 this.start();
             } else {
                 this.visualization = defaultVis;
@@ -69,7 +77,11 @@ export class Visualizer {
             cancelAnimationFrame(this.rafId.data.handleId);
         }
         if (visualization && typeof visualization.destroy === 'function') {
-            visualization.destroy(this.skqw);
+            try {
+                visualization.destroy(this.skqw);
+            } catch (e) {
+                console.log(e);
+            }
         }
         this.isRunning = false;
         this.removeCanvases();
@@ -78,7 +90,11 @@ export class Visualizer {
 
     updateParam(paramUpdate: IParamUpdate): void {
         if (this.visualization && typeof this.visualization.paramChange === 'function') {
-            this.visualization.paramChange(this.skqw, paramUpdate);
+            try {
+                this.visualization.paramChange(this.skqw, paramUpdate);
+            } catch (e) {
+                console.log(e);
+            }
         }
     }
 
@@ -104,7 +120,11 @@ export class Visualizer {
         this.resizeTimer = setTimeout(() => {
             this.updateDimensions();
             if (this.visualization && typeof this.visualization.resize === 'function') {
-                this.visualization.resize(this.skqw);
+                try {
+                    this.visualization.resize(this.skqw);
+                } catch (e) {
+                    console.log(e);
+                }
             }
         }, 100);
     }
