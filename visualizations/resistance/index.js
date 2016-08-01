@@ -22,6 +22,14 @@ let params = {
         max: 4,
         min: 0.1,
         step: 0.01
+    },
+    vertices: {
+        value: 6,
+        type: 'range',
+        label: 'Vertices',
+        max: 12,
+        min: 3,
+        step: 1
     }
 };
 
@@ -68,21 +76,22 @@ function tick(skqw, timestamp) {
  */
 function makePolygonArray(tileSize, ctx) {
     tiles = [];
+    let vertices = params.vertices.value;
     let i = 0; // unique number for each tile
-    tiles.push(new Polygon(6, 0, 0, tileSize, ctx, i)); // the centre tile
+    tiles.push(new Polygon(vertices, 0, 0, tileSize, ctx, i)); // the centre tile
     i++;
     for (let layer = 1; layer < 7; layer++) {
-        tiles.push(new Polygon(6, 0, layer, tileSize, ctx, i)); i++;
-        tiles.push(new Polygon(6, 0, -layer, tileSize, ctx, i)); i++;
+        tiles.push(new Polygon(vertices, 0, layer, tileSize, ctx, i)); i++;
+        tiles.push(new Polygon(vertices, 0, -layer, tileSize, ctx, i)); i++;
         for(let x = 1; x < layer; x++) {
-            tiles.push(new Polygon(6, x, -layer, tileSize, ctx, i)); i++;
-            tiles.push(new Polygon(6, -x, layer, tileSize, ctx, i)); i++;
-            tiles.push(new Polygon(6, x, layer-x, tileSize, ctx, i)); i++;
-            tiles.push(new Polygon(6, -x, -layer+x, tileSize, ctx, i)); i++;
+            tiles.push(new Polygon(vertices, x, -layer, tileSize, ctx, i)); i++;
+            tiles.push(new Polygon(vertices, -x, layer, tileSize, ctx, i)); i++;
+            tiles.push(new Polygon(vertices, x, layer-x, tileSize, ctx, i)); i++;
+            tiles.push(new Polygon(vertices, -x, -layer+x, tileSize, ctx, i)); i++;
         }
         for(let y = -layer; y <= 0; y++) {
-            tiles.push(new Polygon(6, layer, y, tileSize, ctx, i)); i++;
-            tiles.push(new Polygon(6, -layer, -y, tileSize, ctx, i)); i++;
+            tiles.push(new Polygon(vertices, layer, y, tileSize, ctx, i)); i++;
+            tiles.push(new Polygon(vertices, -layer, -y, tileSize, ctx, i)); i++;
         }
     }
 }
@@ -109,10 +118,10 @@ function drawBg(w, h) {
     ctx.beginPath();
     // create radial gradient
     const radius = bgValue / 2500 * w;
-    const fillAlpha = 1 - Math.min(bgValue / 6000, 0.9);
+    const fillAlpha = 1 - Math.log2(bgValue + 0.5) / 30;
     let grd = ctx.createRadialGradient(0, 0, Math.max(w * 4 - radius, 0), 0, 0, 0);
     grd.addColorStop(1, `rgba(0,0,0, ${fillAlpha})`);
-    grd.addColorStop(0, `hsla(${Math.log2(bgValue + 1) - 30}, 50%, 50%, ${fillAlpha})`);
+    grd.addColorStop(0, `hsla(${Math.log2(bgValue + 0.5) - 30}, 80%, 30%, ${fillAlpha})`);
 
     ctx.fillStyle = grd;
     ctx.fillRect(-w / 2, -h /2, w, h);
@@ -141,6 +150,15 @@ function rotateForeground() {
     });
 }
 
+function paramChange(skqw, change) {
+    const { width, height } = skqw.dimensions;
+    params[change.paramKey].value = change.newValue;
+    if (change.paramKey === 'vertices') {
+        let tileSize = width > height ? width / 25 : height / 25;
+        makePolygonArray(tileSize, ctx);
+    }
+}
+
 /**
  * Calculate the number of frames passed since the last tick, based on 60fps.
  * @param timestamp
@@ -162,5 +180,6 @@ module.exports = {
     init,
     tick,
     resize,
+    paramChange,
     params
 };

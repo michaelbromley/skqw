@@ -14,7 +14,7 @@ class Edge {
         if (strength === 0 || this.strength < strength) {
             this.strength = Math.min(strength, 100);
         }
-        if (this.burst < burst) {
+        if (this.burst * 5 < burst) {
             this.burst = burst * 50;
         }
     }
@@ -22,6 +22,7 @@ class Edge {
     render() {
         if (DECAY < this.strength) {
             this.ctx.strokeStyle = `hsla(${this.hue}, ${Math.min(this.burst, 100)}%, 50%, ${this.strength / 100}`;
+            this.ctx.lineWidth = Math.min(Math.max(this.burst / 20, 2), 3);
             let node = this.node;
             let particle = this.particle;
             let dx = node.x - particle.x;
@@ -33,6 +34,8 @@ class Edge {
             this.ctx.moveTo(node.x + sx, node.y + sy);
             this.ctx.lineTo(particle.x, particle.y);
             this.ctx.stroke();
+
+            this.ctx.lineWidth = 1;
 
             this.strength -= DECAY;
         }

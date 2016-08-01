@@ -1,3 +1,6 @@
+/**
+ * Just testing to see if I can get Three.js working. This is just an unlit spinning cube.
+ */
 const THREE = require('./three');
 
 let scene;
