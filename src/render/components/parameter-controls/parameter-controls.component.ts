@@ -20,7 +20,19 @@ export class ParameterControls {
     }  
 
     updateValue(paramKey: string, newValue: number | boolean): void {
-        this.updateParam.emit({ paramKey, newValue });
+        // coerce the value into the correct type
+        let coercedValue;
+        switch (this.params[paramKey].type) {
+            case 'range':
+                coercedValue = +newValue;
+                break;
+            case 'boolean':
+                coercedValue = !!newValue;
+                break;
+            default:
+                coercedValue = newValue;
+        }
+        this.updateParam.emit({ paramKey, newValue: coercedValue });
     }
 }
  
