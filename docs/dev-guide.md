@@ -137,7 +137,7 @@ tick(skqw) {
     // draw some stuff with the given hue.
 }
 
-function paramChange(change) {
+function paramChange(skqw, change) {
     params[change.paramKey].value = change.newValue;
 }
 
@@ -173,7 +173,7 @@ control.
 
 #### `paramChange()` function
 This function is called every time the user changes the value of a param
-in the UI. The argument is an object consisting of two properties:
+in the UI. The second argument is an object consisting of two properties:
 
 - `paramKey` is the key of the param that was changed. In this case it 
 would be "hue". 

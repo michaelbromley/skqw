@@ -8,12 +8,21 @@ It is inspired by my love of the old Winamp plugins like [Milkdrop](https://www.
 
 Visualizations are written in JavaScript and use HTML Canvas (2d or 3d) to render.
 
+## Installing (Windows)
+
+Go to the [releases page](https://github.com/michaelbromley/skqw/releases) to get the latest installer binary.
+
+Then get some visualizations from the [SKQW library repo](https://github.com/michaelbromley/skqw-library).
+
+More detailed setup instructions coming soon.
+
+
 ## Writing Visualizations
 
 - [SKQW developer guide - intro](./docs/dev-guide.md)
 - [SKQW API Docs](./docs/api.md)
 
-## Building From Source (Windows)
+## Building From Source (Windows / OS X / Linix)
 
 I develop SKQW on a Windows machine, so I can only provide instructions for building on Windows for now. 
 
@@ -35,7 +44,7 @@ Those who are familiar with compiling electron apps and native node modules on O
 4. `npm install` - installs the runtime dependencies (native node modules)
 5. `cd ..`
 7. `npm run typings:install` - install global type definitions for TypeScript.
-6. `./node_modules/.bin/electron-rebuild.cmd -m src/node_modules` - rebuild the native modules for electron
+6. `.\node_modules\.bin\electron-rebuild.cmd -m src/node_modules` - rebuild the native modules for electron
 7. `npm run app:build` - build the app
 8. `npm run electron:start` - test the app in dev mode
 9. `npm run dist:win64` - create a Windows 64-bit binary. Will be created in the `dist` folder.
