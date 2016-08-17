@@ -21,7 +21,7 @@ export class Notification {
                 this.message = message;
                 this.visible = true;
                 clearTimeout(this.timer);
-                this.timer = setTimeout(() => this.visible = false, 1000);
+                this.timer = setTimeout(() => this.visible = false, 4000);
             });
     }
 

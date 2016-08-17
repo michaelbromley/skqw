@@ -4,7 +4,7 @@ import {Subject} from 'rxjs';
 /**
  * Service for displaying transient messages to the user.
  */
-Injectable()
+@Injectable()
 export class NotificationService {
 
     messages$ = new Subject<string>();
