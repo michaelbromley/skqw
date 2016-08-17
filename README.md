@@ -8,13 +8,17 @@ It is inspired by my love of the old Winamp plugins like [Milkdrop](https://www.
 
 Visualizations are written in JavaScript and use HTML Canvas (2d or 3d) to render.
 
-## Installing (Windows)
+## Installation (Windows)
 
-Go to the [releases page](https://github.com/michaelbromley/skqw/releases) to get the latest installer binary.
+1. Go to the [releases page](https://github.com/michaelbromley/skqw/releases) to get the latest installer binary. The app will be installed to `Users/<username>/AppData/Local/SKQW`, but should automatically create a shortcut on the desktop.
+2. Then get some visualizations from the [SKQW library repo](https://github.com/michaelbromley/skqw-library). You can download a [zip with the full contents here](https://github.com/michaelbromley/skqw-library/archive/master.zip). Unzip somewhere.
+3. In SKQW, open the settings panel by clicking the icon in the top right.
+4. Open up the "library path" selector and point it to where you unzipped the files from 2.
 
-Then get some visualizations from the [SKQW library repo](https://github.com/michaelbromley/skqw-library).
-
-More detailed setup instructions coming soon.
+#### Notes:
+* The installer is not signed. This means Windows will warn you that it is not trusted and you shouldn't install it. If you trust me, you can disregard this warning ;) If there is enough interest I will consider purchasing a code-signing certificate to make such warnings go away.
+* This is alpha software. It is likely you will encounter bugs. Please open issues in this repo (if you know how) so I can fix them for the next release.
+* I would love to make installers for Mac OS X and Linux, but I have not had the opportunity yet. If you want to see them too, [let me know](https://twitter.com/michlbrmly)! In the mean time, if you feel brave, you can try building from source (see below).
 
 
 ## Writing Visualizations
