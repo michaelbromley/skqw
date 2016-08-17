@@ -32,15 +32,19 @@ export class Loader {
         this.flushVisCache();
 
         fs.readdirSync(this.visPath).forEach(p => {
-            if (!isDir(p) || !hasIndex(p)) {
-                return;
-            }
-            let visPath = path.join(this.visPath, p, 'index.js');
-            let vis = nativeRequire(visPath);
-            if (isVisObject(vis)) {
-                let normalized = this.normalizeParams(vis);
-                // TODO: check for duplicate names and error if found.
-                this.library.push(normalized);
+            try {
+                if (!isDir(p) || !hasIndex(p)) {
+                    return;
+                }
+                let visPath = path.join(this.visPath, p, 'index.js');
+                let vis = nativeRequire(visPath);
+                if (isVisObject(vis)) {
+                    let normalized = this.normalizeParams(vis);
+                    // TODO: check for duplicate names and error if found.
+                    this.library.push(normalized);
+                }
+            } catch (e) {
+                //
             }
         }); 
     }

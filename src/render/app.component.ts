@@ -181,7 +181,11 @@ export class App {
 
     private loadLibrary(dir: string): void {
         this.loader.setPath(dir);
-        this.loader.loadAll();
+        try {
+            this.loader.loadAll();
+        } catch (e) {
+            this.notification.notify(e.message);
+        }
         this.state.setLibrary(this.loader.listAll());
         this.cdr.detectChanges();
         this.selectVis(0);
