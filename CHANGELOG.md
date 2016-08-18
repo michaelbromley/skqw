@@ -1,7 +1,7 @@
 ### v1.0.0-alpha.3 (not released)
 #### Fixes
 * Coerce param value into correct type before passing to paramChange()
-
+* Add try/catch around external file operations.
 
 ### v1.0.0-alpha.2 (2016-07-31)
 

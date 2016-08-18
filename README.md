@@ -26,7 +26,7 @@ Visualizations are written in JavaScript and use HTML Canvas (2d or 3d) to rende
 - [SKQW developer guide - intro](./docs/dev-guide.md)
 - [SKQW API Docs](./docs/api.md)
 
-## Building From Source (Windows / OS X / Linix)
+## Building From Source (Windows / OS X / Linux)
 
 I develop SKQW on a Windows machine, so I can only provide instructions for building on Windows for now. 
 
@@ -56,6 +56,14 @@ Those who are familiar with compiling electron apps and native node modules on O
 When you fire it up, you should see the default visualization. You can set the visualization library folder in the settings panel (click the icon in the top right), then select the `skqw/visualizations` folder.
 
 Currently there are only some work-in-progress tests, but that should give you an idea of how it works.
+
+##### Node 6.4 hacks to get the build working
+
+Just upgraded to Node 6.4.0. This caused some problems with incompatible dependencies which have not upgraded some of
+their own dependencies to newer versions. Here's what I needed to do to get the build to work:
+
+1. Update the npm version inside electron-rebuild to the latest version, so that we get a newer node-gyp which
+does not break with VS2015 update 3.
 
 ## Roadmap
 
