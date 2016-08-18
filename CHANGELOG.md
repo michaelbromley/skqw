@@ -1,4 +1,8 @@
-### v1.0.0-alpha.3 (not released)
+### v1.0.0-alpha.3 (2016-08-18)
+#### Features
+* Improvements to default visualization
+* Update Electron version to 1.3.2
+
 #### Fixes
 * Coerce param value into correct type before passing to paramChange()
 * Add try/catch around external file operations.
