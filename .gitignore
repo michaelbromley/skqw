@@ -3,6 +3,7 @@ app
 dist
 typings
 .idea
+db.json
 
 # Windows image file caches
 Thumbs.db
