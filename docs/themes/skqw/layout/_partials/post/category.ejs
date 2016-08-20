@@ -1,0 +1,8 @@
+<% if (post.categories && post.categories.length){ %>
+	<span class="article-category tagcloud">
+	<%- list_categories(post.categories, {
+	  show_count: false,
+	  class: 'article-category'
+	}) %>
+	</span>
+<% } %>

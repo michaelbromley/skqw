@@ -1,11 +1,11 @@
-# SKQW APIs
+---
+title: API Reference
+---
 
-This is a description of the APIs for authoring visualizations in SKQW.
-For a general overview, see the [dev guide](./dev-guide.md).
+This is a description of the APIs for authoring visualizations in SKQW. For a general overview, see the [dev guide](../developer-guide-getting-started).
 
 ## `skqw` object
-The `skqw` object is passed as the first argument of each of the lifecycle 
-functions (see Visualization interface below). 
+The `skqw` object is passed as the first argument of each of the lifecycle functions (see Visualization interface below). 
 
 ```TypeScript
 interface ISkqw {
@@ -23,13 +23,9 @@ interface ISkqw {
 
 #### `skqw.createCanvas()`
 
-If called with no arguments, it will create a new `<canvas>` element
-and return it.
+If called with no arguments, it will create a new `<canvas>` element and return it.
 
-Alternatively you may create the canvas element yourself, and pass it 
-as an argument to `createCanvas()`. This is useful, for example, when
-using a library such as Three.js, which will provide you with a canvas
-element itself, which can then be handed over to SKQW.
+Alternatively you may create the canvas element yourself, and pass it as an argument to `createCanvas()`. This is useful, for example, when using a library such as Three.js, which will provide you with a canvas element itself, which can then be handed over to SKQW.
 
 #### `skqw.dimensions.width`
 
@@ -41,13 +37,11 @@ The height of the canvas in pixels.
 
 #### `skqw.sample.ts`
 
-An array of numbers representing the time series of the audio
-sample (time domain). Also known as a waveform.
+An array of numbers representing the time series of the audio sample (time domain). Also known as a waveform.
 
 #### `skqw.sample.ft`
 
-An array of numbers representing the fast fourier transform of the 
-signal (frequency domain). Also known as a frequency spectrum.
+An array of numbers representing the fast fourier transform of the signal (frequency domain). Also known as a frequency spectrum.
 
 ## Visualization Interfaces
 
@@ -88,10 +82,7 @@ Called once when the visualization is selected in the UI.
 
 #### `visualization.tick(skqw, timestamp)`
 
-Called for each frame of the visualization animation, roughly 60 times
-per second. The `timestamp` is a [DOMHighResTimeStamp](https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp)
-provided by the [requestAnimationFrame()](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame)
-method which is used internally.
+Called for each frame of the visualization animation, roughly 60 times per second. The `timestamp` is a [DOMHighResTimeStamp](https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp) provided by the [requestAnimationFrame()](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame) method which is used internally.
 
 #### `visualization.resize(skqw)`
 
@@ -99,8 +90,7 @@ Called whenever the app window is resized.
 
 #### `visualization.destroy(skqw)`
 
-Called just before unloading the visualization, as when a different 
-visualization is selected in the UI.
+Called just before unloading the visualization, as when a different visualization is selected in the UI.
 
 #### `visualization.paramChange(skqw, change)`
 
@@ -108,6 +98,4 @@ Called whenever the user changes a param in the UI.
 
 #### `visualization.params`
 
-An object describing the user-configurable parameters which may be
-changed at run time to alter the way the visualization renders.
-
+An object describing the user-configurable parameters which may be changed at run time to alter the way the visualization renders.

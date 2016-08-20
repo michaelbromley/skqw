@@ -1,0 +1,145 @@
+.sidebar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 400px;
+  height: 100%;
+  overflow: hidden;
+  background-color: #333;
+  color: white;
+  text-align: right;
+
+  .sidebar-logo {
+    max-width: 200px;
+    margin: 20px 20px 0 0;
+  }
+
+  .title {
+    margin-bottom: 0px;
+    a {
+      color: white;
+      &:hover {
+        color: color-link-sidebar;
+      }
+    }
+  }
+
+  .subtitle {
+    font-size: 14px;
+    margin-top: 5px
+    margin-bottom: 10px;
+  }
+
+  .info {
+    display: table;
+    width: 100%;
+    margin-top: 20px;
+    & > * {
+      display: table-cell;
+      vertical-align: bottom;
+    }
+    .content {
+      padding-left: 10px;
+    }
+  }
+
+  .author {
+    margin-top: 0.5em;
+  }
+
+  .description {
+    font-size: 14px;
+  }
+
+  .nav {
+    padding-left: 0;
+    & > li {
+      list-style: square;
+      margin-left: 0;
+      & > a {
+        display: block;
+        padding: 5px 25px;
+        color: color-link-sidebar;
+        border-right: 5px solid transparent;
+        &:hover {
+          background-color: gray;
+          color: white;
+          border-right: 5px solid lightgray;
+        }
+      }
+
+      &.section-title {
+        padding: 9px 25px;
+        color: dimgrey;
+      }
+    }
+  }
+
+  .category-list,
+  .tag-list,
+  .archive-list {
+    padding-right: 30px;
+    padding-left: 0;
+    display: none;
+    &.collapsed {
+      height: 0;
+      overflow: hidden;
+    }
+    .category-list-item,
+    .tag-list-item,
+    .archive-list-item {
+      vertical-align: top;
+      display: inline-block;
+      width: 45%;
+      font-size: 13px;
+      a {
+        width: 80%;
+        display: inline-block;
+        color: rgb(134, 168, 127);
+        &:hover {
+          color: white;
+        }
+      }
+      .tag-list-count,
+      .category-list-count,
+      .archive-list-count {
+        display: inline-block;
+        width: 20%;
+        font-size: 12px;
+        color: #838383;
+        vertical-align: top;
+      }
+    }
+  }
+}
+
+@media mq-mobile {
+  .sidebar {
+    left: -400px;
+    width: 300px;
+    max-width: 100%;
+    z-index: 9999999;
+    transition-duration: 0.3s;
+
+    &.in {
+      left: 0;
+    }
+
+    .header {
+      padding-right: 15px;
+    }
+
+    .title {
+      display: none;
+    }
+
+    .nav {
+      & > li {
+        & > a {
+          padding: 5px 10px;
+        }
+      }
+    }
+  }
+}

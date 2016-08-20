@@ -1,0 +1,51 @@
+<div class="sidebar">
+  <div class="header">
+    <a href="<%- url_for('/') %>">
+      <%- image_tag('images/logo-line.svg', { 'class': 'sidebar-logo' }) %>
+    </a>
+    <div class="info">
+      <div class="content">
+        <% if (config.description) { %>
+        <div class="description"><%= config.description %></div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <div class="body">
+    <% if (theme.nav && theme.nav.length) { %>
+    <% theme.nav.forEach(function(list) { %>
+    <ul class="nav">
+      <% list.forEach(function(item){ %>
+      <% if (item === 'categories') { %>
+      <li class="category-list-container">
+        <a href="javascript:;"><%- __('category') %></a>
+        <%- list_categories({depth: -1}) %>
+      </li>
+      <% } else if (item === 'tags') { %>
+      <li class="tag-list-container">
+        <a href="javascript:;"><%- __('tag') %></a>
+        <%- list_tags({}) %>
+      </li>
+      <% } else if (item === 'archives') { %>
+      <li class="archive-list-container">
+        <a href="javascript:;"><%- __('archive') %></a>
+        <%- list_archives({type: 'yearly'}) %>
+      </li>
+      <% } else { %>
+
+      <% if (item.hasOwnProperty('url')) { %>
+      <li>
+        <%- link_to(item.url, item.name, {external: item.url.indexOf('http') === 0}) %>
+      </li>
+      <% } else { %>
+      <li class="section-title">
+        <span><%- item.name %></span>
+      </li>
+      <% } %>
+      <% } %>
+      <% }) %>
+    </ul>
+    <% }); %>
+    <% } %>
+  </div>
+</div>
