@@ -1,0 +1,32 @@
+
+.header-logo {
+  svg {
+    width: 100%;
+    height auto;
+    max-width: 600px;
+    delay = 0s;
+    for i in (1..9) {
+      path:nth-child({i}) {
+        animation-delay: delay;
+        animation-duration: 3s;
+        animation-name: cycle;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+        animation-fill-mode: both;
+      }
+      delay += .2;
+    }
+  }
+}
+
+@keyframes cycle {
+  0% {
+    fill: rgba(62, 231, 191, 0.3);
+  }
+  50% {
+    fill: rgba(62, 231, 255, 0.3);
+  }
+  100% {
+    fill: rgba(0, 169, 255, 0.3);
+  }
+}

@@ -10,9 +10,19 @@
   color: white;
   text-align: right;
 
-  .sidebar-logo {
-    max-width: 200px;
+  svg.logo {
+    width: 200px;
+    height 65px;
     margin: 20px 20px 0 0;
+    path {
+      fill: rgba(0,0,0,0);
+      stroke: #46beb4;
+      transition: fill 1.2s, stroke 0.5s;
+    }
+    &:hover path {
+      fill: rgba(65, 238, 155, 0.1);
+      stroke: #00fff3;
+    }
   }
 
   .title {

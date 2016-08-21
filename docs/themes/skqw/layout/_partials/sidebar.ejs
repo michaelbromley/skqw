@@ -1,7 +1,7 @@
 <div class="sidebar">
   <div class="header">
     <a href="<%- url_for('/') %>">
-      <%- image_tag('images/logo-line.svg', { 'class': 'sidebar-logo' }) %>
+      <%- partial('_partials/logo', {}, {cache: true}) %>
     </a>
     <div class="info">
       <div class="content">
