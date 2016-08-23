@@ -3,7 +3,7 @@ title: Getting Started
 date: 2016-08-20 06:48:50
 ---
 
-# Installation (Windows)
+## Installation (Windows)
 
 1. Go to the [releases page](https://github.com/michaelbromley/skqw/releases) to get the latest installer binary. The app will be installed to `Users/<username>/AppData/Local/SKQW`, but should automatically create a shortcut on the desktop.
 2. Then get some visualizations from the [SKQW library repo](https://github.com/michaelbromley/skqw-library). You can download a [zip with the full contents here](https://github.com/michaelbromley/skqw-library/archive/master.zip). Unzip somewhere.
@@ -15,7 +15,7 @@ date: 2016-08-20 06:48:50
 * This is alpha software. It is likely you will encounter bugs. Please open issues in this repo (if you know how) so I can fix them for the next release.
 * I would love to make installers for Mac OS X and Linux, but I have not had the opportunity yet. If you want to see them too, [let me know](https://twitter.com/michlbrmly)! In the mean time, if you feel brave, you can try building from source (see below).
 
-# Building From Source (Windows / OS X / Linux)
+## Building From Source (Windows / OS X / Linux)
 
 I develop SKQW on a Windows machine, so I can only provide exact instructions for building on Windows for now. Since SKQW makes use of a natively-compiled node addon for sound card access, it needs to be compiled on the target platform.
 

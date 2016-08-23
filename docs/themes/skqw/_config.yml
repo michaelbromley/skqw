@@ -2,7 +2,7 @@
 
 # site setting
 rss: /atom.xml
-favicon: /favicon.png
+favicon: "images/favicon.ico"
 
 # style setting
 monochrome: true

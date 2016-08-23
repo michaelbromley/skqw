@@ -46,7 +46,6 @@ An array of numbers representing the fast fourier transform of the signal (frequ
 ## Visualization Interfaces
 
 ```TypeScript
-
 interface IVisualization {
     name: string;
     init: (skqw: ISkqw) => void;
