@@ -27,6 +27,9 @@ nav:
     -
       name: 'Getting Started'
       url: '/getting-started'
+    -
+      name: 'How To Guides'
+      url: '/how-to'
   -
     -
       name: 'Developer Guide'
@@ -34,12 +37,24 @@ nav:
       name: 'Getting Started'
       url: '/developer-guide-getting-started'
     -
-      name: API Reference
+      name: 'Parameters'
+      url: '/parameters'
+    -
+      name: 'Using Three.js'
+      url: '/using-three-js'
+    -
+      name: 'API Reference'
       url: '/api-reference'
   -
     -
-      name: Github
-      url: https://github.com/michaelbromley/skqw
+      name: 'Links'
+    -
+      name: 'SKQW on Github'
+      url: 'https://github.com/michaelbromley/skqw'
+    -
+      name: '@michlbrmly'
+      url: 'https://twitter.com/michlbrmly'
+
 
 # duoshuo shortname
 # refer to http://duoshuo.com

@@ -29,7 +29,6 @@ let ctx;
 
 function init(skqw) {
     ctx = skqw.createCanvas().getContext('2d');
-    ctx.fillStyle = `hsla(0, 50%, 50%, 0.8)`;
 }
 
 function tick(skqw) {
@@ -47,7 +46,9 @@ function tick(skqw) {
 function drawBars(w, h, ft) {
     const length = ft.length;
     const width = w / length;
-
+    
+    // The bars will be red
+    ctx.fillStyle = `hsla(0, 50%, 50%, 0.8)`;
     for(let i = 0; i < ft.length; i++) {
         const height = ft[i] * 250;
         const x = i * width;
@@ -66,7 +67,7 @@ module.exports = {
 The code above will display a simple frequency spectrum of red bars. Let's take a look at each of the basic parts:
 
 #### `init()` function
-Every visualization *must* export an `init()` function. This function will be called once each time the visualization is selected in SKQW. It is used to set up the canvas as well as any other set-up your code may require. In this case we have SKQW create a new canvas for us to drawto, and save a reference to the canvas' [context object](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D). Then we set the fillStyle property, since we don't plan to change it in this simple example.
+Every visualization *must* export an `init()` function. This function will be called once each time the visualization is selected in SKQW. It is used to set up the canvas as well as any other set-up your code may require. In this case we have SKQW create a new canvas for us to draw to, and save a reference to the canvas' [context object](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D). 
 
 #### `skqw` object
 This object is passed as the first parameter to each of the visualization lifecycle functions. It has a single method, `createCanvas()`, which 
@@ -92,70 +93,6 @@ iterate over each value in the `sample.ft` array, and represent it as a red bar 
 
 #### `module.exports` 
 Finally, we export the required information as a [Node commonjs](https://nodejs.org/docs/latest/api/modules.html) module. There are more functions and properties which SKQW can read (see the [API docs](../api-reference)), which lets us write richer visualizations, but the three shown are the bare minimum required for things to work.
-
-## Parameters
-
-It is possible to make certain aspects of a visualization configurable at run-time by the user. To do this we need to use parameters.
-
-Here's an example:
-
-```JavaScript
-let params = {
-    hue: {
-        value: 120,
-        type: 'range',
-        label: 'Hue',
-        min: 0,
-        max: 360
-    }
-};
-
-// ... init() function omitted
-
-tick(skqw) {
-    // ... code omitted
-    ctx.fillStyle = `hsl(${params.hue.value}, 50%, 50%)`;
-    // draw some stuff with the given hue.
-}
-
-function paramChange(skqw, change) {
-    params[change.paramKey].value = change.newValue;
-}
-
-module.exports = {
-    name: 'Params Example',
-    init,
-    tick,
-    paramChange,
-    params
-};
-```
-
-Let's walk through each of the new concepts introduced here:
-
-#### `params` object
-The `params` object is where we define our user-configurable parameters. Each object will be represented by a UI control in the settings panel of the SKQW user interface. In this example, we want to enable the user to set the hue (colour) of some element in our visualization.
- 
-The `value`, `type`, and `label` properties are required:
-
-- `value` is the actual value of the parameter.
-- `type` determines the type of UI control that will be rendered to
-control this param. Currently only "range" and "boolean" are supported,
-which will render a slider or a checkbox respectively.
-- `label` is the label associated with the control in the UI. This is what
-the user sees.
-
-Additionally, with a "range" type, we may also specify optional `min`,
-`max`, and `step` properties which control the behaviour of the slider
-control.
-
-#### `paramChange()` function
-This function is called every time the user changes the value of a param in the UI. The second argument is an object consisting of two properties:
-
-- `paramKey` is the key of the param that was changed. In this case it would be "hue". 
-- `newValue` is the new value assigned by the user.
-
-Finally, we need to ensure we export `params` and `paramChange` so that SKQW knows about them.
 
 ## Next Steps
 
