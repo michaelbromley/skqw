@@ -40,6 +40,9 @@ nav:
       name: 'Parameters'
       url: '/parameters'
     -
+      name: 'Common Patterns'
+      url: '/common-patterns'
+    -
       name: 'Using Three.js'
       url: '/using-three-js'
     -
@@ -67,7 +70,7 @@ nav:
 #jiathis: 1589291
 
 # open graph
-twitter:
+twitter: "@michlbrmly"
 google_plus:
 fb_admins:
 fb_app_id:
