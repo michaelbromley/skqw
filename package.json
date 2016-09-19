@@ -1,4 +1,4 @@
-{
+  {
   "name": "SKQW",
   "version": "1.0.0-alpha.3",
   "description": "Audio visualizations in JavaScript",
@@ -9,7 +9,8 @@
     "app:watch": "webpack --watch --progress --profile",
     "app:build": "rimraf app && webpack --progress --profile",
     "electron:start": ".\\node_modules\\electron-prebuilt\\dist\\electron.exe ./app/index.js",
-    "dist:win64": "build --platform win32 --arch x64"
+    "dist:win64": "build --platform win32 --arch x64",
+    "dist:osx": "build --osx"
   },
   "repository": {
     "type": "git",
@@ -53,12 +54,13 @@
     "zone.js": "0.6.12"
   },
   "build": {
-    "appId": "michaelbromley.skqw",
+    "appId": "skqw.skqw",
     "app-category-type": "public.app-category.entertainment",
     "files": ["**/*", "../visualizations/**/*"],
     "asar": false,
     "win": {
       "iconUrl": "https://raw.githubusercontent.com/michaelbromley/skqw/master/build/icon.ico"
-    }
+    },
+    "nodeGypRebuild": true
   }
 }
