@@ -19,9 +19,13 @@ install:
 - nvm install 6
 - npm install
 - npm prune
+- cd src
+- npm install
+- cd ..
+
 
 script:
 - npm run typings:install
-- npm run app:build
 - ./node_modules/.bin/electron-rebuild
+- npm run app:build
 - npm run dist:osx
