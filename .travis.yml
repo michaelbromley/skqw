@@ -26,6 +26,6 @@ install:
 
 script:
 - npm run typings:install
-- ./node_modules/.bin/electron-rebuild
+- ./node_modules/.bin/electron-rebuild -m src/node_modules
 - npm run app:build
 - npm run dist:osx
