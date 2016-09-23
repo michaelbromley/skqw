@@ -55,9 +55,11 @@
   },
   "build": {
     "appId": "skqw.skqw",
-    "app-category-type": "public.app-category.entertainment",
     "files": ["**/*", "../visualizations/**/*"],
     "asar": false,
+    "mac": {
+      "category": "public.app-category.entertainment"
+    },
     "win": {
       "iconUrl": "https://raw.githubusercontent.com/michaelbromley/skqw/master/build/icon.ico"
     },

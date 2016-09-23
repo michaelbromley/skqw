@@ -8,6 +8,10 @@ language: c
 os:
   - osx
 
+env:
+  # https://github.com/electron-userland/electron-builder/issues/481
+  - CSC_IDENTITY_AUTO_DISCOVERY=false
+
 cache:
   directories:
   - node_modules
@@ -17,6 +21,7 @@ cache:
 
 install:
 - nvm install 6
+- npm install -g node-gyp
 - npm install
 - npm prune
 - cd src
@@ -28,4 +33,9 @@ script:
 - npm run typings:install
 - ./node_modules/.bin/electron-rebuild -m src/node_modules
 - npm run app:build
+- cd app/node_modules/node-core-audio
+- node-gyp rebuild --target=1.4.0 --arch=x64 --dist-url=https://atom.io/download/atom-shell
+- cd ..
+- cd ..
+- cd ..
 - npm run dist:osx
