@@ -1,24 +1,17 @@
 osx_image: xcode7.3
-
 sudo: required
 dist: trusty
-
 language: c
-
 os:
-  - osx
-
+- osx
 env:
-  # https://github.com/electron-userland/electron-builder/issues/481
-  - CSC_IDENTITY_AUTO_DISCOVERY=false
-
+- CSC_IDENTITY_AUTO_DISCOVERY=false
 cache:
   directories:
   - node_modules
   - app/node_modules
   - $HOME/.electron
   - $HOME/.cache
-
 install:
 - nvm install 6
 - npm install -g node-gyp
@@ -27,8 +20,6 @@ install:
 - cd src
 - npm install
 - cd ..
-
-
 script:
 - npm run typings:install
 - ./node_modules/.bin/electron-rebuild -m src/node_modules
@@ -39,3 +30,15 @@ script:
 - cd ..
 - cd ..
 - npm run dist:osx
+
+deploy:
+  provider: s3
+  access_key_id: AKIAJD3PNC3PV7HMXRIQ
+  secret_access_key:
+    secure: DvplEJFlj+Dx5i9Xhl6S2MwIQiAc1nqKqY32gTNBIoNh/7iw65YiwAewTK559YzojUwNWzjeCKjjXdzCXM8HO+4DkBUW9/5+BrWHJU5hsIgk0aQNz0uRPvNDffSaG5J9lfCO+t6FxZbq3Qkktyr1Fuxu5lZmNflhJmgKtJgrwD117/9kIr11Ir4gAuyIANKqQGPUm+z5f1pUEkE7KvH4badmwktIPAcy9KHPZUK9/9EzSy5l3SEaADcSeIUts10n0y4mFHSwnJ5axDzzSqXWIo4itOTqMlVGAbEItwvUkrMFL6g7SiDgQ9KiqrXnykG/wLtHcRBKRJtOYVuLiGyN6ul0KjRVVwTPr46IXbFk3q+wFFvN8RoE5IWZHU6vpngcQ5suf+BMZkEv7LjjxxNYYgyweiigX0NyNi5/mJd/ZfI5XhXaYdQLT7Xr1T2ZLOsGIbt/zpVI1e79hpa5sg1Nf9izbnkvdD214E0TFm0xK3ZKH51Zy3dWe7TI1q8FbIF6kJkNBPEcbXUon4kiSMqkFChIPWenXzC3nFKVib0kzYJg3aH2foEROOBoDmaqruZiJj+j1x27yj7QBCHeI7SmrTrZDjYybBN2+Dg5QE88RnqJJUmLQVniTMe/YzJR6U3Nz35sLdiopOdzvBNRCWluV0jWDMO4sqymap1FOJah2h4=
+  bucket: skqw-build-artifacts
+  skip_cleanup: true
+  local-dir: dist
+  acl: 'public_read'
+  on:
+    repo: michaelbromley/skqw
