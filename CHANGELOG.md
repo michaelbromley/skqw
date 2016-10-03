@@ -1,3 +1,10 @@
+### v1.0.0-alpha.4 (in progress)
+#### Features
+* OSX build now available thanks to Travis CI.
+
+#### Fixes
+* Gain setting is correctly persisted
+
 ### v1.0.0-alpha.3 (2016-08-18)
 #### Features
 * Improvements to default visualization

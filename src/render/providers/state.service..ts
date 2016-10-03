@@ -74,7 +74,7 @@ export class State {
     }
     
     setGain(val: number): void {
-        this.gain = val;
+        this.gain = +val;
         this.emitStateChange();
     }
 
