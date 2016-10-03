@@ -8,6 +8,7 @@ export const REQUEST_DEVICE_LIST = 'REQUEST_DEVICE_LIST';
 export const RECEIVE_DEVICE_LIST = 'RECEIVE_DEVICE_LIST';
 export const SET_INPUT_DEVICE_ID = 'SET_INPUT_DEVICE_ID';
 export const SET_GAIN = 'SET_GAIN';
+export const SET_SAMPLE_RATE = 'SET_SAMPLE_RATE';
 export const TOGGLE_NORMALIZATION = 'TOGGLE_NORMALIZATION';
 export const TOGGLE_FULLSCREEN = 'TOGGLE_FULLSCREEN';
 export const TOGGLE_DEVTOOLS = 'TOGGLE_DEVTOOLS';
@@ -17,6 +18,8 @@ export const TOGGLE_DEVTOOLS = 'TOGGLE_DEVTOOLS';
  */
 export const MAX_GAIN = 500;
 export const MIN_GAIN = 0;
+export const MIN_SAMPLE_RATE = 10;
+export const MAX_SAMPLE_RATE = 60;
 
 /**
  * Keycodes

@@ -8,7 +8,7 @@ if (handleSquirrelEvent()) {
 
 import {
     START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
-    SET_GAIN, TOGGLE_NORMALIZATION, TOGGLE_FULLSCREEN, TOGGLE_DEVTOOLS
+    SET_GAIN, TOGGLE_NORMALIZATION, TOGGLE_FULLSCREEN, TOGGLE_DEVTOOLS, SET_SAMPLE_RATE
 } from '../common/constants';
 const {app, BrowserWindow, ipcMain, shell} = require('electron');
 import {Analyzer} from './analyzer';
@@ -60,6 +60,10 @@ ipcMain.on(SET_INPUT_DEVICE_ID, (event, id) => {
 
 ipcMain.on(SET_GAIN, (event, val) => {
     analyzer.setGain(val);
+});
+
+ipcMain.on(SET_SAMPLE_RATE, (event, val) => {
+    analyzer.setSampleRate(val);
 });
 
 ipcMain.on(TOGGLE_NORMALIZATION, (event, val) => {

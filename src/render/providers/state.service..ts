@@ -9,6 +9,7 @@ export interface IState {
     settingsIconVisible: boolean;
     settingsExpanded: boolean;
     gain: number;
+    sampleRate: number;
 }
 
 /**
@@ -25,7 +26,8 @@ export class State {
         selectedInputId: 0,
         settingsIconVisible: false,
         settingsExpanded: false,
-        gain: 100
+        gain: 100,
+        sampleRate: 60
     });
 
     private library: { id: number; name: string; }[] = [];
@@ -35,6 +37,7 @@ export class State {
     private settingsIconVisible: boolean = false;
     private settingsExpanded: boolean = false;
     private gain: number = 100;
+    private sampleRate: number = 60;
 
     /**
      * Returns the current state.
@@ -78,6 +81,11 @@ export class State {
         this.emitStateChange();
     }
 
+    setSampleRate(val: number): void {
+        this.sampleRate = +val;
+        this.emitStateChange();
+    }
+
     /**
      * Emit a clone of the current app state.
      */
@@ -89,7 +97,8 @@ export class State {
             selectedInputId: this.selectedInputId,
             settingsIconVisible: this.settingsIconVisible,
             settingsExpanded: this.settingsExpanded,
-            gain: this.gain
+            gain: this.gain,
+            sampleRate: this.sampleRate
         });
     }
 

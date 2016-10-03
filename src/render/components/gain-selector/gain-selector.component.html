@@ -10,6 +10,16 @@
     </div>
 
     <div class="skqw-control">
+        <label> Sample Rate (Hz): {{ state.sampleRate }}</label>
+        <input type="range"
+               (input)="setSampleRate.emit($event.target.value)"
+               [value]="state.sampleRate"
+               [min]="minSampleRate"
+               [max]="maxSampleRate"
+               step="10">
+    </div>
+
+    <div class="skqw-control">
         <label>
             Normalize
         </label>

@@ -25,6 +25,7 @@ export class SettingsPanel {
 
     @Output() select = new EventEmitter<number>();
     @Output() setGain = new EventEmitter<number>();
+    @Output() setSampleRate = new EventEmitter<number>();
     @Output() toggleNormalization = new EventEmitter<boolean>();
     @Output() updateParam = new EventEmitter<IParamUpdate>();
     private icon_settings = require('!!svg-inline!../../../assets/icons/settings.svg');

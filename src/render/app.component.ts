@@ -1,7 +1,8 @@
 import {Component, ChangeDetectorRef, ViewChild, HostListener, ViewEncapsulation} from '@angular/core';
 import {
     START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
-    SET_GAIN, TOGGLE_NORMALIZATION, MAX_GAIN, MIN_GAIN, TOGGLE_FULLSCREEN, TOGGLE_DEVTOOLS
+    SET_GAIN, TOGGLE_NORMALIZATION, MAX_GAIN, MIN_GAIN, TOGGLE_FULLSCREEN, TOGGLE_DEVTOOLS, MIN_SAMPLE_RATE,
+    MAX_SAMPLE_RATE, SET_SAMPLE_RATE
 } from '../common/constants';
 import {Visualizer} from './components/visualizer/visualizer.component';
 import {SettingsPanel} from './components/settings-panel/settings-panel.component';
@@ -30,6 +31,7 @@ export class App {
     private vis: IVisualization;
     private hoverTimer: any;
     private saveGainTimer: any;
+    private sampleRateTimer: any;
     @ViewChild(Visualizer) private visualizer: Visualizer;
 
     constructor(private loader: Loader,
@@ -46,6 +48,11 @@ export class App {
         storage.get('gain', (err, data) => {
             if (data.gain) {
                 this.state.setGain(data.gain);
+            }
+        });
+        storage.get('sampleRate', (err, data) => {
+            if (data.sampleRate) {
+                this.state.setSampleRate(data.sampleRate);
             }
         });
     }
@@ -173,6 +180,16 @@ export class App {
         }
         clearTimeout(this.saveGainTimer);
         this.saveGainTimer = setTimeout(() =>  storage.set('gain', { gain: val }));
+    }
+
+    setSampleRate(val: number) {
+        console.log('setting sample rate to',val);
+        if (MIN_SAMPLE_RATE <= val && val <= MAX_SAMPLE_RATE) {
+            this.state.setSampleRate(val);
+            ipcRenderer.send(SET_SAMPLE_RATE, val);
+        }
+        clearTimeout(this.sampleRateTimer);
+        this.sampleRateTimer = setTimeout(() =>  storage.set('sampleRate', { sampleRate: val }));
     }
 
     toggleNormalization(val: boolean) {

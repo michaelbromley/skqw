@@ -5,8 +5,6 @@
 
     <div class="panel-body">
 
-        <img src="../../../assets/images/logo.svg">
-
         <settings-group groupTitle="Visualization" [visible]="true">
             <v-selector [current]="current"
                         [state]="state"
@@ -16,7 +14,8 @@
         <settings-group groupTitle="Parameters">
             <gain-selector [state]="state"
                            (toggleNormalization)="toggleNormalization.emit($event)"
-                           (setGain)="setGain.emit($event)"></gain-selector>
+                           (setGain)="setGain.emit($event)"
+                           (setSampleRate)="setSampleRate.emit($event)"></gain-selector>
 
             <parameter-controls [params]="current?.params"
                                 (updateParam)="updateParam.emit($event)"></parameter-controls>
@@ -47,9 +46,12 @@
         </settings-group>
 
         <settings-group groupTitle="About">
-            SKQW v {{ version }}<br>
-            by Michael Bromley<br>
-            <a href="http://michaelbromley.github.io/skqw/" target="_blank">Website</a>
+            <div class="about">
+                <img src="../../../assets/images/logo.svg">
+                SKQW v{{ version }}<br>
+                by Michael Bromley<br>
+                <a href="http://michaelbromley.github.io/skqw/" target="_blank">Website</a>
+            </div>
         </settings-group>
     </div>
 </div>

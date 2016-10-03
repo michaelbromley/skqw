@@ -11,7 +11,7 @@ const DEFAULT_OPTIONS = {
     sampleRate: 8000
 };
 engine.setOptions(DEFAULT_OPTIONS);
-engine.setSampleRate(2);
+engine.setSampleRate(60);
 
 /**
  * Low-level interface to the hardware sound device using node-core-audio.
@@ -58,6 +58,13 @@ export class Analyzer {
 
     setGain(val: number) {
         this.gain = val;
+    }
+
+    /**
+     * Set the sample rate of the audio sampler
+     */
+    setSampleRate(frequencyInHerz: number) {
+        engine.setSampleRate(+frequencyInHerz);
     }
 
     toggleNormalization(val: boolean) {

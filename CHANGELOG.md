@@ -1,6 +1,7 @@
 ### v1.0.0-alpha.4 (in progress)
 #### Features
 * OSX build now available thanks to Travis CI.
+* Configurable sample rate
 
 #### Fixes
 * Gain setting is correctly persisted
