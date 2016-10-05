@@ -1,11 +1,12 @@
   {
   "name": "SKQW",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "description": "Audio visualizations in JavaScript",
   "homepage": "https://github.com/michaelbromley/skqw",
   "main": "app/index.js",
   "scripts": {
     "typings:install": "typings install",
+    "electron:rebuild": "electron-rebuild -m src/node_modules",
     "app:watch": "webpack --watch --progress --profile",
     "app:build": "rimraf app && webpack --progress --profile",
     "electron:start": ".\\node_modules\\electron-prebuilt\\dist\\electron.exe ./app/index.js",
