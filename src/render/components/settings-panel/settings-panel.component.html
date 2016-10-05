@@ -13,7 +13,6 @@
 
         <settings-group groupTitle="Parameters">
             <gain-selector [state]="state"
-                           (toggleNormalization)="toggleNormalization.emit($event)"
                            (setGain)="setGain.emit($event)"
                            (setSampleRate)="setSampleRate.emit($event)"></gain-selector>
 

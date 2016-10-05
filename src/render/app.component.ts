@@ -55,6 +55,13 @@ export class App {
                 this.state.setSampleRate(data.sampleRate);
             }
         });
+
+        let normalizeFt = true;
+        (<any> window).skqw_toggleNormalization = () => {
+            normalizeFt = !normalizeFt;
+            console.log('Normalization set to ', normalizeFt);
+            ipcRenderer.send(TOGGLE_NORMALIZATION, normalizeFt);
+        };
     }
 
     ngOnInit(): void {
@@ -190,10 +197,6 @@ export class App {
         }
         clearTimeout(this.sampleRateTimer);
         this.sampleRateTimer = setTimeout(() =>  storage.set('sampleRate', { sampleRate: val }));
-    }
-
-    toggleNormalization(val: boolean) {
-        ipcRenderer.send(TOGGLE_NORMALIZATION, val)
     }
 
     private loadLibrary(dir: string): void {
