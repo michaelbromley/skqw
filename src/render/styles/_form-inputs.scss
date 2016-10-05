@@ -6,7 +6,7 @@ input[type=range]{
   &::-webkit-slider-runnable-track {
     width: 300px;
     height: 16px;
-    background: #ddd;
+    background: #ccc;
     border: none;
     border-radius: 3px;
   }
@@ -25,12 +25,15 @@ input[type=range]{
   }
 
   &:focus::-webkit-slider-runnable-track {
-    background: #ccc;
+    background: #ccf;
   }
 
   &.dark {
     &::-webkit-slider-runnable-track {
       background: #333;
+    }
+    &:focus::-webkit-slider-runnable-track {
+      background: #335;
     }
   }
 }

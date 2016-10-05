@@ -20,6 +20,9 @@ export class VSelector {
 
     @HostListener('document:keydown', ['$event'])
     reloadVis(e: KeyboardEvent): void {
+        if ((e.target as HTMLElement).tagName === 'INPUT') {
+            return;
+        }
         switch (e.which) {
             case KEYCODE_RIGHT_ARROW:
                 this.selectNext();

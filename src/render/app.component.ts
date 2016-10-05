@@ -107,6 +107,9 @@ export class App {
      */
     @HostListener('document:keydown', ['$event'])
     onKeydown(e: KeyboardEvent): void {
+        if ((e.target as HTMLElement).tagName === 'INPUT') {
+            return;
+        }
         if (e.altKey === true && e.which === 82) {
             // Handle alt + R - reload current visualization.
             if (!this.vis) {
