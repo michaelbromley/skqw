@@ -16,6 +16,8 @@ export class ParameterControls {
         if (newParams) {
             let keys = Object.keys(newParams);
             this.paramsArray = keys.map(key => ({key, param: newParams[key]}));
+        } else {
+            this.paramsArray = [];
         }
     }  
 
