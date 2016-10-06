@@ -3,20 +3,25 @@ import {IVisualization} from '../../../common/models';
 import {KEYCODE_RIGHT_ARROW, KEYCODE_LEFT_ARROW} from '../../../common/constants';
 import {IState} from '../../providers/state.service.';
 import {NotificationService} from '../../providers/notification.service';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+
+let arrowIcon: string = require('!!svg-inline!../../../assets/icons/play_arrow.svg');
 
 @Component({
     selector: 'v-selector',
     template: require('./v-selector.component.html'),
-    styles: [require('./v-selector.scss')],
-    directives: []
+    styles: [require('./v-selector.scss')]
 })
 export class VSelector {
     @Input() state: IState;
     @Input() current: IVisualization;
     @Output() select = new EventEmitter<number>();
-    private icon_arrow = require('!!svg-inline!../../../assets/icons/play_arrow.svg');
+    private icon_arrow: SafeHtml;
 
-    constructor(private notificationService: NotificationService) {}
+    constructor(private notificationService: NotificationService,
+                sanitizer: DomSanitizer) {
+        this.icon_arrow = sanitizer.bypassSecurityTrustHtml(arrowIcon);
+    }
 
     @HostListener('document:keydown', ['$event'])
     reloadVis(e: KeyboardEvent): void {
@@ -26,7 +31,7 @@ export class VSelector {
         switch (e.which) {
             case KEYCODE_RIGHT_ARROW:
                 this.selectNext();
-                break; 
+                break;
             case KEYCODE_LEFT_ARROW:
                 this.selectPrev();
                 break;

@@ -19,7 +19,7 @@
       }
     }
 
-    .prev-icon svg {
+    /deep/ .prev-icon svg {
       transform: rotateZ(180deg) translateX(7px);
     }
   }

@@ -1,20 +1,15 @@
 import {Component, Input, EventEmitter, Output} from '@angular/core';
-import {InputSelector} from '../input-selector/input-selector.component';
-import {LibraryPathSelector} from '../library-path-selector/library-path-selector.component';
 import {IState} from '../../providers/state.service.';
-import {VSelector} from '../v-selector/v-selector.component';
 import {IParamUpdate, IVisualization} from '../../../common/models';
-import {SettingsGroup} from '../settings-group/settings-group.component';
-import {GainSelector} from '../gain-selector/gain-selector.component';
-import {ParameterControls} from '../parameter-controls/parameter-controls.component';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 
 declare var VERSION: string;
+let settingsIcon: string = require('!!svg-inline!../../../assets/icons/settings.svg');
 
 @Component({
     selector: 'settings-panel',
     template: require('./settings-panel.component.html'),
-    styles: [require('./settings-panel.scss')],
-    directives: [VSelector, InputSelector, GainSelector, ParameterControls, LibraryPathSelector, SettingsGroup]
+    styles: [require('./settings-panel.scss')]
 })
 export class SettingsPanel {
     @Input() state: IState;
@@ -27,6 +22,10 @@ export class SettingsPanel {
     @Output() setGain = new EventEmitter<number>();
     @Output() setSampleRate = new EventEmitter<number>();
     @Output() updateParam = new EventEmitter<IParamUpdate>();
-    private icon_settings = require('!!svg-inline!../../../assets/icons/settings.svg');
+    private icon_settings: SafeHtml;
     private version: string = VERSION;
+
+    constructor(sanitizer: DomSanitizer) {
+        this.icon_settings = sanitizer.bypassSecurityTrustHtml(settingsIcon);
+    }
 } 

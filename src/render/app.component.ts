@@ -5,12 +5,9 @@ import {
     MAX_SAMPLE_RATE, SET_SAMPLE_RATE
 } from '../common/constants';
 import {Visualizer} from './components/visualizer/visualizer.component';
-import {SettingsPanel} from './components/settings-panel/settings-panel.component';
 import {Loader} from './providers/loader.service';
 import {IParamUpdate, ISample, IVisualization} from '../common/models';
-import {VSelector} from './components/v-selector/v-selector.component';
 import {State} from './providers/state.service.';
-import {Notification} from './components/notification/notification.component';
 import {NotificationService} from './providers/notification.service';
 const ipcRenderer = require('electron').ipcRenderer;
 const {app, dialog} = require('electron').remote;
@@ -22,8 +19,7 @@ require('style!./styles/app.scss');
 @Component({
     selector: 'app',
     template: require('./app.component.html'),
-    encapsulation: ViewEncapsulation.None,
-    directives: [Visualizer, SettingsPanel, VSelector, Notification]
+    encapsulation: ViewEncapsulation.None
 })
 export class App {
 
