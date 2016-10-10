@@ -1,17 +1,19 @@
-var path = require('path');
-var webpack = require('webpack');
+const path = require('path');
+const webpack = require('webpack');
+const ngtools = require('@ngtools/webpack');
+const NgcWebpackPlugin = require('@ngtools/webpack').NgcWebpackPlugin;
 
 // Webpack Plugins
-var CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
+const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 /**
  * Env
  * Get npm lifecycle event to identify the environment
  */
-var ENV = process.env.npm_lifecycle_event;
-var isProd = ENV === 'app:build';
+let ENV = process.env.npm_lifecycle_event;
+let isProd = ENV === 'app:build';
 
 var externalsFn =  (function () {
     var IGNORES = [
@@ -40,16 +42,8 @@ module.exports = [
 
         config.target = 'electron-renderer';
 
-        // add debug messages
-        config.debug = !isProd;
-
-        /**
-         * Entry
-         * Reference: http://webpack.github.io/docs/configuration.html#entry
-         */
         config.entry = {
-            'polyfills': './src/render/polyfills.ts',
-            'render': './src/render/bootstrap.ts' // our angular app
+            'render': path.resolve(__dirname, './src/render/main.aot.ts')
         };
 
         /**
@@ -61,38 +55,17 @@ module.exports = [
             filename: 'js/[name].js'
         };
 
-        /**
-         * Resolve
-         * Reference: http://webpack.github.io/docs/configuration.html#resolve
-         */
         config.resolve = {
-            cache: true,
-            root: root(),
             // only discover files that have those extensions
-            extensions: ['', '.ts', '.js', '.json', '.css', '.scss', '.html']
+            extensions: ['.ts', '.js', '.json', '.css', '.scss', '.html']
         };
 
-        /**
-         * Loaders
-         * Reference: http://webpack.github.io/docs/configuration.html#module-loaders
-         * List: http://webpack.github.io/docs/list-of-loaders.html
-         * This handles most of the magic responsible for converting modules
-         */
         config.module = {
             loaders: [
                 // Support for .ts files.
                 {
                     test: /\.ts$/,
-                    loader: 'ts',
-                    query: {
-                        'ignoreDiagnostics': [
-                            2403, // 2403 -> Subsequent variable declarations
-                            2300, // 2300 -> Duplicate identifier
-                            2374, // 2374 -> Duplicate number index signature
-                            2375, // 2375 -> Duplicate string index signature
-                            2502  // 2502 -> Referenced directly or indirectly
-                        ]
-                    }
+                    loader: '@ngtools/webpack'
                 },
 
                 // copy those assets to output
@@ -107,7 +80,6 @@ module.exports = [
                 // todo: change the loader to something that adds a hash to images
                 {test: /\.html$/, loader: 'html'}
             ],
-            postLoaders: [],
             noParse: [/.+zone\.js\/dist\/.+/, /.+angular2\/bundles\/.+/, /angular2-polyfills\.js/]
         };
 
@@ -141,6 +113,11 @@ module.exports = [
             ]),
             new webpack.DefinePlugin({
                 VERSION: JSON.stringify(require('./package.json').version)
+            }),
+            new NgcWebpackPlugin({
+                project: './tsconfig.json',
+                baseDir: path.resolve(__dirname, ''),
+                genDir:  path.resolve(__dirname, './src/render/ngfactory'),
             })
         );
 
@@ -149,21 +126,13 @@ module.exports = [
             config.plugins.push(
                 // Reference: http://webpack.github.io/docs/list-of-plugins.html#noerrorsplugin
                 // Only emit files when there are no errors
-                new webpack.NoErrorsPlugin(),
+                new webpack.NoErrorsPlugin()
 
                 // Reference: http://webpack.github.io/docs/list-of-plugins.html#dedupeplugin
                 // Dedupe modules in the output
-                new webpack.optimize.DedupePlugin()
+                // new webpack.optimize.DedupePlugin()
             );
         }
-
-        /**
-         * Sass
-         * Reference: https://github.com/jtangelder/sass-loader
-         * Transforms .scss files to .css
-         */
-        config.sassLoader = {
-        };
 
         config.externals = [externalsFn];
 
@@ -178,7 +147,7 @@ module.exports = [
             __filename: false
         },
         resolve: {
-            extensions: ['', '.ts', '.js', '.json']
+            extensions: ['.ts', '.js', '.json']
         },
         entry: {
             'main': './src/main/index.ts'
@@ -189,13 +158,7 @@ module.exports = [
         },
         module: {
             loaders: [
-                {
-                    test: /\.ts$/,
-                    loader: 'ts',
-                    query: {
-                        'ignoreDiagnostics': []
-                    }
-                }
+                { test: /\.ts$/, loader: 'ts' }
             ]
         },
         externals: [externalsFn]

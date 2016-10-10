@@ -6,6 +6,7 @@ typings
 db.json
 docs/public
 docs/.deploy_git
+ngfactory
 
 # Windows image file caches
 Thumbs.db

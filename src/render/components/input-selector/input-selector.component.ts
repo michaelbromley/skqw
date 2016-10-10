@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
     selector: 'input-selector',
-    template: require('./input-selector.component.html'),
+    templateUrl: './input-selector.component.html',
     styles: [`:host { display: block; } select { width: 100%; }`]
 })
 export class InputSelector {
@@ -10,9 +10,9 @@ export class InputSelector {
     @Input() inputs: { [id: number]: string }; 
     @Input() selectedId: number;
     @Output() inputChange = new EventEmitter<number>(); 
-    private inputArray: { id: string; name: string; }[] = [];
+    inputArray: { id: string; name: string; }[] = [];
 
-    ngOnChanges(): void {
+    ngOnChanges(changes: any): void {
         if (this.inputArray.length === 0) {
             for (let id in this.inputs) {
                 let name = this.inputs[id];

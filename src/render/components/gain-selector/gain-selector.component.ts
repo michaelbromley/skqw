@@ -4,8 +4,8 @@ import {MAX_GAIN, MIN_GAIN, MIN_SAMPLE_RATE, MAX_SAMPLE_RATE} from '../../../com
 
 @Component({
     selector: 'gain-selector',
-    template: require('./gain-selector.component.html'),
-    styles: [require('./gain-selector.scss')]
+    templateUrl: './gain-selector.component.html',
+    styleUrls: ['./gain-selector.scss']
 })
 export class GainSelector {
     @Input() state: IState;

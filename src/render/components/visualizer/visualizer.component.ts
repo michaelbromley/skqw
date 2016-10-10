@@ -10,7 +10,7 @@ export interface IDimensions {
 @Component({
     selector: 'visualizer',
     template: ``,
-    styles: [require('./visualizer.scss')]
+    styleUrls: ['./visualizer.scss']
 })
 export class Visualizer {
 
@@ -51,6 +51,7 @@ export class Visualizer {
     ngOnChanges(changes: {[key: string]: SimpleChange}): void {
         if (changes['visualization']) {
             this.stop(changes['visualization'].previousValue);
+            this.updateDimensions();
             if (this.visualization && this.visualization.init) {
                 try {
                     this.visualization.init(this.skqw);
@@ -68,13 +69,12 @@ export class Visualizer {
 
     start() {
         this.isRunning = true;
-        this.updateDimensions();
         this.rafId = requestAnimationFrame(this.tick);
     }
 
     stop(visualization?: IVisualization) {
-        if (this.rafId && this.rafId.data) {
-            cancelAnimationFrame(this.rafId.data.handleId);
+        if (this.rafId) {
+            cancelAnimationFrame(this.rafId);
         }
         if (visualization && typeof visualization.destroy === 'function') {
             try {

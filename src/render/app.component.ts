@@ -18,20 +18,20 @@ require('style!./styles/app.scss');
 
 @Component({
     selector: 'app',
-    template: require('./app.component.html'),
+    templateUrl: './app.component.html',
     encapsulation: ViewEncapsulation.None
 })
 export class App {
 
-    private sample: ISample = { ft: [], ts: [] };
-    private vis: IVisualization;
+    @ViewChild(Visualizer) visualizer: Visualizer;
+    sample: ISample = { ft: [], ts: [] };
+    vis: IVisualization;
     private hoverTimer: any;
     private saveGainTimer: any;
     private sampleRateTimer: any;
-    @ViewChild(Visualizer) private visualizer: Visualizer;
 
-    constructor(private loader: Loader,
-                private state: State,
+    constructor(public state: State,
+                private loader: Loader,
                 private notification: NotificationService,
                 private cdr: ChangeDetectorRef) {
 

@@ -1,10 +1,12 @@
-### v1.0.0-alpha.4 (in progress)
+### v1.0.0-beta.1 (2016-10-10)
 #### Features
 * OSX build now available thanks to Travis CI.
 * Configurable sample rate
+* Styling improvements
 
 #### Fixes
 * Gain setting is correctly persisted
+* Prevent resize immediately after init call
 
 ### v1.0.0-alpha.3 (2016-08-18)
 #### Features

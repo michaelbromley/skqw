@@ -9,14 +9,14 @@ let arrowIcon: string = require('!!svg-inline!../../../assets/icons/play_arrow.s
 
 @Component({
     selector: 'v-selector',
-    template: require('./v-selector.component.html'),
-    styles: [require('./v-selector.scss')]
+    templateUrl: './v-selector.component.html',
+    styleUrls: ['./v-selector.scss']
 })
 export class VSelector {
     @Input() state: IState;
     @Input() current: IVisualization;
     @Output() select = new EventEmitter<number>();
-    private icon_arrow: SafeHtml;
+    icon_arrow: SafeHtml;
 
     constructor(private notificationService: NotificationService,
                 sanitizer: DomSanitizer) {

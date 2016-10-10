@@ -3,13 +3,13 @@ import {IParameter, IParamUpdate} from '../../../common/models';
 
 @Component({
     selector: 'parameter-controls',
-    template: require('./parameter-controls.component.html'),
-    styles: [require('./parameter-controls.scss')]
+    templateUrl: './parameter-controls.component.html',
+    styleUrls: ['./parameter-controls.scss']
 }) 
 export class ParameterControls {
     @Input() params: { [name: string]: IParameter };
     @Output() updateParam = new EventEmitter<IParamUpdate>();
-    private paramsArray: { key: string; param: IParameter }[] = [];
+    paramsArray: { key: string; param: IParameter }[] = [];
 
     ngOnChanges(changes: { [name: string]: SimpleChange }): void {
         let newParams = changes['params'] && changes['params'].currentValue;

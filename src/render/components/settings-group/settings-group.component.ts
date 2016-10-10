@@ -5,14 +5,14 @@ let caretIcon: string = require('!!svg-inline!../../../assets/icons/keyboard_arr
 
 @Component({
     selector: 'settings-group',
-    template: require('./settings-group.component.html'),
-    styles: [require('./settings-group.scss')]
+    templateUrl: './settings-group.component.html',
+    styleUrls: ['./settings-group.scss']
 })
 export class SettingsGroup {
     @Input() groupTitle: string;
     @Input() visible: boolean = false;
     @ViewChild('wrapper') wrapper: ElementRef;
-    private icon_caret: SafeHtml;
+    icon_caret: SafeHtml;
 
     constructor(sanitizer: DomSanitizer) {
         this.icon_caret = sanitizer.bypassSecurityTrustHtml(caretIcon);

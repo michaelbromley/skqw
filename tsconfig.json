@@ -10,5 +10,8 @@
     "node_modules"
   ],
   "compileOnSave": false,
-  "buildOnSave": false
+  "buildOnSave": false,
+  "angularCompilerOptions": {
+    "entryModule": "./src/render/app.module#AppModule"
+  }
 }
