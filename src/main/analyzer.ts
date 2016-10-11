@@ -1,4 +1,4 @@
-import {Subject} from 'rxjs';
+import {Subject} from 'rxjs/Subject';
 import {ISample} from '../common/models';
 const coreAudio = require('node-core-audio');
 const fourierTransform = require('fourier-transform');

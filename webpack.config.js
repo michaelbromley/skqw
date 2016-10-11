@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const ngtools = require('@ngtools/webpack');
-const NgcWebpackPlugin = require('@ngtools/webpack').NgcWebpackPlugin;
+const AotPlugin = require('@ngtools/webpack').AotPlugin;
 
 // Webpack Plugins
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
@@ -114,10 +114,10 @@ module.exports = [
             new webpack.DefinePlugin({
                 VERSION: JSON.stringify(require('./package.json').version)
             }),
-            new NgcWebpackPlugin({
-                project: './tsconfig.json',
-                baseDir: path.resolve(__dirname, ''),
-                genDir:  path.resolve(__dirname, './src/render/ngfactory'),
+            new AotPlugin({
+                tsConfigPath: path.resolve(__dirname, './tsconfig.json'),
+                entryModule: path.resolve(__dirname, './src/render/app.module#AppModule'),
+                genDir: path.resolve(__dirname, './src/render/ngfactory'),
             })
         );
 

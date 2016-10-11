@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs';
+import {Subject} from 'rxjs/Subject';
 
 /**
  * Service for displaying transient messages to the user.

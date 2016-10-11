@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Observable, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs/Subscription';
 import {NotificationService} from '../../providers/notification.service';
 
 @Component({

@@ -14,7 +14,7 @@
 * Update Electron version to 1.3.2
 
 #### Fixes
-* Coerce param value into correct type before passing to paramChange()
+* Coerce param value into correct type before passing to pparamChange()
 * Add try/catch around external file operations.
 
 ### v1.0.0-alpha.2 (2016-07-31)
