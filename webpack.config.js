@@ -13,7 +13,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
  * Get npm lifecycle event to identify the environment
  */
 let ENV = process.env.npm_lifecycle_event;
-let isProd = ENV === 'app:build';
+let isProd = ENV === 'app:build' || ENV === 'app:build-aot';
 
 var externalsFn =  (function () {
     var IGNORES = [
@@ -28,142 +28,135 @@ var externalsFn =  (function () {
     };
 })();
 
-module.exports = [
-    // Render process app
-    function makeWebpackConfig() {
-        var config = {};
+module.exports = function (env) {
 
-        config.name = 'render';
-        if (isProd) {
-            config.devtool = 'source-map';
-        } else {
-            config.devtool = 'eval-source-map';
-        }
+    const aotMode = env === 'aot';
+    console.log(`building in ${aotMode ? 'aot' : 'jit'} mode...`);
+    const entryFile = aotMode ? 'main.aot.ts' : 'bootstrap.ts';
 
-        config.target = 'electron-renderer';
+    return [
+        // Render process app
+        (function makeWebpackConfig() {
+            let config = {};
 
-        config.entry = {
-            'render': path.resolve(__dirname, './src/render/main.aot.ts')
-        };
+            config.name = 'render';
+            if (isProd) {
+                config.devtool = 'source-map';
+            } else {
+                config.devtool = 'eval-source-map';
+            }
 
-        /**
-         * Output
-         * Reference: http://webpack.github.io/docs/configuration.html#output
-         */
-        config.output = {
-            path: root('app'),
-            filename: 'js/[name].js'
-        };
+            config.target = 'electron-renderer';
 
-        config.resolve = {
-            // only discover files that have those extensions
-            extensions: ['.ts', '.js', '.json', '.css', '.scss', '.html']
-        };
+            config.entry = {
+                'render': path.resolve(__dirname, './src/render/', entryFile)
+            };
 
-        config.module = {
-            loaders: [
-                // Support for .ts files.
-                {
-                    test: /\.ts$/,
-                    loader: '@ngtools/webpack'
-                },
+            /**
+             * Output
+             * Reference: http://webpack.github.io/docs/configuration.html#output
+             */
+            config.output = {
+                path: root('app'),
+                filename: 'js/[name].js'
+            };
 
-                // copy those assets to output
-                {test: /\.(svg|png|jpe?g|gif|woff|woff2|ttf|eot|ico)$/, loader: 'file?name=assets/[name].[ext]?'},
-                // all css required in src/app files will be merged in js files
-                {test: /\.css$/, loader: 'raw'},
+            config.resolve = {
+                // only discover files that have those extensions
+                extensions: ['.ts', '.js', '.json', '.css', '.scss', '.html']
+            };
 
-                // all css required in src/app files will be merged in js files
-                {test: /\.s[ac]ss$/, loader: 'raw!sass'},
+            config.module = {
+                loaders: [
+                    // Support for .ts files.
+                    {
+                        test: /\.ts$/,
+                        loaders: aotMode ? ['@ngtools/webpack'] : ['ts', 'angular2-template-loader']
+                    },
 
-                // support for .html as raw text
-                // todo: change the loader to something that adds a hash to images
-                {test: /\.html$/, loader: 'html'}
-            ],
-            noParse: [/.+zone\.js\/dist\/.+/, /.+angular2\/bundles\/.+/, /angular2-polyfills\.js/]
-        };
+                    // copy those assets to output
+                    {test: /\.(svg|png|jpe?g|gif|woff|woff2|ttf|eot|ico)$/, loader: 'file?name=assets/[name].[ext]?'},
+                    // all css required in src/app files will be merged in js files
+                    {test: /\.css$/, loader: 'raw'},
 
-        /**
-         * Plugins
-         * Reference: http://webpack.github.io/docs/configuration.html#plugins
-         * List: http://webpack.github.io/docs/list-of-plugins.html
-         */
-        config.plugins = [];
+                    // all css required in src/app files will be merged in js files
+                    {test: /\.s[ac]ss$/, loader: 'raw!sass'},
 
-        config.plugins.push(
-            // Inject script and link tags into html files
-            // Reference: https://github.com/ampedandwired/html-webpack-plugin
-            new HtmlWebpackPlugin({
-                inject: true,
-                template: 'src/index.html',
-                chunksSortMode: packageSort(['polyfills', 'render'])
-            }),
+                    // support for .html as raw text
+                    {test: /\.html$/, loader: 'html'}
+                ],
+                noParse: [/.+zone\.js\/dist\/.+/, /.+angular2\/bundles\/.+/, /angular2-polyfills\.js/]
+            };
 
-            // Copy assets from the public folder
-            // Reference: https://github.com/kevlened/copy-webpack-plugin
-            new CopyWebpackPlugin([
-                {
-                    from: root('src/package.json')
-                },
-                {
-                    context: './src',
-                    from: 'node_modules/**/*',
-                    to: ''
-                }
-            ]),
-            new webpack.DefinePlugin({
-                VERSION: JSON.stringify(require('./package.json').version)
-            }),
-            new AotPlugin({
-                tsConfigPath: path.resolve(__dirname, './tsconfig.json'),
-                entryModule: path.resolve(__dirname, './src/render/app.module#AppModule'),
-                genDir: path.resolve(__dirname, './src/render/ngfactory'),
-            })
-        );
+            /**
+             * Plugins
+             * Reference: http://webpack.github.io/docs/configuration.html#plugins
+             * List: http://webpack.github.io/docs/list-of-plugins.html
+             */
+            config.plugins = [];
 
-        // Add build specific plugins
-        if (isProd) {
             config.plugins.push(
-                // Reference: http://webpack.github.io/docs/list-of-plugins.html#noerrorsplugin
-                // Only emit files when there are no errors
-                new webpack.NoErrorsPlugin()
+                // Inject script and link tags into html files
+                // Reference: https://github.com/ampedandwired/html-webpack-plugin
+                new HtmlWebpackPlugin({
+                    inject: true,
+                    template: 'src/index.html',
+                    chunksSortMode: packageSort(['polyfills', 'render'])
+                }),
 
-                // Reference: http://webpack.github.io/docs/list-of-plugins.html#dedupeplugin
-                // Dedupe modules in the output
-                // new webpack.optimize.DedupePlugin()
+                // Copy assets from the public folder
+                // Reference: https://github.com/kevlened/copy-webpack-plugin
+                new CopyWebpackPlugin([
+                    {
+                        from: root('src/package.json')
+                    },
+                    {
+                        context: './src',
+                        from: 'node_modules/**/*',
+                        to: ''
+                    }
+                ]),
+                new webpack.DefinePlugin({
+                    VERSION: JSON.stringify(require('./package.json').version)
+                }),
+                new AotPlugin({
+                    tsConfigPath: path.resolve(__dirname, './tsconfig.json'),
+                    entryModule: path.resolve(__dirname, './src/render/app.module#AppModule'),
+                    genDir: path.resolve(__dirname, './src/render/ngfactory'),
+                })
             );
+
+            config.externals = [externalsFn];
+
+            return config;
+        })(),
+        // Main process app
+        {
+            name: 'main',
+            target: 'node',
+            node: {
+                __dirname: false,
+                __filename: false
+            },
+            resolve: {
+                extensions: ['.ts', '.js', '.json']
+            },
+            entry: {
+                'main': './src/main/index.ts'
+            },
+            output: {
+                path: root('app'),
+                filename: 'index.js'
+            },
+            module: {
+                loaders: [
+                    { test: /\.ts$/, loader: 'ts' }
+                ]
+            },
+            externals: [externalsFn]
         }
-
-        config.externals = [externalsFn];
-
-        return config;
-    }(),
-    // Main process app
-    {
-        name: 'main',
-        target: 'node',
-        node: {
-            __dirname: false,
-            __filename: false
-        },
-        resolve: {
-            extensions: ['.ts', '.js', '.json']
-        },
-        entry: {
-            'main': './src/main/index.ts'
-        },
-        output: {
-            path: root('app'),
-            filename: 'index.js'
-        },
-        module: {
-            loaders: [
-                { test: /\.ts$/, loader: 'ts' }
-            ]
-        },
-        externals: [externalsFn]
-    }
-];
+    ];
+};
 
 // Helper functions
 function root(args) {

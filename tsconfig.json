@@ -7,8 +7,13 @@
     "sourceMap": true
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "src/render/main.aot.ts"
   ],
   "compileOnSave": false,
-  "buildOnSave": false
+  "buildOnSave": false,
+  "angularCompilerOptions": {
+    "genDir": "./src/render/ngfactory",
+    "entryModule": "./src/render/app.module#AppModule"
+  }
 }
