@@ -1,10 +1,15 @@
 <div class="header-logo">
   <%- partial('_partials/logo', {}, {cache: true}) %>
-  <div class="version">alpha</div>
+  <div class="version">beta</div>
 </div>
-
-<h3>A native desktop audio visualizer, built with Electron and Angular 2.</h3>
-
+<div class="hero">
+  <h3>A native desktop audio visualizer<br> built with Electron and Angular 2</h3>
+  <a class="download-button" href="https://github.com/michaelbromley/skqw/releases">
+    <%- image_tag('images/windows8.svg') %>
+    <%- image_tag('images/apple.svg') %>
+    Download for Windows & macOS
+  </a>
+</div>
 <p>SKQW (pronounced "skew") allows you to visualize the audio output of you computer's sound card.
 It is inspired by my love of the old Winamp plugins like Milkdrop and Geiss.
 Visualizations are written in JavaScript and are rendered with HTML Canvas.</p>
