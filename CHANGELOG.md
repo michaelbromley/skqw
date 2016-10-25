@@ -1,3 +1,9 @@
+### v1.0.0-beta.2 (in progress)
+#### Features
+* Error messages in console when visualizations fail to load
+* Automatic updating of parameters when no callback exported
+
+
 ### v1.0.0-beta.1 (2016-10-10)
 #### Features
 * OSX build now available thanks to Travis CI.

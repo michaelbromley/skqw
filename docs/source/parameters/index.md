@@ -27,6 +27,7 @@ function tick(skqw) {
 }
 
 function paramChange(skqw, change) {
+    // this is optional, see explanation below
     params[change.paramKey].value = change.newValue;
 }
 
@@ -52,10 +53,12 @@ The `value`, `type`, and `label` properties are required:
 
 Additionally, with a "range" type, we may also specify optional `min`, `max`, and `step` properties which control the behaviour of the slider control.
 
-#### `paramChange()` function
+#### `paramChange()` function (optional)
 This function is called every time the user changes the value of a param in the UI. The second argument is an object consisting of two properties:
 
 - `paramKey` is the key of the param that was changed. In this case it would be "hue". 
 - `newValue` is the new value assigned by the user.
+
+In fact, this function is optional. If it is omitted, SKQW will automatically apply the same function as shown above to update the parameter values. It is only necessary to define this function if additional processing is required when a parameter changes.
 
 Finally, we need to ensure we export `params` and `paramChange` so that SKQW knows about them.

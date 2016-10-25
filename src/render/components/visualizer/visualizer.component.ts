@@ -89,11 +89,17 @@ export class Visualizer {
     }
 
     updateParam(paramUpdate: IParamUpdate): void {
-        if (this.visualization && typeof this.visualization.paramChange === 'function') {
-            try {
-                this.visualization.paramChange(this.skqw, paramUpdate);
-            } catch (e) {
-                console.log(e);
+        if (this.visualization && this.visualization.params) {
+            if (typeof this.visualization.paramChange === 'function') {
+                try {
+                    this.visualization.paramChange(this.skqw, paramUpdate);
+                } catch (e) {
+                    console.log(e);
+                }
+            } else {
+                // if the paramChange hook is not defined, automatically update
+                // the parameter.
+                this.visualization.params[paramUpdate.paramKey].value = paramUpdate.newValue;
             }
         }
     }
