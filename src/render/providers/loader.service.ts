@@ -44,7 +44,8 @@ export class Loader {
                     this.library.push(normalized);
                 }
             } catch (e) {
-                //
+                console.error(`Failed to load index.js in folder "${p}":`);
+                console.error(e);
             }
         }); 
     }
