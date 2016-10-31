@@ -25,6 +25,7 @@ Those who are familiar with compiling electron apps and native node modules on O
 - [**Windows**] Visual Studio (for compiling the native node modules). You can download the [community edition](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx) for free. [**OS X / Linux**] See the [node-gyp docs](https://github.com/nodejs/node-gyp#installation) for requirements for compiling native addons.
 - [**Windows 7 only**] [Windows SDK version 8.1](https://developer.microsoft.com/en-us/windows/downloads/windows-8-1-sdk) or above - only applicable if you are on Windows 7 or below.
 - [Node](https://nodejs.org/en/). Make sure the node version is 64-bit for building for x64 versions of Windows, and vice-versa.
+- [**Windows**] If you have Visual Studio 2015 update 3+, make sure your npm version is > 3.10.5, otherwise you will get an error when trying to run `dist:win64`
 
 ### Steps to Build
 

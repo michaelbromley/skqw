@@ -1,8 +1,9 @@
 ### v1.0.0-beta.2 (in progress)
 #### Features
+* Visualization scripts are now run in a sandbox context
+* Only load scripts on demand, rather than keeping whole library in memory.
 * Error messages in console when visualizations fail to load
 * Automatic updating of parameters when no callback exported
-
 
 ### v1.0.0-beta.1 (2016-10-10)
 #### Features

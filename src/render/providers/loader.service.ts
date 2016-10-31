@@ -1,14 +1,73 @@
 import {Injectable} from '@angular/core';
 import {IVisualization, IParameter} from '../../common/models';
 import {defaultVis} from '../components/visualizer/defaultVisualization';
+import {SKQW_UTILS_MODULE_NAME} from '../../common/constants';
+import {skqwUtils} from './skqw-utils';
 const path = require('path');
-const fs = require("fs");
+const fs = require('fs');
+const vm = require('vm');
+// Webpack patches the native Node require, so we need to use this instead.
 const nativeRequire = (<any> global).require;
+
+/**
+ * Returns true is the module is a built-in, e.g. "path" or "fs".
+ */
+function isBuiltInModule(name: string): boolean {
+    let isBuiltIn: boolean;
+    try {
+        isBuiltIn = nativeRequire.resolve(name).indexOf('/') <= 0;
+    } catch (e) {
+        isBuiltIn = false;
+    }
+    return isBuiltIn;
+}
+
+/**
+ * When we run a visualization script, we do not want to give that script access to same execution context as that
+ * of the app itself. Therefore we run the script in a sandbox, which provides a limited set of global methods and
+ * objects.
+ */
+function runInSandbox(visPath: string): IVisualization {
+    let pathDiff = path.relative(__dirname, visPath);
+    let sandbox = {
+        /**
+         * User scripts may not require built-in Node modules for security reasons, but may be used to load local
+         * scripts and also the skqw-utils library module.
+         */
+        require: (moduleName) => {
+            if (isBuiltInModule(moduleName)) {
+                console.warn(`Cannot require module ${moduleName} from a visualization script.`)
+            } else if (moduleName === SKQW_UTILS_MODULE_NAME) {
+                return skqwUtils;
+            } else {
+                return nativeRequire(path.join(pathDiff, moduleName));
+            }
+        },
+        console: {
+            log: (...args) => console.log(...args),
+            warn: (...args) => console.warn(...args),
+            error: (...args) => console.error(...args),
+        },
+        module: {}
+    };
+    let filename = path.join(visPath, 'index.js');
+    let options = {
+        filename,
+        timeout: 5000
+    };
+    let data = fs.readFileSync(filename);
+    return vm.runInNewContext(data, sandbox, options);
+}
 
 @Injectable()
 export class Loader {
 
-    private library: IVisualization[] = [];
+    private library: {
+        name: string;
+        path: string;
+        // TODO: implement a hash for use in presets etc.
+        hash?: string;
+    }[] = [];
     private visPath: string = __dirname;
 
     /**
@@ -27,7 +86,10 @@ export class Loader {
         const isDir = p => fs.statSync(path.join(this.visPath, p)).isDirectory();
         const hasIndex = p => fs.statSync(path.join(this.visPath, p, 'index.js')).isFile();
         const isVisObject = v => v && v.name && v.init && v.tick;
-        this.library = [defaultVis];
+        this.library = [{
+            name: defaultVis.name,
+            path: ''
+        }];
 
         this.flushVisCache();
 
@@ -36,12 +98,14 @@ export class Loader {
                 if (!isDir(p) || !hasIndex(p)) {
                     return;
                 }
-                let visPath = path.join(this.visPath, p, 'index.js');
-                let vis = nativeRequire(visPath);
+                let visPath = path.join(this.visPath, p);
+                let vis = runInSandbox(visPath);
                 if (isVisObject(vis)) {
-                    let normalized = this.normalizeParams(vis);
                     // TODO: check for duplicate names and error if found.
-                    this.library.push(normalized);
+                    this.library.push({
+                        name: vis.name,
+                        path: visPath
+                    });
                 }
             } catch (e) {
                 console.error(`Failed to load index.js in folder "${p}":`);
@@ -61,8 +125,11 @@ export class Loader {
      * Returns a visualization object given by the id (the index in the library array)
      */
     getVisualization(id: number): IVisualization {
-        if (0 <= id && id < this.library.length) {
-            return this.library[id];
+        if (id === 0) {
+            return defaultVis;
+        } else if (1 <= id && id < this.library.length) {
+            let vis = runInSandbox(this.library[id].path);
+            return this.normalizeParams(vis);
         }
     }
 

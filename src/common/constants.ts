@@ -20,6 +20,7 @@ export const MAX_GAIN = 500;
 export const MIN_GAIN = 0;
 export const MIN_SAMPLE_RATE = 10;
 export const MAX_SAMPLE_RATE = 60;
+export const SKQW_UTILS_MODULE_NAME = 'skqw-utils';
 
 /**
  * Keycodes

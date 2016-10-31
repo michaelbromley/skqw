@@ -46,6 +46,10 @@ module.exports = function (env) {
                 config.devtool = 'eval-source-map';
             }
 
+            config.node = {
+                __dirname: false,
+                __filename: false
+            };
             config.target = 'electron-renderer';
 
             config.entry = {
