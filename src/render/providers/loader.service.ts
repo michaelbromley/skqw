@@ -44,9 +44,9 @@ function runInSandbox(visPath: string): IVisualization {
             }
         },
         console: {
-            log: (...args) => console.log(...args),
-            warn: (...args) => console.warn(...args),
-            error: (...args) => console.error(...args),
+            log: (message: any, ...args: any[]) => console.log(message, ...args),
+            warn: (message: any, ...args: any[]) => console.warn(message, ...args),
+            error: (message: any, ...args: any[]) => console.error(message, ...args),
         },
         module: {}
     };
