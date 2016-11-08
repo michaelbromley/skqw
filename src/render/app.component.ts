@@ -67,9 +67,6 @@ export class App {
         });
 
         ipcRenderer.send(START_ANALYZER);
-        ipcRenderer.on(SAMPLE, (event, sample: ISample) => {
-            this.sample = sample;
-        });
     }
     
     toggleSettings(expanded: boolean): void {

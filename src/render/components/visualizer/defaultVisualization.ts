@@ -1,4 +1,4 @@
-import {ISkqw} from '../../../common/models';
+const {createCanvas, getSample, getDimensions} = require('skqw-core');
 
 const SVG_PATHS = [
     ['m', [415.33604,13.13485], [0,159.60405], [90.71168,-159.46391], 'z'],
@@ -19,9 +19,9 @@ let ctx: CanvasRenderingContext2D;
 let ctxBuffer: CanvasRenderingContext2D;
 let acc: number = 0;
 
-function init(skqw: ISkqw) {
-    const { width, height } = skqw.dimensions;
-    ctx = skqw.createCanvas().getContext('2d');
+function init() {
+    const { width, height } = getDimensions();
+    ctx = createCanvas().getContext('2d');
     ctxBuffer = document.createElement('canvas').getContext('2d');
     ctxBuffer.canvas.width = width;
     ctxBuffer.canvas.height = height;
@@ -29,9 +29,9 @@ function init(skqw: ISkqw) {
 
 declare var Path2D: any;
 
-function tick(skqw: ISkqw) {
-    const { width, height } = skqw.dimensions;
-    const { ft }  = skqw.sample;
+function tick() {
+    const { width, height } = getDimensions();
+    const { ft }  = getSample();
 
     let baseScale = width / (ORIGINAL_WIDTH + 600);
     let volume = 0;
@@ -101,8 +101,8 @@ function drawPath(ft, baseScale) {
     });
 }
 
-function resize(skqw) {
-    const { width, height } = skqw.dimensions;
+function resize() {
+    const { width, height } = getDimensions();
     ctxBuffer.canvas.width = width;
     ctxBuffer.canvas.height = height;
 }

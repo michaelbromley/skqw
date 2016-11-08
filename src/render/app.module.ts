@@ -14,6 +14,7 @@ import {App} from './app.component';
 import {NotificationService} from './providers/notification.service';
 import {State} from './providers/state.service.';
 import {Loader} from './providers/loader.service';
+import {CanvasService} from './providers/canvas.service';
 
 @NgModule({
     imports: [
@@ -34,7 +35,8 @@ import {Loader} from './providers/loader.service';
     providers: [
         Loader,
         State,
-        NotificationService
+        NotificationService,
+        CanvasService
     ],
     bootstrap: [App]
 })

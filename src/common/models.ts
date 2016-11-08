@@ -8,16 +8,9 @@ export interface ISample {
     ts: number[];
 }
 
-export interface ISkqw {
-    createCanvas: (domElement?: HTMLCanvasElement) => HTMLCanvasElement;
-    dimensions: {
-        width: number;
-        height: number;
-    };
-    sample: {
-        ts: number[];
-        ft: number[];
-    }
+export interface IDimensions {
+    width: number;
+    height: number;
 }
 
 export interface IParameter {
@@ -34,11 +27,11 @@ export interface IParameter {
  */
 export interface IVisualization {
     name: string;
-    init: (skqw: ISkqw) => void;
-    tick: (skqw: ISkqw, timestamp: number) => void;
-    resize?: (skqw: ISkqw) => void;
-    destroy?: (skqw: ISkqw) => void;
-    paramChange?: (skqw: ISkqw, change: IParamUpdate) => void;
+    init: () => void;
+    tick: (timestamp: number) => void;
+    resize?: () => void;
+    destroy?: () => void;
+    paramChange?: (change: IParamUpdate) => void;
     params?: { [name: string]: IParameter }
 }
 

@@ -1,11 +1,7 @@
 import {Component, ElementRef, Input, SimpleChange} from '@angular/core';
-import {IVisualization, ISample, IParamUpdate, ISkqw} from '../../../common/models';
+import {IVisualization, ISample, IParamUpdate} from '../../../common/models';
 import {defaultVis} from './defaultVisualization';
-
-export interface IDimensions {
-    width: number;
-    height: number;
-}
+import {CanvasService} from '../../providers/canvas.service';
 
 @Component({
     selector: 'visualizer',
@@ -16,9 +12,6 @@ export class Visualizer {
 
     @Input() sample: ISample;
     @Input() visualization: IVisualization;
-    private skqw: ISkqw;
-    private canvases: HTMLCanvasElement[] = [];
-    private dimensions: IDimensions = { width: 0, height: 0 };
     private resizeTimer: any;
     private isRunning: boolean = false;
     private onResizeFn: Function;
@@ -27,7 +20,7 @@ export class Visualizer {
     private tick = (timestamp) => {
         if (this.isRunning && this.visualization.tick) {
             try {
-                this.visualization.tick(this.skqw, timestamp);
+                this.visualization.tick(timestamp);
             } catch (e) {
                 console.log(e);
             }
@@ -35,34 +28,30 @@ export class Visualizer {
         }
     };
 
-    constructor(private elementRef: ElementRef) {
-        const self = this;
-        this.skqw = {
-            createCanvas: this.createCanvas.bind(this),
-            get sample(): ISample { return self.sample },
-            get dimensions(): IDimensions { return self.dimensions }
-        };
+    constructor(private elementRef: ElementRef,
+                private canvasService: CanvasService) {
+        canvasService.registerHostElement(elementRef);
     }
 
     ngOnInit(): void {
         window.addEventListener('resize', this.resizeHandler.bind(this));
+        this.resizeHandler();
     }
 
     ngOnChanges(changes: {[key: string]: SimpleChange}): void {
         if (changes['visualization']) {
             this.stop(changes['visualization'].previousValue);
-            this.updateDimensions();
             if (this.visualization && this.visualization.init) {
                 try {
-                    this.visualization.init(this.skqw);
+                    this.visualization.init();
                 } catch (e) {
                     console.log(e);
                 }
                 this.start();
             } else {
-                this.visualization = defaultVis;
-                this.visualization.init(this.skqw);
-                this.start();
+                /*this.visualization = defaultVis;
+                this.visualization.init();
+                this.start();*/
             }
         }
     }
@@ -78,13 +67,13 @@ export class Visualizer {
         }
         if (visualization && typeof visualization.destroy === 'function') {
             try {
-                visualization.destroy(this.skqw);
+                visualization.destroy();
             } catch (e) {
                 console.log(e);
             }
         }
         this.isRunning = false;
-        this.removeCanvases();
+        this.canvasService.destroyCanvases();
         this.onResizeFn = null;
     }
 
@@ -92,7 +81,7 @@ export class Visualizer {
         if (this.visualization && this.visualization.params) {
             if (typeof this.visualization.paramChange === 'function') {
                 try {
-                    this.visualization.paramChange(this.skqw, paramUpdate);
+                    this.visualization.paramChange(paramUpdate);
                 } catch (e) {
                     console.log(e);
                 }
@@ -105,58 +94,20 @@ export class Visualizer {
     }
 
     /**
-     * Creates a canvas element for the visualization to render onto.
-     */
-    createCanvas(userSuppliedCanvas?: HTMLCanvasElement): HTMLCanvasElement {
-        let canvas = userSuppliedCanvas || document.createElement('canvas');
-        let container = this.elementRef.nativeElement;
-        this.elementRef.nativeElement.appendChild(canvas);
-        canvas.width = container.offsetWidth;
-        canvas.height = container.offsetHeight;
-        this.canvases.push(canvas);
-        return canvas;
-    }
-
-    /**
      * Debounce the resize handler since the resize even gets fired rapidly in
      * succession as the user resizes.
      */
     resizeHandler() {
         clearTimeout(this.resizeTimer);
         this.resizeTimer = setTimeout(() => {
-            this.updateDimensions();
+            this.canvasService.updateDimensions();
             if (this.visualization && typeof this.visualization.resize === 'function') {
                 try {
-                    this.visualization.resize(this.skqw);
+                    this.visualization.resize();
                 } catch (e) {
                     console.log(e);
                 }
             }
         }, 100);
-    }
-
-    /**
-     * Update the w & h dimensions and set the canvas dimensions.
-     */
-    updateDimensions() {
-        this.dimensions.width = this.elementRef.nativeElement.offsetWidth;
-        this.dimensions.height = this.elementRef.nativeElement.offsetHeight;
-
-        this.canvases.forEach((c: HTMLCanvasElement) => {
-            c.width = this.dimensions.width;
-            c.height = this.dimensions.height;
-        });
-    }
-
-    /**
-     * Remove any existing canvases from the DOM.
-     */
-    removeCanvases() {
-        this.canvases.forEach(c => {
-            if (c.parentNode) {
-                c.parentNode.removeChild(c);
-            }
-        });
-        this.canvases = [];
     }
 }
