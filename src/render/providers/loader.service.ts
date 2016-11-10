@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {IVisualization, IParameter} from '../../common/models';
 import {CanvasService} from './canvas.service';
-import {IVisualization} from '../../common/models';
 import {SKQW_CORE_MODULE_NAME, SKQW_UTILS_MODULE_NAME} from '../../common/constants';
 import {skqwUtils} from '../modules/skqw-utils';
 import {createCoreModule} from '../modules/skqw-core';
