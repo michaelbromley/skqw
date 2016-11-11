@@ -140,7 +140,6 @@ export function createSandbox(canvasService: CanvasService): { run: (filepath: s
  * to trivially access all global app objects and contaminate the app or other scripts.
  */
 function runInVmSandbox(canvasService: CanvasService, visPath: string): IVisualization {
-    let pathDiff = path.relative(__dirname, visPath);
     let filename = path.join(visPath, 'index.js');
     let options = {
         filename,
@@ -153,9 +152,9 @@ function runInVmSandbox(canvasService: CanvasService, visPath: string): IVisuali
         } else if (moduleName === SKQW_UTILS_MODULE_NAME) {
             return skqwUtils;
         } else if (moduleName === SKQW_CORE_MODULE_NAME) {
-            return createCoreModule(canvasService, pathDiff);
+            return createCoreModule(canvasService, visPath);
         } else {
-            return nativeRequire(path.join(pathDiff, moduleName));
+            return nativeRequire(path.join(visPath, moduleName));
         }
     };
     let script = fs.readFileSync(filename).toString();

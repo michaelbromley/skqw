@@ -15,7 +15,7 @@ ipcRenderer.on(SAMPLE, (event, sample: ISample) => {
  * Creates the module that is returned by calling `require('skqw-core')`. Provides the core API for
  * building a visualization.
  */
-export function createCoreModule(canvasService: CanvasService, pathDiff: string) {
+export function createCoreModule(canvasService: CanvasService, visPath: string) {
     return {
         createCanvas(): HTMLCanvasElement {
             return canvasService.create();
@@ -27,7 +27,7 @@ export function createCoreModule(canvasService: CanvasService, pathDiff: string)
             return canvasService.getDimensions();
         },
         loadScript: function loadScript(filename: string) {
-            let data = fs.readFileSync(path.join(__dirname, pathDiff, filename));
+            let data = fs.readFileSync(path.join(visPath, filename));
             vm.runInThisContext(data, { filename });
         }
     }
