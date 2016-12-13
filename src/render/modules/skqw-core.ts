@@ -12,6 +12,13 @@ ipcRenderer.on(SAMPLE, (event, sample: ISample) => {
 });
 
 /**
+ * For use by other internal modules.
+ */
+export function getSample(): ISample {
+    return lastSample;
+}
+
+/**
  * Creates the module that is returned by calling `require('skqw-core')`. Provides the core API for
  * building a visualization.
  */
