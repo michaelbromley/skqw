@@ -40,14 +40,14 @@ nav:
       name: 'Parameters'
       url: '/parameters'
     -
-      name: 'Common Patterns'
-      url: '/common-patterns'
-    -
       name: 'Using Three.js'
       url: '/using-three-js'
     -
       name: 'API Reference'
       url: '/api-reference'
+    -
+      name: 'skqw-core'
+      url: '/skqw-core-module'
   -
     -
       name: 'Links'

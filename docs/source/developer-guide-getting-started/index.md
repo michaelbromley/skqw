@@ -24,16 +24,18 @@ A visualization main file must be located in a subdirectory of the "library path
 Here is a bare-bones visualization:
 
 ```JavaScript
+const {createCanvas, getSample, getDimensions} = require('skqw-core');
+
 // canvas context.
 let ctx;
 
-function init(skqw) {
-    ctx = skqw.createCanvas().getContext('2d');
+function init() {
+    ctx = createCanvas().getContext('2d');
 }
 
-function tick(skqw) {
-    const { width, height } = skqw.dimensions;
-    const ft = skqw.sample.ft;
+function tick() {
+    const { width, height } = getDimensions();
+    const { ft } = getSample();
 
     // clear the canvas.
     ctx.fillStyle = 'rgba(0, 0, 0, 1)';
@@ -66,30 +68,19 @@ module.exports = {
 
 The code above will display a simple frequency spectrum of red bars. Let's take a look at each of the basic parts:
 
+#### Importing from `skqw-core`
+
+The `skqw-core` module exports a few functions that you'll need for your visualization. Note - you don't need to "install" `skqw-core`, it is provided by SKQW itself. See the [skqw-core module documentation](../skqw-core-module) for a description of the exported functions.
+
 #### `init()` function
-Every visualization *must* export an `init()` function. This function will be called once each time the visualization is selected in SKQW. It is used to set up the canvas as well as any other set-up your code may require. In this case we have SKQW create a new canvas for us to draw to, and save a reference to the canvas' [context object](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D). 
-
-#### `skqw` object
-This object is passed as the first parameter to each of the visualization lifecycle functions. It has a single method, `createCanvas()`, which 
-will create an HTML canvas element which we can then draw on to.
-
-It additionally has two properties: 
-
-- `dimensions` which is an object containing the `width` and `height` of the 
-canvas; 
-- `sample` which is and object containing 2 arrays of numbers: 
-    - `ts` is the "time series" or waveform of the current audio sample.
-    - `ft` is the "fourier transform" or frequency spectrum of the current
-    audio sample.
-    
-The two arrays provided by `sample` provide the raw information that you will use to form the basis of your visualizations.
+Every visualization *must* export an `init()` function. This function will be called once each time the visualization is selected in SKQW. It is used to set up the canvas as well as any other set-up your code may require. In this case we use `createCanvas()` to create a new canvas for us to draw to, and save a reference to the canvas' [context object](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D).
 
 #### `tick()` function
 This is a required function which will be called every time a new audio sample arrives from the sound card, roughly 60 times per second. This is 
 where the magic happens! The `tick` function is responsible for rendering each individual frame of your visualization.
 
 In our example, we first clear the canvas by drawing a big black rectangle over whatever was there before, and then we call a function which will
-iterate over each value in the `sample.ft` array, and represent it as a red bar whose height is proportional to the value of that frequency.
+iterate over each value in the `getSample().ft` array (which is the frequency spectrum), and represent it as a red bar whose height is proportional to the value of that frequency.
 
 #### `module.exports` 
 Finally, we export the required information as a [Node commonjs](https://nodejs.org/docs/latest/api/modules.html) module. There are more functions and properties which SKQW can read (see the [API docs](../api-reference)), which lets us write richer visualizations, but the three shown are the bare minimum required for things to work.

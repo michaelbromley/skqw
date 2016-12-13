@@ -6,6 +6,12 @@ SKQW (pronounced "skew") allows you to visualize the audio output of you compute
 
 For installation, build, and development guides, see https://michaelbromley.github.io/skqw
 
+## Guide to This Repo
+
+Since this is an Electron app, you'll find the meat of the code split between the `src/main` folder for the main process code, and `src/render` for the render process (browser app) code.
+
+The docs are generated from markdown files in the `docs/source` folder.
+
 ## Troubleshooting (Windows)
 
 #### Visualizations don't react to audio

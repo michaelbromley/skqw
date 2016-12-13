@@ -20,13 +20,13 @@ let params = {
 
 // ... init() function omitted
 
-function tick(skqw) {
+function tick() {
     // ... code omitted
     ctx.fillStyle = `hsl(${params.hue.value}, 50%, 50%)`;
     // draw some stuff with the given hue.
 }
 
-function paramChange(skqw, change) {
+function paramChange(change) {
     // this is optional, see explanation below
     params[change.paramKey].value = change.newValue;
 }
