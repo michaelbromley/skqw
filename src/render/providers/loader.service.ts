@@ -4,13 +4,13 @@ import {CanvasService} from './canvas.service';
 import {SKQW_CORE_MODULE_NAME, SKQW_UTILS_MODULE_NAME} from '../../common/constants';
 import {skqwUtils} from '../modules/skqw-utils';
 import {createCoreModule} from '../modules/skqw-core';
+import {Context} from 'vm';
 
 const path = require('path');
 const fs = require('fs');
 const vm = require('vm');
 // Webpack patches the native Node require, so we need to use this instead.
 const nativeRequire = (<any> global).require;
-
 
 @Injectable()
 export class Loader {
@@ -21,7 +21,7 @@ export class Loader {
         // TODO: implement a hash for use in presets etc.
         hash?: string;
     }[] = [];
-    private visPath: string = __dirname;
+    private visPath: string = path.join(__dirname, 'library');
 
     constructor(private canvasService: CanvasService) {}
 
@@ -29,8 +29,10 @@ export class Loader {
      * Set the path where the visualizations are located.
      */
     setPath(absolutePath: string) {
-        this.visPath = absolutePath;
+        // TODO: enable as additional scripts path
+        // this.visPath = absolutePath;
     }
+
 
     /**
      * Load all visualizations which reside in the folder specified by setPath().
@@ -74,9 +76,9 @@ export class Loader {
     /**
      * Returns a visualization object given by the id (the index in the library array)
      */
-    getVisualization(id: number): IVisualization {
+    getVisualization(id: number, debugMode: boolean = false): IVisualization {
         if (0 <= id && id < this.library.length) {
-            let vis = createSandbox(this.canvasService).run(this.library[id].path);
+            let vis = createSandbox(this.canvasService, debugMode).run(this.library[id].path);
             return this.normalizeParams(vis);
         }
     }
@@ -118,33 +120,44 @@ export class Loader {
  * of the app itself. Therefore we run the script in a sandbox, which provides a limited set of global methods and
  * objects.
  */
-export function createSandbox(canvasService: CanvasService): { run: (filepath: string) => IVisualization; } {
+export function createSandbox(canvasService: CanvasService, debugMode: boolean = false): { run: (filepath: string) => IVisualization; } {
 
     return {
         run(visPath: string): IVisualization {
             // return runInGlobalContext(canvasService, visPath);
             // This is the safer mode to run in, but is buggy.
-            return runInVmSandbox(canvasService, visPath);
+            return runInVmSandbox(canvasService, visPath, debugMode);
         }
     };
 }
 
 /**
- * Originally the intent was to run in a brand new context via vm.runInNewContext(), which would provide much better
- * encapsulation of the user scripts (not sharing a Window object, for example). However, there were a few issues with
- * this, see:
- * - https://github.com/electron/electron/issues/7814
- * - https://github.com/electron/electron/issues/7816
+ * Runs the visualization script in a new Node vm context, to prevent scripts from polluting the global app scope.
  *
- * So currently the user scripts must be run in the app context, which is not ideal, since it allows user scripts
- * to trivially access all global app objects and contaminate the app or other scripts.
+ * When debugMode === true, scripts are run the the app context (not in a sandbox) because it is not possible to use
+ * the Chrome devtools to debug scripts in another context (see https://github.com/electron/electron/issues/7816).
+ *
+ * TODO: currently not possible to run in new context, see https://github.com/electron/electron/issues/7814
  */
-function runInVmSandbox(canvasService: CanvasService, visPath: string): IVisualization {
+function runInVmSandbox(canvasService: CanvasService, visPath: string, debugMode: boolean = false): IVisualization {
     let filename = path.join(visPath, 'index.js');
     let options = {
         filename,
         timeout: 5000
     };
+
+    let sandbox: Context;
+    if (!debugMode) {
+        const noop = () => {};
+        sandbox = vm.createContext({
+            console: {
+                log: noop,
+                warn: noop,
+                error: noop,
+                info: noop
+            },
+        });
+    }
 
     let customRequire = (moduleName) => {
         if (isBuiltInModule(moduleName)) {
@@ -152,7 +165,7 @@ function runInVmSandbox(canvasService: CanvasService, visPath: string): IVisuali
         } else if (moduleName === SKQW_UTILS_MODULE_NAME) {
             return skqwUtils;
         } else if (moduleName === SKQW_CORE_MODULE_NAME) {
-            return createCoreModule(canvasService, visPath);
+            return createCoreModule(canvasService, visPath, sandbox);
         } else {
             return nativeRequire(path.join(visPath, moduleName));
         }
@@ -162,7 +175,13 @@ function runInVmSandbox(canvasService: CanvasService, visPath: string): IVisuali
     let dirname = path.dirname(filename);
     let module: any = { exports: {} };
 
-    let compiledWrapper = vm.runInThisContext(wrapped, options);
+    let compiledWrapper: any;
+    // TODO: try to enable this again once https://github.com/electron/electron/pull/7909 is merged
+    // if (debugMode) {
+        compiledWrapper = vm.runInThisContext(wrapped, options);
+    // } else {
+    //    compiledWrapper = vm.runInContext(wrapped, sandbox, options);
+    //}
     let args = [module.exports, customRequire, module, filename, dirname];
 
     compiledWrapper.apply(this, args);

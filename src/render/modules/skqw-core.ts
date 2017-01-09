@@ -1,6 +1,7 @@
 import {CanvasService} from '../providers/canvas.service';
 import {ISample} from '../../common/models';
 import {SAMPLE} from '../../common/constants';
+import {Context} from 'vm';
 const ipcRenderer = require('electron').ipcRenderer;
 const path = require('path');
 const fs = require('fs');
@@ -22,7 +23,7 @@ export function getSample(): ISample {
  * Creates the module that is returned by calling `require('skqw-core')`. Provides the core API for
  * building a visualization.
  */
-export function createCoreModule(canvasService: CanvasService, visPath: string) {
+export function createCoreModule(canvasService: CanvasService, visPath: string, sandbox?: Context) {
     return {
         createCanvas(): HTMLCanvasElement {
             return canvasService.create();
@@ -34,8 +35,20 @@ export function createCoreModule(canvasService: CanvasService, visPath: string) 
             return canvasService.getDimensions();
         },
         loadScript: function loadScript(filename: string) {
-            let data = fs.readFileSync(path.join(visPath, filename));
-            vm.runInThisContext(data, { filename });
+            let fullPath: string;
+
+            if (filename.indexOf('vendor/three') === 0) {
+                fullPath = path.join(__dirname, filename);
+            } else {
+                fullPath = path.join(visPath, filename);
+            }
+            let data = fs.readFileSync(fullPath);
+            // TODO: try to enable this again once https://github.com/electron/electron/pull/7909 is merged
+           /* if (vm.isContext(sandbox)) {
+                vm.runInContext(data, sandbox, { filename });
+            } else {*/
+                vm.runInThisContext(data, {filename});
+           // }
         }
     }
 }
