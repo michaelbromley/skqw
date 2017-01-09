@@ -118,6 +118,16 @@ module.exports = function (env) {
                         context: './src',
                         from: 'node_modules/**/*',
                         to: ''
+                    },
+                    {
+                        context: './node_modules/three/build',
+                        from: '*.js',
+                        to: 'vendor/three'
+                    },
+                    {
+                        context: './src/library',
+                        from: '**/*',
+                        to: 'library'
                     }
                 ]),
                 new webpack.DefinePlugin({
