@@ -2,7 +2,7 @@ import {Component, ChangeDetectorRef, ViewChild, HostListener, ViewEncapsulation
 import {
     START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
     SET_GAIN, TOGGLE_NORMALIZATION, MAX_GAIN, MIN_GAIN, TOGGLE_FULLSCREEN, TOGGLE_DEVTOOLS, MIN_SAMPLE_RATE,
-    MAX_SAMPLE_RATE, SET_SAMPLE_RATE
+    MAX_SAMPLE_RATE, SET_SAMPLE_RATE, CLOSE_DEVTOOLS, OPEN_DEVTOOLS
 } from '../common/constants';
 import {Visualizer} from './components/visualizer/visualizer.component';
 import {Loader} from './providers/loader.service';
@@ -29,6 +29,7 @@ export class App {
     private hoverTimer: any;
     private saveGainTimer: any;
     private sampleRateTimer: any;
+    private debugMode: boolean = false;
 
     constructor(public state: State,
                 private loader: Loader,
@@ -67,6 +68,16 @@ export class App {
         });
 
         ipcRenderer.send(START_ANALYZER);
+
+
+        ipcRenderer.on(OPEN_DEVTOOLS, () => {
+            this.debugMode = true;
+            this.notification.notify(`Debug mode enabled`);
+        });
+        ipcRenderer.on(CLOSE_DEVTOOLS, () => {
+            this.debugMode = false;
+            this.notification.notify(`Debug mode disabled`);
+        });
     }
     
     toggleSettings(expanded: boolean): void {
@@ -92,7 +103,7 @@ export class App {
     }
 
     selectVis(id: number): void {
-        this.vis = this.loader.getVisualization(id);
+        this.vis = this.loader.getVisualization(id, this.debugMode);
     }
 
     /**
@@ -105,13 +116,7 @@ export class App {
         }
         if (e.altKey === true && e.which === 82) {
             // Handle alt + R - reload current visualization.
-            if (!this.vis) {
-                return;
-            }
-            this.loader.loadAll();
-            let id = this.state.getValue().library
-                .filter(item => item.name === this.vis.name)[0].id;
-            this.vis = this.loader.getVisualization(id);
+            this.reloadCurrentVisualization();
             this.notification.notify(`Reloaded visualization`);
         }
         if (e.altKey === true && e.which === 70) {
@@ -121,6 +126,7 @@ export class App {
         if (e.ctrlKey=== true && e.shiftKey && e.which === 73) {
             // Handle ctrl + shift + i - toggle devtools.
             ipcRenderer.send(TOGGLE_DEVTOOLS);
+            this.reloadCurrentVisualization();
         }
         if (e.which === 38) {
             // increase the gain
@@ -193,6 +199,16 @@ export class App {
         }
         clearTimeout(this.sampleRateTimer);
         this.sampleRateTimer = setTimeout(() =>  storage.set('sampleRate', { sampleRate: val }));
+    }
+
+    private reloadCurrentVisualization(): void {
+        if (!this.vis) {
+            return;
+        }
+        this.loader.loadAll();
+        let id = this.state.getValue().library
+            .filter(item => item.name === this.vis.name)[0].id;
+        this.vis = this.loader.getVisualization(id, this.debugMode);
     }
 
     private loadLibrary(dir: string): void {

@@ -8,7 +8,7 @@ if (handleSquirrelEvent()) {
 
 import {
     START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
-    SET_GAIN, TOGGLE_NORMALIZATION, TOGGLE_FULLSCREEN, TOGGLE_DEVTOOLS, SET_SAMPLE_RATE
+    SET_GAIN, TOGGLE_NORMALIZATION, TOGGLE_FULLSCREEN, TOGGLE_DEVTOOLS, SET_SAMPLE_RATE, OPEN_DEVTOOLS, CLOSE_DEVTOOLS
 } from '../common/constants';
 const {app, BrowserWindow, ipcMain, shell} = require('electron');
 import {Analyzer} from './analyzer';
@@ -33,6 +33,14 @@ app.on('ready', () => {
     mainWindow.webContents.on('new-window', (e, url) => {
         e.preventDefault();
         shell.openExternal(url);
+    });
+
+    mainWindow.webContents.on('devtools-opened', () => {
+        mainWindow.webContents.send(OPEN_DEVTOOLS);
+    });
+
+    mainWindow.webContents.on('devtools-closed', () => {
+        mainWindow.webContents.send(CLOSE_DEVTOOLS);
     });
 
     mainWindow.on('close', () => {
