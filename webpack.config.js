@@ -132,12 +132,12 @@ module.exports = function (env) {
                 ]),
                 new webpack.DefinePlugin({
                     VERSION: JSON.stringify(require('./package.json').version)
-                }),
+                })/*,
                 new AotPlugin({
                     tsConfigPath: path.resolve(__dirname, './tsconfig.json'),
                     entryModule: path.resolve(__dirname, './src/render/app.module#AppModule'),
                     genDir: path.resolve(__dirname, './src/render/ngfactory'),
-                })
+                })*/
             );
 
             config.externals = [externalsFn];
