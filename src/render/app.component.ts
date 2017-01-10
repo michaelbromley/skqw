@@ -38,18 +38,18 @@ export class App {
 
         storage.get('libraryDir', (err, data) => {
             if (data.libraryDir) {
-                this.state.setLibraryDir(data.libraryDir);
+                this.state.set('libraryDir', data.libraryDir);
                 this.loadLibrary(data.libraryDir);
             }
         });
         storage.get('gain', (err, data) => {
             if (data.gain) {
-                this.state.setGain(data.gain);
+                this.state.set('gain', data.gain);
             }
         });
         storage.get('sampleRate', (err, data) => {
             if (data.sampleRate) {
-                this.state.setSampleRate(data.sampleRate);
+                this.state.set('sampleRate', data.sampleRate);
             }
         });
 
@@ -64,7 +64,7 @@ export class App {
     ngOnInit(): void {
         ipcRenderer.send(REQUEST_DEVICE_LIST);
         ipcRenderer.on(RECEIVE_DEVICE_LIST, (event, list) => {
-            this.state.setInputDevices(list);
+            this.state.set('inputDevices', list);
         });
 
         ipcRenderer.send(START_ANALYZER);
@@ -81,7 +81,7 @@ export class App {
     }
     
     toggleSettings(expanded: boolean): void {
-        this.state.setSettingsExpanded(expanded);
+        this.state.set('settingsExpanded', expanded);
     }
 
     /**
@@ -96,7 +96,7 @@ export class App {
             if (paths && paths.length === 1) {
                 let dir = paths[0];
                 storage.set('libraryDir', { libraryDir: dir });
-                this.state.setLibraryDir(dir);
+                this.state.set('libraryDir', dir);
                 this.loadLibrary(dir);
             }
         });
@@ -154,7 +154,7 @@ export class App {
 
     @HostListener('document:mouseleave')
     onMouseOut(): void {
-        this.state.setSettingsIconVisible(false);
+        this.state.set('settingsIconVisible', false);
     }
 
     /**
@@ -162,19 +162,19 @@ export class App {
      * to hide them again after a delay.
      */
     displayUiElements(): void {
-           this.state.setSettingsIconVisible(true);
+           this.state.set('settingsIconVisible', true);
         
         clearTimeout(this.hoverTimer);
         this.hoverTimer = setTimeout(() => {
-            this.state.setSettingsIconVisible(false);
+            this.state.set('settingsIconVisible', false);
             if (!this.state.getValue().settingsExpanded) {
-                this.state.setSettingsIconVisible(false);
+                this.state.set('settingsIconVisible', false);
             }
         }, 3000);
     }
     
     setInputDeviceId(id: number): void {
-        this.state.setSelectedInputId(id);
+        this.state.set('selectedInputId', id);
         ipcRenderer.send(SET_INPUT_DEVICE_ID, id);
     }
 
@@ -184,7 +184,7 @@ export class App {
 
     setGain(val: number) {
         if (MIN_GAIN <= val && val <= MAX_GAIN) {
-            this.state.setGain(val);
+            this.state.set('gain', val);
             ipcRenderer.send(SET_GAIN, val);
         }
         clearTimeout(this.saveGainTimer);
@@ -194,7 +194,7 @@ export class App {
     setSampleRate(val: number) {
         console.log('setting sample rate to',val);
         if (MIN_SAMPLE_RATE <= val && val <= MAX_SAMPLE_RATE) {
-            this.state.setSampleRate(val);
+            this.state.set('sampleRate', val);
             ipcRenderer.send(SET_SAMPLE_RATE, val);
         }
         clearTimeout(this.sampleRateTimer);
@@ -218,7 +218,7 @@ export class App {
         } catch (e) {
             this.notification.notify(e.message);
         }
-        this.state.setLibrary(this.loader.listAll());
+        this.state.set('library', this.loader.listAll());
         this.cdr.detectChanges();
         this.selectVis(0);
     }
