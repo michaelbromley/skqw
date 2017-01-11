@@ -12,6 +12,12 @@ Since this is an Electron app, you'll find the meat of the code split between th
 
 The docs are generated from markdown files in the `docs/source` folder.
 
+## Building The Docs
+
+The docs are build with Hexo. In development, go to the `/docs` folder and run `hexo serve`
+
+To deploy, run `hexo generate --deploy`
+
 ## Troubleshooting (Windows)
 
 #### Visualizations don't react to audio

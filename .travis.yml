@@ -31,6 +31,9 @@ script:
 - cd ..
 - npm run dist:osx
 
+# fix for "shell_session_update: command not found" error - see https://github.com/direnv/direnv/issues/210#issuecomment-271272371
+after_script: set +e
+
 deploy:
   provider: s3
   access_key_id: AKIAJD3PNC3PV7HMXRIQ
