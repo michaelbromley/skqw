@@ -1,7 +1,7 @@
 import {Component, HostListener, Input, EventEmitter, Output} from '@angular/core';
-import {IVisualization} from '../../../common/models';
+import {Visualization} from '../../../common/models';
 import {KEYCODE_RIGHT_ARROW, KEYCODE_LEFT_ARROW} from '../../../common/constants';
-import {IState} from '../../providers/state.service.';
+import {AppState} from '../../providers/state.service.';
 import {NotificationService} from '../../providers/notification.service';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 
@@ -13,8 +13,8 @@ let arrowIcon: string = require('!!svg-inline!../../../assets/icons/play_arrow.s
     styleUrls: ['./v-selector.scss']
 })
 export class VSelector {
-    @Input() state: IState;
-    @Input() current: IVisualization;
+    @Input() state: AppState;
+    @Input() current: Visualization;
     @Output() select = new EventEmitter<number>();
     icon_arrow: SafeHtml;
 

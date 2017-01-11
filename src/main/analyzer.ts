@@ -1,5 +1,5 @@
 import {Subject} from 'rxjs/Subject';
-import {ISample} from '../common/models';
+import {Sample} from '../common/models';
 const coreAudio = require('node-core-audio');
 const fourierTransform = require('fourier-transform');
 const engine: any = coreAudio.createNewAudioEngine();
@@ -19,7 +19,7 @@ engine.setSampleRate(60);
  * visualization script for rendering to canvas.
  */
 export class Analyzer {
-    sample$ = new Subject<ISample>();
+    sample$ = new Subject<Sample>();
     fps: number = 0;
 
     private isActive: boolean = false;

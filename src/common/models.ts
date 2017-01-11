@@ -3,17 +3,17 @@
  * A sample is a single frame of the audio buffer.
  * { ft: fourier transform array, ts: time series array }
  */
-export interface ISample {
+export interface Sample {
     ft: number[];
     ts: number[];
 }
 
-export interface IDimensions {
+export interface Dimensions {
     width: number;
     height: number;
 }
 
-export interface IParameter {
+export interface Parameter {
     value: number | boolean;
     type: 'range' | 'boolean';
     label: string;
@@ -22,20 +22,32 @@ export interface IParameter {
     step?: number;
 }
 
+export interface LibraryEntry {
+    id: string;
+    name: string;
+    path: string;
+}
+
+export interface Preset {
+    name: string;
+    entryId: string;
+    params: { [key: string]: any };
+}
+
 /** 
  * A visualization object
  */
-export interface IVisualization {
+export interface Visualization {
     name: string;
     init: () => void;
     tick: (timestamp: number) => void;
     resize?: () => void;
     destroy?: () => void;
-    paramChange?: (change: IParamUpdate) => void;
-    params?: { [name: string]: IParameter }
+    paramChange?: (change: ParamUpdate) => void;
+    params?: { [name: string]: Parameter }
 }
 
-export interface IParamUpdate {
+export interface ParamUpdate {
     paramKey: string;
     newValue: number | boolean;
 }

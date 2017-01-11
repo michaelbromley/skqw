@@ -1,5 +1,5 @@
 import {Component, Input, EventEmitter, Output, SimpleChange} from '@angular/core';
-import {IParameter, IParamUpdate} from '../../../common/models';
+import {Parameter, ParamUpdate} from '../../../common/models';
 
 @Component({
     selector: 'parameter-controls',
@@ -7,9 +7,9 @@ import {IParameter, IParamUpdate} from '../../../common/models';
     styleUrls: ['./parameter-controls.scss']
 }) 
 export class ParameterControls {
-    @Input() params: { [name: string]: IParameter };
-    @Output() updateParam = new EventEmitter<IParamUpdate>();
-    paramsArray: { key: string; param: IParameter }[] = [];
+    @Input() params: { [name: string]: Parameter };
+    @Output() updateParam = new EventEmitter<ParamUpdate>();
+    paramsArray: { key: string; param: Parameter }[] = [];
 
     ngOnChanges(changes: { [name: string]: SimpleChange }): void {
         let newParams = changes['params'] && changes['params'].currentValue;

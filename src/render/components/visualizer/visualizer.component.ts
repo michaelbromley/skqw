@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, SimpleChange} from '@angular/core';
-import {IVisualization, ISample, IParamUpdate} from '../../../common/models';
+import {Visualization, Sample, ParamUpdate} from '../../../common/models';
 import {defaultVis} from './defaultVisualization';
 import {CanvasService} from '../../providers/canvas.service';
 
@@ -10,8 +10,8 @@ import {CanvasService} from '../../providers/canvas.service';
 })
 export class Visualizer {
 
-    @Input() sample: ISample;
-    @Input() visualization: IVisualization;
+    @Input() sample: Sample;
+    @Input() visualization: Visualization;
     private resizeTimer: any;
     private isRunning: boolean = false;
     private onResizeFn: Function;
@@ -61,7 +61,7 @@ export class Visualizer {
         this.rafId = requestAnimationFrame(this.tick);
     }
 
-    stop(visualization?: IVisualization) {
+    stop(visualization?: Visualization) {
         if (this.rafId) {
             cancelAnimationFrame(this.rafId);
         }
@@ -77,7 +77,7 @@ export class Visualizer {
         this.onResizeFn = null;
     }
 
-    updateParam(paramUpdate: IParamUpdate): void {
+    updateParam(paramUpdate: ParamUpdate): void {
         if (this.visualization && this.visualization.params) {
             if (typeof this.visualization.paramChange === 'function') {
                 try {

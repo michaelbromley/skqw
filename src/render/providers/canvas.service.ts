@@ -1,5 +1,5 @@
 import {ElementRef, Injectable} from '@angular/core';
-import {IDimensions} from '../../common/models';
+import {Dimensions} from '../../common/models';
 
 /**
  * Manages creating and destroying canvases for use by visualization scripts.
@@ -9,7 +9,7 @@ export class CanvasService {
 
     private host: ElementRef;
     private canvases: HTMLCanvasElement[] = [];
-    private dimensions: IDimensions = { width: 0, height: 0 };
+    private dimensions: Dimensions = { width: 0, height: 0 };
 
     constructor() { }
 
@@ -36,7 +36,7 @@ export class CanvasService {
         this.canvases = [];
     }
 
-    getDimensions(): IDimensions {
+    getDimensions(): Dimensions {
         return this.dimensions;
     }
 

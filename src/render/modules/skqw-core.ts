@@ -1,5 +1,5 @@
 import {CanvasService} from '../providers/canvas.service';
-import {ISample} from '../../common/models';
+import {Sample} from '../../common/models';
 import {SAMPLE} from '../../common/constants';
 import {Context} from 'vm';
 const ipcRenderer = require('electron').ipcRenderer;
@@ -7,15 +7,15 @@ const path = require('path');
 const fs = require('fs');
 const vm = require('vm');
 
-let lastSample: ISample;
-ipcRenderer.on(SAMPLE, (event, sample: ISample) => {
+let lastSample: Sample;
+ipcRenderer.on(SAMPLE, (event, sample: Sample) => {
     lastSample = sample;
 });
 
 /**
  * For use by other internal modules.
  */
-export function getSample(): ISample {
+export function getSample(): Sample {
     return lastSample;
 }
 
@@ -28,7 +28,7 @@ export function createCoreModule(canvasService: CanvasService, visPath: string, 
         createCanvas(): HTMLCanvasElement {
             return canvasService.create();
         },
-        getSample(): ISample {
+        getSample(): Sample {
             return lastSample
         },
         getDimensions() {

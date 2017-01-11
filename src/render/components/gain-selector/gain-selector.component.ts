@@ -1,5 +1,5 @@
 import {Component, Input, Output, EventEmitter} from '@angular/core';
-import {IState} from '../../providers/state.service.';
+import {AppState} from '../../providers/state.service.';
 import {MAX_GAIN, MIN_GAIN, MIN_SAMPLE_RATE, MAX_SAMPLE_RATE} from '../../../common/constants';
 
 @Component({
@@ -8,7 +8,7 @@ import {MAX_GAIN, MIN_GAIN, MIN_SAMPLE_RATE, MAX_SAMPLE_RATE} from '../../../com
     styleUrls: ['./gain-selector.scss']
 })
 export class GainSelector {
-    @Input() state: IState;
+    @Input() state: AppState;
     @Output() setGain = new EventEmitter<number>();
     @Output() setSampleRate = new EventEmitter<number>();
     maxGain = MAX_GAIN;
