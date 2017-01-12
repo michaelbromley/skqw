@@ -32,6 +32,7 @@ export class Analyzer {
     private normalizationEnabled: boolean = true;
 
     constructor() {
+        // TODO: try / catch for errors when no input device enabled?
         engine.addAudioCallback(this.processAudio.bind(this));
         this.lastUpdate = +new Date() * 1;
 

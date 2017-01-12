@@ -1,10 +1,12 @@
 import {Injectable} from '@angular/core';
-import {IVisualization, IParameter} from '../../common/models';
+import {Visualization, Parameter} from '../../common/models';
 import {CanvasService} from './canvas.service';
 import {SKQW_CORE_MODULE_NAME, SKQW_UTILS_MODULE_NAME} from '../../common/constants';
 import {skqwUtils} from '../modules/skqw-utils';
 import {createCoreModule} from '../modules/skqw-core';
 import {Context} from 'vm';
+import {LibraryService} from './library.service';
+import {NotificationService} from './notification.service';
 
 const path = require('path');
 const fs = require('fs');
@@ -15,79 +17,64 @@ const nativeRequire = (<any> global).require;
 @Injectable()
 export class Loader {
 
-    private library: {
-        name: string;
-        path: string;
-        // TODO: implement a hash for use in presets etc.
-        hash?: string;
-    }[] = [];
-    private visPath: string = path.join(__dirname, 'library');
-
-    constructor(private canvasService: CanvasService) {}
+    constructor(private canvasService: CanvasService,
+                private libraryService: LibraryService,
+                private notification: NotificationService) {}
 
     /**
-     * Set the path where the visualizations are located.
-     */
-    setPath(absolutePath: string) {
-        // TODO: enable as additional scripts path
-        // this.visPath = absolutePath;
-    }
-
-
-    /**
-     * Load all visualizations which reside in the folder specified by setPath().
+     * Load all visualizations in the library.
      * Visualizations should reside in their own folders, with the main entry point
      * named `index.js`.
      */
-    loadAll() {
-        const isDir = p => fs.statSync(path.join(this.visPath, p)).isDirectory();
-        const hasIndex = p => fs.statSync(path.join(this.visPath, p, 'index.js')).isFile();
-        const isVisObject = v => v && v.name && v.init && v.tick;
-        this.library = [];
+    loadFromPath(pathToIndexJs: string): Visualization {
+        const fullPath = path.join(pathToIndexJs, 'index.js');
 
-        fs.readdirSync(this.visPath).forEach(p => {
-            try {
-                if (!isDir(p) || !hasIndex(p)) {
-                    return;
-                }
-                let visPath = path.join(this.visPath, p);
-                let vis = createSandbox(this.canvasService).run(visPath);
-                if (isVisObject(vis)) {
-                    // TODO: check for duplicate names and error if found.
-                    this.library.push({
-                        name: vis.name,
-                        path: visPath
-                    });
-                }
-            } catch (e) {
-                console.error(`Failed to load index.js in folder "${p}":`);
-                console.error(e);
+        if (!fs.statSync(fullPath).isFile()) {
+            this.notification.notify(`Could not find "index.js" in path "${pathToIndexJs}"`);
+            return;
+        }
+
+        try {
+            let visualization = createSandbox(this.canvasService).run(pathToIndexJs);
+            if (this.isValidVisualization(visualization)) {
+                return visualization;
+            } else {
+                this.notification.notify(`Not a valid visualization script.`);
             }
-        });
-    }
-
-    /**
-     * Get a list of the names and ids of all loaded visualizations.
-     */
-    listAll(): { id: number, name: string }[] {
-        return this.library.map((v, i) => ({ id: i, name: v.name }));
+        } catch (e) {
+            console.error(`Failed to load index.js in path "${pathToIndexJs}":`);
+            console.error(e);
+        }
     }
 
     /**
      * Returns a visualization object given by the id (the index in the library array)
      */
-    getVisualization(id: number, debugMode: boolean = false): IVisualization {
-        if (0 <= id && id < this.library.length) {
-            let vis = createSandbox(this.canvasService, debugMode).run(this.library[id].path);
+    loadLibraryEntry(id: string, debugMode: boolean = false): Visualization {
+        console.log('loading', id);
+        const entry = this.libraryService.getEntry(id);
+        if (entry) {
+            let vis = createSandbox(this.canvasService, debugMode).run(entry.path);
             return this.normalizeParams(vis);
+        } else {
+            this.libraryService.removeEntry(id);
         }
+    }
+
+    /**
+     * Returns true is the candidate seems to satisfy the requirements for a Visualization.
+     */
+    private isValidVisualization(candidate: any): boolean {
+        return (typeof candidate.name === 'string' &&
+                typeof candidate.init === 'function' &&
+                typeof candidate.tick === 'function');
     }
 
     /**
      * Ensure the parameters contain the expected data, and clone the object to eliminate
      * references when the user changes params.
      */
-    private normalizeParams(vis: IVisualization): IVisualization {
+    private normalizeParams(vis: Visualization): Visualization {
         const params = Object.assign({}, vis.params);
         for(let paramName in params) {
             if (params.hasOwnProperty(paramName)) {
@@ -98,8 +85,7 @@ export class Loader {
         return vis;
     }
 
-    private normalizeParam(param: IParameter): IParameter {
-
+    private normalizeParam(param: Parameter): Parameter {
         if (param.type === 'range') {
             if (param.min === undefined) {
                 param.min = 0;
@@ -120,10 +106,10 @@ export class Loader {
  * of the app itself. Therefore we run the script in a sandbox, which provides a limited set of global methods and
  * objects.
  */
-export function createSandbox(canvasService: CanvasService, debugMode: boolean = false): { run: (filepath: string) => IVisualization; } {
+export function createSandbox(canvasService: CanvasService, debugMode: boolean = false): { run: (filepath: string) => Visualization; } {
 
     return {
-        run(visPath: string): IVisualization {
+        run(visPath: string): Visualization {
             // return runInGlobalContext(canvasService, visPath);
             // This is the safer mode to run in, but is buggy.
             return runInVmSandbox(canvasService, visPath, debugMode);
@@ -139,7 +125,7 @@ export function createSandbox(canvasService: CanvasService, debugMode: boolean =
  *
  * TODO: currently not possible to run in new context, see https://github.com/electron/electron/issues/7814
  */
-function runInVmSandbox(canvasService: CanvasService, visPath: string, debugMode: boolean = false): IVisualization {
+function runInVmSandbox(canvasService: CanvasService, visPath: string, debugMode: boolean = false): Visualization {
     let filename = path.join(visPath, 'index.js');
     let options = {
         filename,
@@ -206,4 +192,3 @@ function isBuiltInModule(name: string): boolean {
     }
     return isBuiltIn;
 }
-

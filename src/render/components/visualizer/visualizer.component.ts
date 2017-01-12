@@ -48,10 +48,6 @@ export class Visualizer {
                     console.log(e);
                 }
                 this.start();
-            } else {
-                /*this.visualization = defaultVis;
-                this.visualization.init();
-                this.start();*/
             }
         }
     }

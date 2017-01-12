@@ -1,5 +1,5 @@
-<div class="panel-container" [ngClass]="{ visible: state.settingsIconVisible, expanded: state.settingsExpanded }">
-    <div class="icon toggle-icon" (click)="toggle.emit(!state.settingsExpanded)">
+<div class="panel-container" [ngClass]="{ visible: iconVisible, expanded: expanded }">
+    <div class="icon toggle-icon" (click)="expanded = !expanded">
         <div [innerHTML]="icon_settings"></div>
     </div>
 
@@ -21,9 +21,7 @@
         </settings-group>
 
         <settings-group groupTitle="Library Path">
-            <library-path-selector [library]="state.library"
-                                   [libraryDir]="state.libraryDir"
-                                   (selectLibraryDir)="selectLibraryDir.emit($event)"></library-path-selector>
+            <library-path-selector></library-path-selector>
         </settings-group>
 
         <settings-group groupTitle="Input Device">

@@ -15,6 +15,7 @@ import {NotificationService} from './providers/notification.service';
 import {State} from './providers/state.service.';
 import {Loader} from './providers/loader.service';
 import {CanvasService} from './providers/canvas.service';
+import {LibraryService} from './providers/library.service';
 
 @NgModule({
     imports: [
@@ -34,6 +35,7 @@ import {CanvasService} from './providers/canvas.service';
     ],
     providers: [
         Loader,
+        LibraryService,
         State,
         NotificationService,
         CanvasService
