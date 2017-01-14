@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Observable} from 'rxjs/Observable';
 import {LibraryEntry} from '../../common/models';
 const storage = require('electron-json-storage');
 
 const APP_STATE_KEY = 'appState';
 
-export interface AppState {
+interface AppState {
     library: LibraryEntry[];
     activeId: string;
     inputDevices: { [id: number]: string };
@@ -23,6 +24,11 @@ const initialState: AppState = {
     sampleRate: 60
 };
 
+// A type which turns an interface into a version where each type is a BehaviorSubject wrapping that type.
+type BehaviorSubjectify<T> = {
+    [P in keyof T]: BehaviorSubject<T[P]>;
+}
+
 /**
  * A state container for the entire app state, which exposes an
  * observable which emits the state on each change. State can only be changed
@@ -30,65 +36,82 @@ const initialState: AppState = {
  */
 @Injectable()
 export class State {
-    stateChanges$ = new BehaviorSubject<AppState>(initialState);
-    _state: AppState = initialState;
+
+    private _state: BehaviorSubjectify<AppState>;
 
     constructor() {
+        // construct the state observables
+        for (let key in initialState) {
+            this._state[key] = new BehaviorSubject(initialState[key]);
+        }
+
+
         // restore last state from local storage
         storage.get(APP_STATE_KEY, (err, data) => {
             if (!err && data) {
-                this._state = data;
+                for(let key in data) {
+                   this.setValue(key as keyof AppState, data[key]);
+                }
             }
         });
     }
 
+    get library(): Observable<LibraryEntry[]> { return this._state.library; }
+    get activeId(): Observable<string> { return this._state.activeId; }
+    get gain(): Observable<number> { return this._state.gain; }
+    get inputDevices(): Observable<{ [id: number]: string }> { return this._state.inputDevices; }
+    get selectedInputId(): Observable<number> { return this._state.selectedInputId; }
+    get sampleRate(): Observable<number> { return this._state.sampleRate; }
+
+
     /**
      * Update a state value.
      */
-    set(key: 'library', value: { id: number; name: string; }[]): void;
-    set(key: 'activeId', value: string): void;
-    set(key: 'gain', value: number): void;
-    set(key: 'inputDevices', value: { [id: number]: string }): void;
-    set(key: 'selectedInputId', value: number): void;
-    set(key: 'sampleRate', value: number): void;
-    set(key: keyof AppState, value: any): void;
-    set(key: keyof AppState, value: any): void {
+    update(key: 'library', value: LibraryEntry[]): void;
+    update(key: 'activeId', value: string): void;
+    update(key: 'gain', value: number): void;
+    update(key: 'inputDevices', value: { [id: number]: string }): void;
+    update(key: 'selectedInputId', value: number): void;
+    update(key: 'sampleRate', value: number): void;
+    update(key: keyof AppState, value: any): void;
+    update(key: keyof AppState, value: any): void {
         const forceNumeric = ['gain', 'sampleRate', 'selectedInputId'];
         if (-1 < forceNumeric.indexOf(key)) {
             value = +value;
         }
-        this._state[key] = value;
-        this.emitStateChange();
-        storage.set(APP_STATE_KEY, this._state);
+        this.setValue(key as keyof AppState, value);
+        // TODO: is it possible to change just a key in the local storage, rather than the entire object?
+        storage.set(APP_STATE_KEY, this.getValue());
     }
 
     /**
-     * Returns the current state.
+     * Returns the complete app state value.
      */
     getValue(): AppState {
-        return this.stateChanges$.getValue();
+        let plainState = {} as AppState;
+        for (let key in this._state) {
+            plainState[key] = this._state[key].getValue();
+        }
+        return plainState;
     }
 
     /**
-     * Emit a clone of the current app state.
+     * Emit the next value on the corresponding key, if it exists.
      */
-    private emitStateChange(): void {
-        this.stateChanges$.next({
-            library: this.clone(this._state.library),
-            activeId: this._state.activeId,
-            inputDevices: this.clone(this._state.inputDevices),
-            selectedInputId: this._state.selectedInputId,
-            gain: this._state.gain,
-            sampleRate: this._state.sampleRate
-        });
+    private setValue(key: keyof AppState, value: any): void {
+        if (this._state[key]) {
+            (this._state[key] as BehaviorSubject<any>).next(this.clone(value));
+        }
     }
 
     /**
-     * Clone a simple array or object so that the exposed state
-     * is immutable.
+     * Returns a new version of the passed value, i.e. complex objects are cloned,
+     * primitives are passed through.
      */
     private clone(obj: any[] | any): any {
-        if (Array.isArray(obj)) {
+        if (typeof obj === 'string' || typeof obj === 'number') {
+            return obj;
+        } else if (Array.isArray(obj)) {
             return obj.slice(0);
         } else {
             return Object.assign({}, obj);
