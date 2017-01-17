@@ -22,15 +22,15 @@
     "url": "https://github.com/michaelbromley/skqw/issues"
   },
   "devDependencies": {
-    "@angular/common": "2.0.2",
-    "@angular/compiler": "2.0.2",
-    "@angular/compiler-cli": "^0.6.4",
-    "@angular/core": "2.0.2",
-    "@angular/platform-browser": "2.0.2",
-    "@angular/platform-browser-dynamic": "2.0.2",
-    "@angular/platform-server": "2.0.2",
+    "@angular/common": "2.4.3",
+    "@angular/compiler": "2.4.3",
+    "@angular/compiler-cli": "2.4.3",
+    "@angular/core": "2.4.3",
+    "@angular/platform-browser": "2.4.3",
+    "@angular/platform-browser-dynamic": "2.4.3",
+    "@angular/platform-server": "2.4.3",
     "@ngtools/webpack": "1.1.0",
-    "angular2-template-loader": "^0.5.0",
+    "angular2-template-loader": "^0.6.0",
     "bulma": "0.0.26",
     "copy-webpack-plugin": "^3.0.1",
     "css-loader": "^0.23.1",
@@ -49,7 +49,7 @@
     "raw-loader": "^0.5.1",
     "reflect-metadata": "0.1.3",
     "rimraf": "^2.5.2",
-    "rxjs": "5.0.0-beta.12",
+    "rxjs": "5.0.3",
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.1",
     "svg-inline-loader": "^0.4.1",
@@ -58,7 +58,7 @@
     "typescript": "2.1.4",
     "typings": "^1.3.1",
     "webpack": "2.1.0-beta.25",
-    "zone.js": "0.6.25"
+    "zone.js": "0.7.4"
   },
   "build": {
     "appId": "skqw.skqw",
