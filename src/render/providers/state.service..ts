@@ -6,8 +6,9 @@ const storage = require('electron-json-storage');
 
 const APP_STATE_KEY = 'appState';
 
-interface AppState {
+export interface AppState {
     library: LibraryEntry[];
+    lastPath: string;
     activeId: string;
     inputDevices: { [id: number]: string };
     selectedInputId: number;
@@ -17,6 +18,7 @@ interface AppState {
 
 const initialState: AppState = {
     library: [],
+    lastPath: '',
     activeId: '',
     inputDevices: {},
     selectedInputId: 0,
@@ -37,7 +39,7 @@ type BehaviorSubjectify<T> = {
 @Injectable()
 export class State {
 
-    private _state: BehaviorSubjectify<AppState>;
+    private _state = {} as BehaviorSubjectify<AppState>;
 
     constructor() {
         // construct the state observables
@@ -56,18 +58,20 @@ export class State {
         });
     }
 
-    get library(): Observable<LibraryEntry[]> { return this._state.library; }
-    get activeId(): Observable<string> { return this._state.activeId; }
-    get gain(): Observable<number> { return this._state.gain; }
-    get inputDevices(): Observable<{ [id: number]: string }> { return this._state.inputDevices; }
-    get selectedInputId(): Observable<number> { return this._state.selectedInputId; }
-    get sampleRate(): Observable<number> { return this._state.sampleRate; }
+    get library(): BehaviorSubject<LibraryEntry[]> { return this._state.library; }
+    get lastPath(): BehaviorSubject<string> { return this._state.lastPath; }
+    get activeId(): BehaviorSubject<string> { return this._state.activeId; }
+    get gain(): BehaviorSubject<number> { return this._state.gain; }
+    get inputDevices(): BehaviorSubject<{ [id: number]: string }> { return this._state.inputDevices; }
+    get selectedInputId(): BehaviorSubject<number> { return this._state.selectedInputId; }
+    get sampleRate(): BehaviorSubject<number> { return this._state.sampleRate; }
 
 
     /**
      * Update a state value.
      */
     update(key: 'library', value: LibraryEntry[]): void;
+    update(key: 'lastPath', value: string): void;
     update(key: 'activeId', value: string): void;
     update(key: 'gain', value: number): void;
     update(key: 'inputDevices', value: { [id: number]: string }): void;

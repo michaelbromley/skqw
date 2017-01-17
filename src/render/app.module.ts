@@ -3,7 +3,6 @@ import {BrowserModule} from '@angular/platform-browser';
 
 import {GainSelector} from './components/gain-selector/gain-selector.component';
 import {InputSelector} from './components/input-selector/input-selector.component';
-import {LibraryPathSelector} from './components/library-path-selector/library-path-selector.component';
 import {Notification} from './components/notification/notification.component';
 import {ParameterControls} from './components/parameter-controls/parameter-controls.component';
 import {SettingsGroup} from './components/settings-group/settings-group.component';
@@ -25,7 +24,6 @@ import {LibraryService} from './providers/library.service';
         App,
         GainSelector,
         InputSelector,
-        LibraryPathSelector,
         Notification,
         ParameterControls,
         SettingsGroup,

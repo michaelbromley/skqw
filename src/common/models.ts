@@ -26,6 +26,7 @@ export interface LibraryEntry {
     id: string;
     name: string;
     path: string;
+    error: boolean;
 }
 
 export interface Preset {

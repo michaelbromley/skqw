@@ -1,9 +1,8 @@
-<visualizer [sample]="sample" [visualization]="vis"></visualizer>
+<visualizer [sample]="sample" [visualization]="visualization$ | async"></visualizer>
 
 <notification></notification>
 
 <settings-panel
-        [state]="state.stateChanges$ | async"
         (toggle)="toggleSettings($event)"
         (selectLibraryDir)="selectLibraryDir()"
         (changeInputDeviceId)="setInputDeviceId($event)"

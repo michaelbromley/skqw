@@ -1,12 +1,10 @@
 <div class="v-selector-container">
-    <div class="title-row">
-        <div class="prev-icon icon">
-            <div [innerHTML]="icon_arrow" (click)="selectPrev()"></div>
-        </div>
-        <div class="title">{{ current?.name || 'none selected' }}</div>
-        <div class="next-icon icon" (click)="selectNext()">
-            <div [innerHTML]="icon_arrow"></div>
-        </div>
-    </div>
-
+    <ul class="library-list">
+        <li *ngFor="let entry of state.library | async" (click)="select(entry)"
+            [class.selected]="(current$ | async)?.id === entry.id">
+            <div class="name">{{ entry.name }}</div>
+            <div class="remove" (click)="remove(entry, $event)">-</div>
+        </li>
+    </ul>
+    <button class="button is-small is-dark" (click)="add()">Add...</button>
 </div>

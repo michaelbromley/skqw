@@ -5,28 +5,18 @@
 
     <div class="panel-body">
 
-        <settings-group groupTitle="Visualization" [visible]="true">
-            <v-selector [current]="current"
-                        [state]="state"
-                        (select)="select.emit($event)"></v-selector>
-        </settings-group>
+        <v-selector></v-selector>
 
-        <settings-group groupTitle="Parameters">
-            <gain-selector [state]="state"
-                           (setGain)="setGain.emit($event)"
-                           (setSampleRate)="setSampleRate.emit($event)"></gain-selector>
+        <gain-selector [state]="state"
+                       (setGain)="setGain.emit($event)"
+                       (setSampleRate)="setSampleRate.emit($event)"></gain-selector>
 
-            <parameter-controls [params]="current?.params"
-                                (updateParam)="updateParam.emit($event)"></parameter-controls>
-        </settings-group>
-
-        <settings-group groupTitle="Library Path">
-            <library-path-selector></library-path-selector>
-        </settings-group>
+        <parameter-controls [params]="current?.params"
+                            (updateParam)="updateParam.emit($event)"></parameter-controls>
 
         <settings-group groupTitle="Input Device">
-            <input-selector [inputs]="state.inputDevices"
-                            [selectedId]="state.selectedInputId"
+            <input-selector [inputs]="state.inputDevices | async"
+                            [selectedId]="state.selectedInputId | async"
                             (inputChange)="changeInputDeviceId.emit($event)"></input-selector>
         </settings-group>
 

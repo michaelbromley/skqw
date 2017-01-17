@@ -35,13 +35,7 @@ export function createCoreModule(canvasService: CanvasService, visPath: string, 
             return canvasService.getDimensions();
         },
         loadScript: function loadScript(filename: string) {
-            let fullPath: string;
-
-            if (filename.indexOf('vendor/three') === 0) {
-                fullPath = path.join(__dirname, filename);
-            } else {
-                fullPath = path.join(visPath, filename);
-            }
+            let fullPath = path.join(visPath, filename);
             let data = fs.readFileSync(fullPath);
             // TODO: try to enable this again once https://github.com/electron/electron/pull/7909 is merged
            /* if (vm.isContext(sandbox)) {

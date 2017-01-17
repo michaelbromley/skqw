@@ -1,7 +1,7 @@
 <div class="gain-selector-container">
 
     <div class="skqw-control">
-        <label>Gain: {{ state.gain }}</label>
+        <label>Gain: {{ state.gain | async }}</label>
         <input type="range"
                class="dark"
                (input)="setGain.emit($event.target.value)"
@@ -11,7 +11,7 @@
     </div>
 
     <div class="skqw-control">
-        <label>Sample Rate (Hz): {{ state.sampleRate }}</label>
+        <label>Sample Rate (Hz): {{ state.sampleRate | async }}</label>
         <input type="range"
                class="dark"
                (input)="setSampleRate.emit($event.target.value)"

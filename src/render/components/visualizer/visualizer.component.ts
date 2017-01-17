@@ -2,6 +2,9 @@ import {Component, ElementRef, Input, SimpleChange} from '@angular/core';
 import {Visualization, Sample, ParamUpdate} from '../../../common/models';
 import {defaultVis} from './defaultVisualization';
 import {CanvasService} from '../../providers/canvas.service';
+import {NotificationService} from '../../providers/notification.service';
+
+const MAX_ERRORS = 10;
 
 @Component({
     selector: 'visualizer',
@@ -16,19 +19,27 @@ export class Visualizer {
     private isRunning: boolean = false;
     private onResizeFn: Function;
     private rafId: any;
+    private errorCount = 0;
 
     private tick = (timestamp) => {
         if (this.isRunning && this.visualization.tick) {
             try {
                 this.visualization.tick(timestamp);
             } catch (e) {
-                console.log(e);
+                    this.errorCount++;
+                    console.error(e);
             }
-            this.rafId = requestAnimationFrame(this.tick);
+            if (this.errorCount < MAX_ERRORS) {
+                this.rafId = requestAnimationFrame(this.tick);
+            } else {
+                this.notification.notify(`Halting visualization: too many errors!`);
+                this.stop();
+            }
         }
     };
 
     constructor(private elementRef: ElementRef,
+                private notification: NotificationService,
                 private canvasService: CanvasService) {
         canvasService.registerHostElement(elementRef);
     }
@@ -53,6 +64,7 @@ export class Visualizer {
     }
 
     start() {
+        this.errorCount = 0;
         this.isRunning = true;
         this.rafId = requestAnimationFrame(this.tick);
     }

@@ -29,12 +29,12 @@ export class Loader {
     loadFromPath(pathToIndexJs: string): Visualization {
         const fullPath = path.join(pathToIndexJs, 'index.js');
 
-        if (!fs.statSync(fullPath).isFile()) {
-            this.notification.notify(`Could not find "index.js" in path "${pathToIndexJs}"`);
-            return;
-        }
-
         try {
+            if (!fs.statSync(fullPath).isFile()) {
+                this.notification.notify(`Could not find "index.js" in path "${pathToIndexJs}"`);
+                return;
+            }
+
             let visualization = createSandbox(this.canvasService).run(pathToIndexJs);
             if (this.isValidVisualization(visualization)) {
                 return visualization;
@@ -43,7 +43,7 @@ export class Loader {
             }
         } catch (e) {
             console.error(`Failed to load index.js in path "${pathToIndexJs}":`);
-            console.error(e);
+            throw e;
         }
     }
 
@@ -51,12 +51,17 @@ export class Loader {
      * Returns a visualization object given by the id (the index in the library array)
      */
     loadLibraryEntry(id: string, debugMode: boolean = false): Visualization {
-        console.log('loading', id);
         const entry = this.libraryService.getEntry(id);
         if (entry) {
-            let vis = createSandbox(this.canvasService, debugMode).run(entry.path);
-            return this.normalizeParams(vis);
+            try {
+                let vis = createSandbox(this.canvasService, debugMode).run(entry.path);
+                return this.normalizeParams(vis);
+            } catch (e) {
+                this.notification.notify(e.toString());
+                this.libraryService.setError(id);
+            }
         } else {
+            this.notification.notify(`Visualization at was not found`);
             this.libraryService.removeEntry(id);
         }
     }
@@ -153,7 +158,13 @@ function runInVmSandbox(canvasService: CanvasService, visPath: string, debugMode
         } else if (moduleName === SKQW_CORE_MODULE_NAME) {
             return createCoreModule(canvasService, visPath, sandbox);
         } else {
-            return nativeRequire(path.join(visPath, moduleName));
+            let fullPath;
+            if (moduleName.indexOf('vendor/three') === 0) {
+                fullPath = path.join(__dirname, 'vendor/three/three');
+            } else {
+                fullPath = path.join(visPath, moduleName);
+            }
+            return nativeRequire(fullPath);
         }
     };
     let script = fs.readFileSync(filename).toString();
@@ -170,7 +181,12 @@ function runInVmSandbox(canvasService: CanvasService, visPath: string, debugMode
     //}
     let args = [module.exports, customRequire, module, filename, dirname];
 
-    compiledWrapper.apply(this, args);
+
+    try {
+        compiledWrapper.apply(this, args);
+    } catch (e) {
+        console.error(e);
+    }
     return module.exports;
 }
 

@@ -1,8 +1,11 @@
 import {Component, ChangeDetectorRef, ViewChild, HostListener, ViewEncapsulation} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/observable/combineLatest';
+import 'rxjs/add/operator/map';
 import {
     START_ANALYZER, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
     SET_GAIN, TOGGLE_NORMALIZATION, MAX_GAIN, MIN_GAIN, TOGGLE_FULLSCREEN, TOGGLE_DEVTOOLS, MIN_SAMPLE_RATE,
-    MAX_SAMPLE_RATE, SET_SAMPLE_RATE, CLOSE_DEVTOOLS, OPEN_DEVTOOLS
+    MAX_SAMPLE_RATE, SET_SAMPLE_RATE, CLOSE_DEVTOOLS, OPEN_DEVTOOLS, SAMPLE
 } from '../common/constants';
 import {Visualizer} from './components/visualizer/visualizer.component';
 import {Loader} from './providers/loader.service';
@@ -25,7 +28,7 @@ export class App {
 
     @ViewChild(Visualizer) visualizer: Visualizer;
     sample: Sample = { ft: [], ts: [] };
-    vis: Visualization;
+    visualization$: Observable<Visualization>;
     private debugMode: boolean = false;
 
     constructor(public state: State,
@@ -40,12 +43,18 @@ export class App {
             console.log('Normalization set to ', normalizeFt);
             ipcRenderer.send(TOGGLE_NORMALIZATION, normalizeFt);
         };
+
+        this.visualization$ = this.state.activeId.map(id => this.loader.loadLibraryEntry(id, this.debugMode));
     }
 
     ngOnInit(): void {
         ipcRenderer.send(REQUEST_DEVICE_LIST);
         ipcRenderer.on(RECEIVE_DEVICE_LIST, (event, list) => {
-            this.state.set('inputDevices', list);
+            this.state.update('inputDevices', list);
+        });
+
+        ipcRenderer.on(SAMPLE, (event, sample: Sample) => {
+            this.sample = sample;
         });
 
         ipcRenderer.send(START_ANALYZER);
@@ -59,15 +68,6 @@ export class App {
             this.debugMode = false;
             this.notification.notify(`Debug mode disabled`);
         });
-
-        this.state.stateChanges$.subscribe(state => {
-            let firstVis = 0 < state.library.length && state.library[0];
-            if (firstVis && state.activeId !== firstVis.id) {
-                console.log('state', state);
-                this.vis = this.loader.loadLibraryEntry(firstVis.id, this.debugMode);
-                this.state.set('activeId', firstVis.id);
-            }
-        })
     }
 
     /**
@@ -107,7 +107,7 @@ export class App {
     }
     
     setInputDeviceId(id: number): void {
-        this.state.set('selectedInputId', id);
+        this.state.update('selectedInputId', id);
         ipcRenderer.send(SET_INPUT_DEVICE_ID, id);
     }
 
@@ -117,24 +117,24 @@ export class App {
 
     setGain(val: number) {
         if (MIN_GAIN <= val && val <= MAX_GAIN) {
-            this.state.set('gain', val);
+            this.state.update('gain', val);
             ipcRenderer.send(SET_GAIN, val);
         }
     }
 
     setSampleRate(val: number) {
         if (MIN_SAMPLE_RATE <= val && val <= MAX_SAMPLE_RATE) {
-            this.state.set('sampleRate', val);
+            this.state.update('sampleRate', val);
             ipcRenderer.send(SET_SAMPLE_RATE, val);
         }
     }
 
     private reloadCurrentVisualization(): void {
-        if (!this.vis) {
+       /* if (!this.vis) {
             return;
         }
         let id = this.state.getValue().library
             .filter(item => item.name === this.vis.name)[0].id;
-        this.vis = this.loader.loadLibraryEntry(id, this.debugMode);
+        this.vis = this.loader.loadLibraryEntry(id, this.debugMode);*/
     }
 }

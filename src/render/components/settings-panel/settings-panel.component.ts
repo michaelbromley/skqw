@@ -1,5 +1,5 @@
 import {Component, HostListener, Input, EventEmitter, Output} from '@angular/core';
-import {AppState} from '../../providers/state.service.';
+import {AppState, State} from '../../providers/state.service.';
 import {ParamUpdate, Visualization} from '../../../common/models';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 
@@ -12,7 +12,6 @@ let settingsIcon: string = require('!!svg-inline!../../../assets/icons/settings.
     styleUrls: ['./settings-panel.scss']
 })
 export class SettingsPanel {
-    @Input() state: AppState;
     @Input() current: Visualization;
     @Output() changeInputDeviceId = new EventEmitter<number>();
     @Output() selectLibraryDir = new EventEmitter<boolean>();
@@ -26,7 +25,8 @@ export class SettingsPanel {
     version: string = VERSION;
     private hoverTimer: any;
 
-    constructor(sanitizer: DomSanitizer) {
+    constructor(public state: State,
+                sanitizer: DomSanitizer) {
         this.icon_settings = sanitizer.bypassSecurityTrustHtml(settingsIcon);
     }
 

@@ -14,7 +14,7 @@ export class LibraryService {
      * Get all library entries.
      */
     getLibrary(): LibraryEntry[] {
-        return this.state.getValue().library;
+        return this.state.library.value;
     }
 
     /**
@@ -28,14 +28,24 @@ export class LibraryService {
     }
 
     /**
+     * Mark the entry as having an error.
+     */
+    setError(id: string): void {
+        const library = this.getLibrary();
+        const index = library.findIndex(entry => entry.id === id);
+        library[index].error = true;
+        this.state.update('library', library);
+    }
+
+    /**
      * Add a path to the library
      */
     addEntry(path: string, visualization: Visualization): void {
-        const library = this.state.getValue().library;
+        const library = this.getLibrary();
         const entry = this.generateLibraryEntry(path, visualization);
         if (library.map(e => e.id).indexOf(entry.id) === -1) {
             library.push(entry);
-            this.state.set('library', library);
+            this.state.update('library', library);
         }
     }
 
@@ -43,8 +53,8 @@ export class LibraryService {
      * Remove a path from the library.
      */
     removeEntry(id: string): void {
-        const library = this.state.getValue().library.filter(e => e.id !== id);
-        this.state.set('library', library);
+        const library = this.getLibrary().filter(e => e.id !== id);
+        this.state.update('library', library);
     }
 
     private generateLibraryEntry(path: string, visualization: Visualization): LibraryEntry {
@@ -53,7 +63,8 @@ export class LibraryService {
         return {
             id,
             name,
-            path
+            path,
+            error: false
         };
     }
 

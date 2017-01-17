@@ -1,26 +1,21 @@
 :host {
 
-  .title-row {
-    text-align: center;
-    color: #afafaf;
-    & > div {
-      display: inline-block;
-    }
+  ul.library-list {
+    margin-bottom: 10px;
 
-    .title {
-      margin: 0 20px;
-      color: #afafaf;
-    }
+    li {
+      padding: 5px;
+      border-bottom: 1px solid #252424;
+      cursor: pointer;
+      display: flex;
 
-    .icon {
-      // margin-top: 5px;
-      svg {
-        fill: #afafaf;
+      &.selected {
+        color: #efefef;
       }
-    }
 
-    /deep/ .prev-icon svg {
-      transform: rotateZ(180deg) translateX(7px);
+      .name {
+        flex-grow: 1;
+      }
     }
   }
 }
