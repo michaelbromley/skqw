@@ -1,16 +1,13 @@
-<div class="gain-selector-container">
-
-    <div class="skqw-control">
-        <label>Gain: {{ state.gain | async }}</label>
-        <input type="range"
-               class="dark"
-               (input)="setGain.emit($event.target.value)"
-               [value]="state.gain"
+<div class="gain-selector-container" [class.active]="active">
+    <md-slider vertical
+               [value]="gain"
+               (change)="setGain.emit($event.value)"
                [min]="minGain"
-               [max]="maxGain">
-    </div>
+               [max]="maxGain"></md-slider>
 
-    <div class="skqw-control">
+    <div class="label">Gain: {{ gain }}</div>
+
+    <!--<div class="skqw-control">
         <label>Sample Rate (Hz): {{ state.sampleRate | async }}</label>
         <input type="range"
                class="dark"
@@ -19,5 +16,5 @@
                [min]="minSampleRate"
                [max]="maxSampleRate"
                step="10">
-    </div>
+    </div>-->
 </div>

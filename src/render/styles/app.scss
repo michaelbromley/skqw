@@ -1,41 +1,10 @@
-@import "../../../node_modules/bulma/bulma.sass";
-@import "form-inputs";
+@import "material";
+@import "icons";
 
 html {
-  overflow-y: hidden;
+  overflow: hidden;
   background-color: black;
   -webkit-user-select: none;
   user-select: none;
-}
-
-.icon {
-  svg {
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    fill: rgba(55, 55, 55, 1);
-    transition: fill 0.3s;
-    cursor: pointer;
-
-    &:hover {
-      fill: rgba(100, 100, 100, 1);
-    }
-  }
-}
-
-.skqw-control {
-  display: flex;
-  margin-bottom: 16px;
-
-  > label {
-    flex: 0 1 auto;
-    font-weight: bold;
-    margin-right: 10px;
-    min-width: 150px;
-    text-align: right;
-  }
-  > input {
-    background-color: transparent;
-    flex: 1 0 auto;
-  }
+  font-family: Roboto,"Helvetica Neue",sans-serif;
 }

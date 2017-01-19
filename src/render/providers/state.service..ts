@@ -6,10 +6,13 @@ const storage = require('electron-json-storage');
 
 const APP_STATE_KEY = 'appState';
 
+export type ParamSettingsMap = { [name: string]: number | boolean };
+
 export interface AppState {
     library: LibraryEntry[];
     lastPath: string;
     activeId: string;
+    paramSettings: ParamSettingsMap;
     inputDevices: { [id: number]: string };
     selectedInputId: number;
     gain: number;
@@ -20,6 +23,7 @@ const initialState: AppState = {
     library: [],
     lastPath: '',
     activeId: '',
+    paramSettings: {},
     inputDevices: {},
     selectedInputId: 0,
     gain: 100,
@@ -61,6 +65,7 @@ export class State {
     get library(): BehaviorSubject<LibraryEntry[]> { return this._state.library; }
     get lastPath(): BehaviorSubject<string> { return this._state.lastPath; }
     get activeId(): BehaviorSubject<string> { return this._state.activeId; }
+    get paramSettings(): BehaviorSubject<ParamSettingsMap> { return this._state.paramSettings; }
     get gain(): BehaviorSubject<number> { return this._state.gain; }
     get inputDevices(): BehaviorSubject<{ [id: number]: string }> { return this._state.inputDevices; }
     get selectedInputId(): BehaviorSubject<number> { return this._state.selectedInputId; }
@@ -73,6 +78,7 @@ export class State {
     update(key: 'library', value: LibraryEntry[]): void;
     update(key: 'lastPath', value: string): void;
     update(key: 'activeId', value: string): void;
+    update(key: 'paramSettings', value: ParamSettingsMap): void;
     update(key: 'gain', value: number): void;
     update(key: 'inputDevices', value: { [id: number]: string }): void;
     update(key: 'selectedInputId', value: number): void;

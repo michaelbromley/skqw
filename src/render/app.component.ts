@@ -1,4 +1,5 @@
 import {Component, ChangeDetectorRef, ViewChild, HostListener, ViewEncapsulation} from '@angular/core';
+import {MdSliderChange} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/observable/combineLatest';
 import 'rxjs/add/operator/map';
@@ -96,13 +97,11 @@ export class App {
             // increase the gain
             const newValue = this.state.getValue().gain + 5;
             this.setGain(newValue);
-            this.notification.notify(`Gain: ${newValue}`);
         }
         if (e.which === 40) {
             // decrease the gain
             const newValue = this.state.getValue().gain - 5;
             this.setGain(newValue);
-            this.notification.notify(`Gain: ${newValue}`);
         }
     }
     

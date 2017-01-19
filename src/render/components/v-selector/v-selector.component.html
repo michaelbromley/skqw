@@ -1,10 +1,22 @@
 <div class="v-selector-container">
-    <ul class="library-list">
-        <li *ngFor="let entry of state.library | async" (click)="select(entry)"
-            [class.selected]="(current$ | async)?.id === entry.id">
-            <div class="name">{{ entry.name }}</div>
-            <div class="remove" (click)="remove(entry, $event)">-</div>
-        </li>
-    </ul>
-    <button class="button is-small is-dark" (click)="add()">Add...</button>
+    <md-nav-list>
+        <md-list-item *ngFor="let entry of state.library | async"
+                      [class.selected]="(current$ | async)?.id === entry.id"
+                      (click)="select(entry)">
+            <h4 md-line class="name">{{ entry.name }}</h4>
+            <p md-line class="path"> {{ entry.path }} </p>
+            <button md-icon-button [mdMenuTriggerFor]="menu" (click)="menuClick($event)">
+                <md-icon>more_vert</md-icon>
+            </button>
+            <md-menu #menu="mdMenu">
+                <button md-menu-item (click)="remove(entry, $event)">
+                    <md-icon>delete</md-icon>
+                    <span>Remove</span>
+                </button>
+            </md-menu>
+        </md-list-item>
+    </md-nav-list>
+    <div class="add-button">
+        <button md-icon-button (click)="add()"><md-icon>add</md-icon></button>
+    </div>
 </div>

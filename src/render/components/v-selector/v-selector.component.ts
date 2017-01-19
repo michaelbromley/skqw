@@ -69,6 +69,11 @@ export class VSelector {
         this.state.update('activeId', entry.id);
     }
 
+    menuClick(e: Event): void {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
     remove(entry: LibraryEntry, e: MouseEvent): void {
         this.libraryService.removeEntry(entry.id);
         e.stopPropagation();

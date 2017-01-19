@@ -1,5 +1,9 @@
 <visualizer [sample]="sample" [visualization]="visualization$ | async"></visualizer>
 
+<gain-selector [gain]="state.gain | async"
+               (setGain)="setGain($event)"
+               (setSampleRate)="setSampleRate($event)"></gain-selector>
+
 <notification></notification>
 
 <settings-panel
@@ -7,7 +11,7 @@
         (selectLibraryDir)="selectLibraryDir()"
         (changeInputDeviceId)="setInputDeviceId($event)"
 
-        [current]="vis"
+        [current]="visualization$ | async"
         (setGain)="setGain($event)"
         (setSampleRate)="setSampleRate($event)"
         (select)="selectVis($event)"

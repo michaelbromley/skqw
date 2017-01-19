@@ -3,6 +3,7 @@ import {Visualization, Sample, ParamUpdate} from '../../../common/models';
 import {defaultVis} from './defaultVisualization';
 import {CanvasService} from '../../providers/canvas.service';
 import {NotificationService} from '../../providers/notification.service';
+import {State} from '../../providers/state.service.';
 
 const MAX_ERRORS = 10;
 
@@ -39,6 +40,7 @@ export class Visualizer {
     };
 
     constructor(private elementRef: ElementRef,
+                private state: State,
                 private notification: NotificationService,
                 private canvasService: CanvasService) {
         canvasService.registerHostElement(elementRef);
@@ -98,6 +100,11 @@ export class Visualizer {
                 // the parameter.
                 this.visualization.params[paramUpdate.paramKey].value = paramUpdate.newValue;
             }
+            let paramSettings = {};
+            for(let name in this.visualization.params) {
+                paramSettings[name] = this.visualization.params[name].value;
+            }
+            this.state.update('paramSettings', paramSettings);
         }
     }
 

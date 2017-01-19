@@ -8,31 +8,47 @@
   max-width: 90vw;
   transform: translateX(450px);
   z-index: 10;
-  transition: transform 0.2s, opacity 0.2s;
+  transition: transform 0.4s;
+  transition-timing-function: cubic-bezier(.82,.11,.68,.99);
   background-color: rgba(50, 50, 50, 0);
-  opacity: 0;
 
-  &.visible {
-    opacity: 1;
+  .panel-body {
+    opacity: 0;
+    transition: opacity 0.4s;
   }
 
   &.expanded {
     background-color: rgba(10, 10, 10, 0.6);
     border-left: 1px solid #252525;
     transform: translateX(0px);
-    opacity: 1;
+
+    .panel-body {
+      opacity: 1;
+    }
+
+    .toggle-icon {
+      left: 10px;
+    }
   }
 
-  > .toggle-icon {
+  &.visible {
+    .toggle-icon {
+      opacity: 1;
+    }
+  }
+
+  .toggle-icon {
     position: absolute;
-    left: 10px;
+    z-index: 10;
+    left: -15px;
     top: 10px;
-    svg {
-      fill: rgba(200, 200, 200, 0.3);
-      transition: fill 0.3s;
-      &:hover {
-        fill: rgba(200, 200, 200, 0.6);
-      }
+    color: rgba(255, 255, 255, 0.7);
+    transition: color 0.2s, opacity 0.8s, left 0.5s;
+    cursor: pointer;
+    will-change: left;
+    opacity: 0;
+    &:hover {
+      color: rgba(255, 255, 255, 0.9);
     }
   }
 

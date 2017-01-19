@@ -1,17 +1,17 @@
 <div class="panel-container" [ngClass]="{ visible: iconVisible, expanded: expanded }">
-    <div class="icon toggle-icon" (click)="expanded = !expanded">
-        <div [innerHTML]="icon_settings"></div>
+    <div class="toggle-icon" (click)="expanded = !expanded">
+        <button md-fab><md-icon>
+            <span *ngIf="!expanded">settings</span>
+            <span *ngIf="expanded">close</span>
+        </md-icon></button>
     </div>
 
     <div class="panel-body">
 
         <v-selector></v-selector>
 
-        <gain-selector [state]="state"
-                       (setGain)="setGain.emit($event)"
-                       (setSampleRate)="setSampleRate.emit($event)"></gain-selector>
-
         <parameter-controls [params]="current?.params"
+                            [paramSettings]="state.paramSettings | async"
                             (updateParam)="updateParam.emit($event)"></parameter-controls>
 
         <settings-group groupTitle="Input Device">

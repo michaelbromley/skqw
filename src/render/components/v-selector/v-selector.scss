@@ -1,21 +1,21 @@
 :host {
-
-  ul.library-list {
-    margin-bottom: 10px;
-
-    li {
-      padding: 5px;
-      border-bottom: 1px solid #252424;
-      cursor: pointer;
-      display: flex;
-
-      &.selected {
-        color: #efefef;
-      }
-
-      .name {
-        flex-grow: 1;
-      }
+  color: #bbb;
+  md-list-item {
+    color: #bbb;
+    background-color: rgba(0, 0, 0, 0.24);
+    &.selected {
+      background-color: rgba(100, 100, 100, 0.34);
     }
+  }
+
+  .path {
+    font-size: 12px;
+    opacity: 0.5;
+  }
+
+  .add-button {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
   }
 }

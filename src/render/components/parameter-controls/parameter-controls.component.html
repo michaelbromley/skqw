@@ -1,22 +1,20 @@
 <div class="parameter-controls">
 
     <div class="parameter" *ngFor="let item of paramsArray">
-
         <div *ngIf="item.param.type === 'range'" class="skqw-control">
-            <label>{{ item.param.label }}: {{ item.param.value }}</label>
-            <input type="range"
-                   (input)="updateValue(item.key, $event.target.value)"
-                   [value]="item.param.value"
-                   [min]="item.param.min"
-                   [step]="item.param.step"
-                   [max]="item.param.max">
+            <label>{{ item.param.label }}
+                <span class="value">{{ paramSettings[item.key] || item.param.value }}</span>
+            </label>
+            <md-slider  [value]="paramSettings[item.key] || item.param.value"
+                        [min]="item.param.min"
+                        [step]="item.param.step"
+                        [max]="item.param.max"
+                        (change)="updateValue(item.key, $event.value)">yolo</md-slider>
         </div>
 
         <div *ngIf="item.param.type === 'boolean'" class="skqw-control">
-            <label> {{ item.param.label }}</label>
-            <input type="checkbox"
-                   (change)="updateValue(item.key, $event.target.checked)"
-                   [checked]="item.param.value">
+            <md-slide-toggle (change)="updateValue(item.key, $event.checked)"
+                             [checked]="paramSettings[item.key] || item.param.value"> {{ item.param.label }}</md-slide-toggle>
         </div>
     </div>
 

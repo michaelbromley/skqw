@@ -1,5 +1,7 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
+import {MaterialModule} from '@angular/material';
+import 'hammerjs';
 
 import {GainSelector} from './components/gain-selector/gain-selector.component';
 import {InputSelector} from './components/input-selector/input-selector.component';
@@ -18,7 +20,8 @@ import {LibraryService} from './providers/library.service';
 
 @NgModule({
     imports: [
-        BrowserModule
+        BrowserModule,
+        MaterialModule.forRoot()
     ],
     declarations: [
         App,

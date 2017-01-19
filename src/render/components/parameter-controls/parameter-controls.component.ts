@@ -1,5 +1,6 @@
 import {Component, Input, EventEmitter, Output, SimpleChange} from '@angular/core';
 import {Parameter, ParamUpdate} from '../../../common/models';
+import {ParamSettingsMap} from '../../providers/state.service.';
 
 @Component({
     selector: 'parameter-controls',
@@ -8,6 +9,7 @@ import {Parameter, ParamUpdate} from '../../../common/models';
 }) 
 export class ParameterControls {
     @Input() params: { [name: string]: Parameter };
+    @Input() paramSettings: ParamSettingsMap;
     @Output() updateParam = new EventEmitter<ParamUpdate>();
     paramsArray: { key: string; param: Parameter }[] = [];
 
@@ -16,7 +18,7 @@ export class ParameterControls {
         if (newParams) {
             let keys = Object.keys(newParams);
             this.paramsArray = keys.map(key => ({key, param: newParams[key]}));
-        } else {
+        } else if (!this.params) {
             this.paramsArray = [];
         }
     }  

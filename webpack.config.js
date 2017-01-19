@@ -116,6 +116,11 @@ module.exports = function (env) {
                     },
                     {
                         context: './src',
+                        from: 'assets/icons*/*.woff2',
+                        to: ''
+                    },
+                    {
+                        context: './src',
                         from: 'node_modules/**/*',
                         to: ''
                     },
