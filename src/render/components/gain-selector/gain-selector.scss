@@ -23,6 +23,11 @@
     .label {
       color: rgba(230, 230, 230, 0.8);
       min-width: 100px;
+      text-transform: uppercase;
+      font-size: 14px;
+      .value {
+        font-weight: bold;
+      }
     }
   }
 }

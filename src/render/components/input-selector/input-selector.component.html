@@ -1,9 +1,10 @@
 <div class="control">
     <div class="select">
-        <select (change)="inputChanged($event)">
-            <option *ngFor="let input of inputArray"
-                    [value]="input.id"
-                    [selected]="input.id === selectedId">{{ input.name }}</option>
-        </select>
+        <md-select *ngIf="inputArray && inputArray.length"
+                   placeholder="Audio Source"
+                   [formControl]="selectControl">
+            <md-option *ngFor="let input of inputArray"
+                       [value]="input.id">{{ input.name }}</md-option>
+        </md-select>
     </div>
 </div>

@@ -1,9 +1,11 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {FormControl} from '@angular/forms';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'input-selector',
     templateUrl: './input-selector.component.html',
-    styles: [`:host { display: block; } select { width: 100%; }`]
+    styleUrls: ['./input-selector.scss']
 })
 export class InputSelector {
 
@@ -11,6 +13,15 @@ export class InputSelector {
     @Input() selectedId: number;
     @Output() inputChange = new EventEmitter<number>(); 
     inputArray: { id: string; name: string; }[] = [];
+    selectControl = new FormControl();
+    subscription: Subscription;
+
+    ngOnInit(): void {
+        this.subscription = this.selectControl.valueChanges
+            .subscribe(value => {
+                this.inputChange.emit(Number(value));
+            })
+    }
 
     ngOnChanges(changes: any): void {
         if (this.inputArray.length === 0) {
@@ -18,10 +29,12 @@ export class InputSelector {
                 let name = this.inputs[id];
                 this.inputArray.push({ id, name });
             }
+            this.selectControl.setValue(this.selectedId.toString());
         }
     }
 
-    inputChanged(event: any): void {
-        this.inputChange.emit(Number(event.target.value));
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
+
 }

@@ -8,7 +8,7 @@
   max-width: 90vw;
   transform: translateX(450px);
   z-index: 10;
-  transition: transform 0.4s;
+  transition: transform 0.2s;
   transition-timing-function: cubic-bezier(.82,.11,.68,.99);
   background-color: rgba(50, 50, 50, 0);
 
@@ -42,13 +42,13 @@
     z-index: 10;
     left: -15px;
     top: 10px;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(0, 0, 0, 0.89);
     transition: color 0.2s, opacity 0.8s, left 0.5s;
     cursor: pointer;
     will-change: left;
     opacity: 0;
     &:hover {
-      color: rgba(255, 255, 255, 0.9);
+      color: rgba(33, 33, 33, 0.9);
     }
   }
 
@@ -85,4 +85,12 @@ ul.shortcuts {
 
 .about {
   text-align: center;
+  position: relative;
+  img {
+    width: 100%;
+  }
+  .version {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
 }

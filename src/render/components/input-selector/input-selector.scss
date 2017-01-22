@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  margin-top: 16px;
+}
+
+/deep/ md-select {
+  width: 100%;
+  color: #888;
+}
+
+/deep/ .md-select-arrow {
+  color: #888;
+}
+
+/deep/ .md-select-value {
+  color: #ccc;
+}
+
+/deep/ .md-select-trigger {
+  color: #aaa;
+  border-bottom: 1px solid #888;
+}

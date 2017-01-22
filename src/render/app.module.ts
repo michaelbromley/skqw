@@ -1,5 +1,6 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
+import {ReactiveFormsModule} from '@angular/forms';
 import {MaterialModule} from '@angular/material';
 import 'hammerjs';
 
@@ -21,6 +22,7 @@ import {LibraryService} from './providers/library.service';
 @NgModule({
     imports: [
         BrowserModule,
+        ReactiveFormsModule,
         MaterialModule.forRoot()
     ],
     declarations: [

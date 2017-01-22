@@ -1,19 +1,15 @@
-import {Component, HostListener} from '@angular/core';
+import {Component} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import {Visualization, LibraryEntry} from '../../../common/models';
-import {KEYCODE_RIGHT_ARROW, KEYCODE_LEFT_ARROW} from '../../../common/constants';
+import {LibraryEntry} from '../../../common/models';
 import {State} from '../../providers/state.service.';
 import {NotificationService} from '../../providers/notification.service';
-import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {LibraryService} from '../../providers/library.service';
 import {Loader} from '../../providers/loader.service';
 const {dialog} = require('electron').remote;
 const path = require('path');
 
 const DEFAULT_LIBRARY_PATH = path.join(__dirname, 'library');
-
-let arrowIcon: string = require('!!svg-inline!../../../assets/icons/play_arrow.svg');
 
 @Component({
     selector: 'v-selector',
@@ -23,16 +19,12 @@ let arrowIcon: string = require('!!svg-inline!../../../assets/icons/play_arrow.s
 export class VSelector {
 
     current$: Observable<LibraryEntry>;
-    icon_arrow: SafeHtml;
     activeId: string;
 
     constructor(private notificationService: NotificationService,
                 private state: State,
                 private libraryService: LibraryService,
-                private loader: Loader,
-                sanitizer: DomSanitizer) {
-        this.icon_arrow = sanitizer.bypassSecurityTrustHtml(arrowIcon);
-
+                private loader: Loader) {
         this.current$ = state.activeId.map(id => this.libraryService.getEntry(id));
     }
 

@@ -1,7 +1,8 @@
 <div class="settings-group-container" [ngClass]="{ visible: visible }">
-    <div class="group-title" (click)="toggle()">{{ groupTitle }}
-        <div class="icon toggle-icon">
-           <div [innerHTML]="icon_caret"></div>
+    <div class="group-title" (click)="toggle()">
+        <div class="name">{{ groupTitle }}</div>
+        <div class="toggle-icon">
+           <md-icon>keyboard_arrow_right</md-icon>
        </div>
     </div>
 

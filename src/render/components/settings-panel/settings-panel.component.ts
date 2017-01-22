@@ -1,10 +1,8 @@
 import {Component, HostListener, Input, EventEmitter, Output} from '@angular/core';
-import {AppState, State} from '../../providers/state.service.';
+import {State} from '../../providers/state.service.';
 import {ParamUpdate, Visualization} from '../../../common/models';
-import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 
 declare const VERSION: string;
-let settingsIcon: string = require('!!svg-inline!../../../assets/icons/settings.svg');
 
 @Component({
     selector: 'settings-panel',
@@ -21,14 +19,10 @@ export class SettingsPanel {
     @Output() updateParam = new EventEmitter<ParamUpdate>();
     iconVisible: boolean = false;
     expanded: boolean = false;
-    icon_settings: SafeHtml;
     version: string = VERSION;
     private hoverTimer: any;
 
-    constructor(public state: State,
-                sanitizer: DomSanitizer) {
-        this.icon_settings = sanitizer.bypassSecurityTrustHtml(settingsIcon);
-    }
+    constructor(public state: State) {}
 
     ngOnDestroy(): void {
         clearTimeout(this.hoverTimer);
