@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
 import {LibraryEntry} from '../../common/models';
 const storage = require('electron-json-storage');
 
@@ -44,6 +43,8 @@ type BehaviorSubjectify<T> = {
 export class State {
 
     private _state = {} as BehaviorSubjectify<AppState>;
+    private loadedFromDisk: boolean = false;
+    private deferredOperations: { key: keyof AppState; value: any }[] = [];
 
     constructor() {
         // construct the state observables
@@ -58,6 +59,11 @@ export class State {
                 for(let key in data) {
                    this.setValue(key as keyof AppState, data[key]);
                 }
+
+                this.loadedFromDisk = true;
+                this.deferredOperations.forEach(operation => {
+                    this.update(operation.key, operation.value);
+                })
             }
         });
     }
@@ -89,9 +95,17 @@ export class State {
         if (-1 < forceNumeric.indexOf(key)) {
             value = +value;
         }
-        this.setValue(key as keyof AppState, value);
-        // TODO: is it possible to change just a key in the local storage, rather than the entire object?
-        storage.set(APP_STATE_KEY, this.getValue());
+
+        if (this.loadedFromDisk) {
+            this.setValue(key as keyof AppState, value);
+            // TODO: is it possible to change just a key in the local storage, rather than the entire object?
+            const stateObject = this.getValue();
+            storage.set(APP_STATE_KEY, stateObject);
+        } else {
+            // If the last app state has not yet been loaded from the disk, we defer this update operation
+            // until after we have loaded it, to prevent overwriting saved state.
+            this.deferredOperations.push({ key, value });
+        }
     }
 
     /**

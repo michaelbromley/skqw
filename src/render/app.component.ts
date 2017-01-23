@@ -1,8 +1,9 @@
 import {Component, ChangeDetectorRef, ViewChild, HostListener, ViewEncapsulation} from '@angular/core';
-import {MdSliderChange} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/observable/combineLatest';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/filter';
 import {
     START_ANALYZER, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
     SET_GAIN, TOGGLE_NORMALIZATION, MAX_GAIN, MIN_GAIN, TOGGLE_FULLSCREEN, TOGGLE_DEVTOOLS, MIN_SAMPLE_RATE,
@@ -45,7 +46,14 @@ export class App {
             ipcRenderer.send(TOGGLE_NORMALIZATION, normalizeFt);
         };
 
-        this.visualization$ = this.state.activeId.map(id => this.loader.loadLibraryEntry(id, this.debugMode));
+        this.visualization$ = this.state.activeId
+            .map(id => id.toString())
+            .filter(id => !!id)
+            .distinctUntilChanged()
+            .map(id => {
+                return this.loader.loadLibraryEntry(id, this.debugMode)
+            })
+            .filter(vis => !!vis);
     }
 
     ngOnInit(): void {
