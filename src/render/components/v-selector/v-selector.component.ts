@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import {LibraryEntry} from '../../../common/models';
+import {LibraryEntry, Visualization} from '../../../common/models';
 import {State} from '../../providers/state.service.';
 import {NotificationService} from '../../providers/notification.service';
 import {LibraryService} from '../../providers/library.service';
@@ -37,23 +37,33 @@ export class VSelector {
             defaultPath: this.state.lastPath.value || DEFAULT_LIBRARY_PATH,
             properties: ['openDirectory', 'multiSelections']
         }, (paths: string[]) => {
-            this.state.update('lastPath', path.join(paths[0], '..'));
-            paths.forEach(pathToScript => {
-                try {
-                    const vis = this.loader.loadFromPath(pathToScript);
-                    if (vis) {
-                        this.libraryService.addEntry(pathToScript, vis);
+            if (paths && 0 < paths.length) {
+                this.state.update('lastPath', path.join(paths[0], '..'));
+                let firstEntry: LibraryEntry;
+                paths.forEach(pathToScript => {
+                    try {
+                        const vis = this.loader.loadFromPath(pathToScript);
+                        if (vis) {
+                            const entry = this.libraryService.addEntry(pathToScript, vis);
+                            if (!firstEntry) {
+                                firstEntry = entry;
+                            }
+                        }
+                    } catch (e) {
+                        let message: string;
+                        if (e.code === "ENOENT") {
+                            message = `File not found: "${path.join(pathToScript, 'index.js')}"`
+                        } else {
+                            message = e.toString();
+                        }
+                        this.notificationService.notify(message);
                     }
-                } catch (e) {
-                    let message: string;
-                    if (e.code === "ENOENT") {
-                        message = `File not found: "${path.join(pathToScript, 'index.js')}"`
-                    } else {
-                        message = e.toString();
-                    }
-                    this.notificationService.notify(message);
+                });
+                if (firstEntry) {
+                    this.state.update('activeId', firstEntry.id);
                 }
-            });
+
+            }
         });
     }
 
@@ -68,6 +78,11 @@ export class VSelector {
 
     remove(entry: LibraryEntry, e: MouseEvent): void {
         this.libraryService.removeEntry(entry.id);
+        // load the first entry in the library
+        const library = this.libraryService.getLibrary();
+        if (0 < library.length) {
+            this.state.update('activeId', library[0].id);
+        }
         e.stopPropagation();
     }
 }

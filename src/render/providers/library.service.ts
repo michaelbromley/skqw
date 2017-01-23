@@ -40,13 +40,14 @@ export class LibraryService {
     /**
      * Add a path to the library
      */
-    addEntry(path: string, visualization: Visualization): void {
+    addEntry(path: string, visualization: Visualization): LibraryEntry {
         const library = this.getLibrary();
         const entry = this.generateLibraryEntry(path, visualization);
         if (library.map(e => e.id).indexOf(entry.id) === -1) {
             library.push(entry);
             this.state.update('library', library);
         }
+        return entry;
     }
 
     /**
