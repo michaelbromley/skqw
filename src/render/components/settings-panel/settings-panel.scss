@@ -1,3 +1,5 @@
+@import "variables";
+
 .panel-container {
   position: absolute;
   top: 0;
@@ -18,16 +20,12 @@
   }
 
   &.expanded {
-    background-color: rgba(10, 10, 10, 0.6);
+    background-color: rgba(20, 20, 30, 0.85);
     border-left: 1px solid #252525;
     transform: translateX(0px);
 
     .panel-body {
       opacity: 1;
-    }
-
-    .toggle-icon {
-      left: 10px;
     }
   }
 
@@ -59,6 +57,10 @@
     overflow-y: scroll;
     height: 100%;
   }
+}
+
+.sample-rate {
+  @include inline-slider(55%);
 }
 
 ul.shortcuts {

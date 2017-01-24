@@ -10,11 +10,8 @@ import {MAX_GAIN, MIN_GAIN, MIN_SAMPLE_RATE, MAX_SAMPLE_RATE} from '../../../com
 export class GainSelector {
     @Input() gain: number;
     @Output() setGain = new EventEmitter<number>();
-    @Output() setSampleRate = new EventEmitter<number>();
     maxGain = MAX_GAIN;
     minGain = MIN_GAIN;
-    minSampleRate = MIN_SAMPLE_RATE;
-    maxSampleRate = MAX_SAMPLE_RATE;
     active: boolean = false;
     hoverTimer: any;
 

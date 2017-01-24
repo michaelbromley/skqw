@@ -1,18 +1,11 @@
 <visualizer [sample]="sample" [visualization]="visualization$ | async"></visualizer>
 
 <gain-selector [gain]="state.gain | async"
-               (setGain)="setGain($event)"
-               (setSampleRate)="setSampleRate($event)"></gain-selector>
+               (setGain)="setGain($event)"></gain-selector>
 
 <notification></notification>
 
-<settings-panel
-        (toggle)="toggleSettings($event)"
-        (selectLibraryDir)="selectLibraryDir()"
-        (changeInputDeviceId)="setInputDeviceId($event)"
-
-        [current]="visualization$ | async"
-        (setGain)="setGain($event)"
-        (setSampleRate)="setSampleRate($event)"
-        (select)="selectVis($event)"
-        (updateParam)="updateParamValue($event)"></settings-panel>
+<settings-panel (changeInputDeviceId)="setInputDeviceId($event)"
+                [current]="visualization$ | async"
+                (setSampleRate)="setSampleRate($event)"
+                (updateParam)="updateParamValue($event)"></settings-panel>

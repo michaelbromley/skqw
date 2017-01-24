@@ -14,10 +14,19 @@
                             [paramSettings]="state.paramSettings | async"
                             (updateParam)="updateParam.emit($event)"></parameter-controls>
 
-        <settings-group groupTitle="Input Device">
+        <settings-group groupTitle="Audio Source">
             <input-selector [inputs]="state.inputDevices | async"
                             [selectedId]="state.selectedInputId | async"
                             (inputChange)="changeInputDeviceId.emit($event)"></input-selector>
+
+            <div class="sample-rate">
+                <label>Sample Rate (Hz): <span class="value">{{ state.sampleRate | async  }}</span></label>
+                <md-slider [value]="state.sampleRate | async"
+                           (change)="setSampleRate.emit($event.value)"
+                           [min]="minSampleRate"
+                           [max]="maxSampleRate"></md-slider>
+            </div>
+
         </settings-group>
 
         <settings-group groupTitle="Keyboard Shortcuts">

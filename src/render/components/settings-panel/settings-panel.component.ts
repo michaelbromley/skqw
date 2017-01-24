@@ -1,6 +1,7 @@
 import {Component, HostListener, Input, EventEmitter, Output} from '@angular/core';
 import {State} from '../../providers/state.service.';
 import {ParamUpdate, Visualization} from '../../../common/models';
+import {MIN_SAMPLE_RATE, MAX_SAMPLE_RATE} from '../../../common/constants';
 
 declare const VERSION: string;
 
@@ -12,11 +13,10 @@ declare const VERSION: string;
 export class SettingsPanel {
     @Input() current: Visualization;
     @Output() changeInputDeviceId = new EventEmitter<number>();
-    @Output() selectLibraryDir = new EventEmitter<boolean>();
-    @Output() select = new EventEmitter<number>();
-    @Output() setGain = new EventEmitter<number>();
     @Output() setSampleRate = new EventEmitter<number>();
     @Output() updateParam = new EventEmitter<ParamUpdate>();
+    minSampleRate = MIN_SAMPLE_RATE;
+    maxSampleRate = MAX_SAMPLE_RATE;
     iconVisible: boolean = false;
     expanded: boolean = false;
     version: string = VERSION;

@@ -1,8 +1,29 @@
+@import "variables";
+
 :host {
   color: #bbb;
+
+  .v-selector-container {
+  }
+
+  .title {
+    text-transform: uppercase;
+    font-size: 14px;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: $primary-color;
+    letter-spacing: 2px;
+    padding: 8px;
+  }
+
+  .empty-placeholder {
+    color: rgba(136, 136, 136, 0.78);
+    text-align: center;
+    margin: 20px;
+  }
+
   md-list-item {
     color: #bbb;
-    background-color: rgba(0, 0, 0, 0.24);
+    border-bottom: 1px solid rgba(150, 150, 150, 0.2);
     &.selected {
       background-color: rgba(100, 100, 100, 0.34);
     }
@@ -17,5 +38,6 @@
     margin-top: 10px;
     display: flex;
     justify-content: flex-end;
+
   }
 }

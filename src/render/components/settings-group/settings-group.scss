@@ -1,3 +1,5 @@
+@import "variables";
+
 .settings-group-container {
   margin-bottom: 20px;
   color: #afafaf;
@@ -11,8 +13,8 @@
     word-spacing: 3px;
     text-transform: uppercase;
     background-color: rgba(0, 0, 0, 0.4);
-    color: #6BBBD4;
-    padding: 0 8px;
+    color: $primary-color;
+    padding: 2px 8px 0;
   }
 
   .name {
