@@ -18,6 +18,16 @@ export class LibraryService {
     }
 
     /**
+     * Get the active visualization entry
+     */
+    getActive(): LibraryEntry {
+        const currentId = this.state.activeId.value;
+        if (currentId) {
+            return this.getEntry(currentId);
+        }
+    }
+
+    /**
      * Get a single entry by id.
      */
     getEntry(id: string): LibraryEntry {

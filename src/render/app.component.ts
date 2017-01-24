@@ -1,9 +1,13 @@
-import {Component, ChangeDetectorRef, ViewChild, HostListener, ViewEncapsulation} from '@angular/core';
+import {Component, ViewChild, HostListener, ViewEncapsulation} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
 import 'rxjs/observable/combineLatest';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/merge';
+import 'rxjs/add/operator/share';
 import {
     START_ANALYZER, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
     SET_GAIN, TOGGLE_NORMALIZATION, MAX_GAIN, MIN_GAIN, TOGGLE_FULLSCREEN, TOGGLE_DEVTOOLS, MIN_SAMPLE_RATE,
@@ -21,6 +25,8 @@ const path = require('path');
 
 require('style!./styles/app.scss');
 
+const RESET_TOKEN = 'reset';
+
 @Component({
     selector: 'app',
     templateUrl: './app.component.html',
@@ -32,12 +38,12 @@ export class App {
     sample: Sample = { ft: [], ts: [] };
     visualization$: Observable<Visualization>;
     private debugMode: boolean = false;
+    private reload$ = new Subject<string>();
 
     constructor(public state: State,
                 private loader: Loader,
                 private libraryService: LibraryService,
-                private notification: NotificationService,
-                private cdr: ChangeDetectorRef) {
+                private notification: NotificationService) {
 
         let normalizeFt = true;
         (<any> window).skqw_toggleNormalization = () => {
@@ -50,10 +56,16 @@ export class App {
             .map(id => id.toString())
             .filter(id => !!id)
             .distinctUntilChanged()
+            .merge(this.reload$)
             .map(id => {
-                return this.loader.loadLibraryEntry(id, this.debugMode)
+                if (id === RESET_TOKEN) {
+                    return {};
+                } else {
+                    return this.loader.loadLibraryEntry(id, this.debugMode)
+                }
             })
-            .filter(vis => !!vis);
+            .filter(vis => !!vis)
+            .share();
     }
 
     ngOnInit(): void {
@@ -137,11 +149,10 @@ export class App {
     }
 
     private reloadCurrentVisualization(): void {
-       /* if (!this.vis) {
-            return;
+        const activeEntry = this.libraryService.getActive();
+        if (activeEntry) {
+            this.reload$.next(RESET_TOKEN);
+            this.reload$.next(this.state.activeId.value);
         }
-        let id = this.state.getValue().library
-            .filter(item => item.name === this.vis.name)[0].id;
-        this.vis = this.loader.loadLibraryEntry(id, this.debugMode);*/
     }
 }
