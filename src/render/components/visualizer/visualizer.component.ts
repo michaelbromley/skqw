@@ -1,6 +1,5 @@
-import {Component, ElementRef, Input, SimpleChange} from '@angular/core';
+import {Component, ElementRef, HostBinding, Input, SimpleChange} from '@angular/core';
 import {Visualization, Sample, ParamUpdate} from '../../../common/models';
-import {defaultVis} from './defaultVisualization';
 import {CanvasService} from '../../providers/canvas.service';
 import {NotificationService} from '../../providers/notification.service';
 import {State} from '../../providers/state.service.';
@@ -16,8 +15,9 @@ export class Visualizer {
 
     @Input() sample: Sample;
     @Input() visualization: Visualization;
+    @HostBinding('class.running')
+    isRunning: boolean = false;
     private resizeTimer: any;
-    private isRunning: boolean = false;
     private onResizeFn: Function;
     private rafId: any;
     private errorCount = 0;
@@ -89,6 +89,9 @@ export class Visualizer {
 
     updateParam(paramUpdate: ParamUpdate): void {
         if (this.visualization && this.visualization.params) {
+            if (!this.visualization.params.hasOwnProperty(paramUpdate.paramKey)) {
+                return;
+            }
             if (typeof this.visualization.paramChange === 'function') {
                 try {
                     this.visualization.paramChange(paramUpdate);

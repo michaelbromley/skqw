@@ -24,6 +24,7 @@ export const MIN_SAMPLE_RATE = 10;
 export const MAX_SAMPLE_RATE = 60;
 export const SKQW_UTILS_MODULE_NAME = 'skqw-utils';
 export const SKQW_CORE_MODULE_NAME = 'skqw-core';
+export const RESET_TOKEN = 'visualization:reset';
 
 /**
  * Keycodes

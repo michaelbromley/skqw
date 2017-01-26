@@ -39,7 +39,7 @@
     "electron": "^1.4.14",
     "electron-builder": "7.3.0",
     "electron-debug": "^1.0.1",
-    "electron-json-storage": "^2.0.0",
+    "electron-json-storage": "^3.0.0",
     "electron-rebuild": "1.5.6",
     "es6-shim": "^0.35.0",
     "extract-text-webpack-plugin": "^1.0.1",

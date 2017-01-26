@@ -6,6 +6,7 @@ import {State} from '../../providers/state.service.';
 import {NotificationService} from '../../providers/notification.service';
 import {LibraryService} from '../../providers/library.service';
 import {Loader} from '../../providers/loader.service';
+import {RESET_TOKEN} from '../../../common/constants';
 const {dialog} = require('electron').remote;
 const path = require('path');
 
@@ -82,6 +83,8 @@ export class VSelector {
         const library = this.libraryService.getLibrary();
         if (0 < library.length) {
             this.state.update('activeId', library[0].id);
+        } else {
+            this.state.update('activeId', RESET_TOKEN);
         }
         e.stopPropagation();
     }

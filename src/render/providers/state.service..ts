@@ -3,7 +3,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {LibraryEntry} from '../../common/models';
 const storage = require('electron-json-storage');
 
-const APP_STATE_KEY = 'appState';
+const APP_STATE_KEY = 'SKQW_app_state';
 
 export type ParamSettingsMap = { [name: string]: number | boolean };
 
@@ -55,7 +55,11 @@ export class State {
 
         // restore last state from local storage
         storage.get(APP_STATE_KEY, (err, data) => {
-            if (!err && data) {
+            if (err) {
+                console.error(`Error restoring last state:`, err);
+                storage.clear(() => console.log('Cleared storage!'));
+                this.loadedFromDisk = true;
+            } else if (data) {
                 for(let key in data) {
                    this.setValue(key as keyof AppState, data[key]);
                 }

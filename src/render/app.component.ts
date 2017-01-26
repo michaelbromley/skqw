@@ -8,10 +8,14 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/merge';
 import 'rxjs/add/operator/share';
+import 'rxjs/add/operator/withLatestFrom';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/skip';
 import {
     START_ANALYZER, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
     SET_GAIN, TOGGLE_NORMALIZATION, MAX_GAIN, MIN_GAIN, TOGGLE_FULLSCREEN, TOGGLE_DEVTOOLS, MIN_SAMPLE_RATE,
-    MAX_SAMPLE_RATE, SET_SAMPLE_RATE, CLOSE_DEVTOOLS, OPEN_DEVTOOLS, SAMPLE
+    MAX_SAMPLE_RATE, SET_SAMPLE_RATE, CLOSE_DEVTOOLS, OPEN_DEVTOOLS, SAMPLE, RESET_TOKEN
 } from '../common/constants';
 import {Visualizer} from './components/visualizer/visualizer.component';
 import {Loader} from './providers/loader.service';
@@ -24,8 +28,6 @@ const {app} = require('electron').remote;
 const path = require('path');
 
 require('style!./styles/app.scss');
-
-const RESET_TOKEN = 'reset';
 
 @Component({
     selector: 'app',
@@ -66,6 +68,12 @@ export class App {
             })
             .filter(vis => !!vis)
             .share();
+
+        // Set the visualization params to the values stored in the state
+        this.visualization$
+            .skip(1)
+            .delay(100)
+            .subscribe(vis => this.restoreSaveParams(vis));
     }
 
     ngOnInit(): void {
@@ -89,6 +97,12 @@ export class App {
             this.debugMode = false;
             this.notification.notify(`Debug mode disabled`);
         });
+
+        // Restore the save param settings, ensure enough time to the visialization to load and init.
+        this.visualization$
+            .take(1)
+            .delay(500)
+            .subscribe(vis => this.restoreSaveParams(vis));
     }
 
     /**
@@ -124,7 +138,7 @@ export class App {
             this.setGain(newValue);
         }
     }
-    
+
     setInputDeviceId(id: number): void {
         this.state.update('selectedInputId', id);
         ipcRenderer.send(SET_INPUT_DEVICE_ID, id);
@@ -145,6 +159,18 @@ export class App {
         if (MIN_SAMPLE_RATE <= val && val <= MAX_SAMPLE_RATE) {
             this.state.update('sampleRate', val);
             ipcRenderer.send(SET_SAMPLE_RATE, val);
+        }
+    }
+
+    private restoreSaveParams(vis: Visualization): void {
+        if (vis.params) {
+            const paramSettings = this.state.paramSettings.value;
+            for (let paramKey in paramSettings) {
+                if (paramSettings.hasOwnProperty(paramKey)) {
+                    const newValue = paramSettings[paramKey];
+                    this.updateParamValue({paramKey, newValue});
+                }
+            }
         }
     }
 
