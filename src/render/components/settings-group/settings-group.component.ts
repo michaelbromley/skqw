@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 
 @Component({
     selector: 'settings-group',
@@ -8,13 +8,11 @@ import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 export class SettingsGroup {
     @Input() groupTitle: string;
     @Input() visible: boolean = false;
+    @Output() toggle = new EventEmitter<boolean>();
     @ViewChild('wrapper') wrapper: ElementRef;
 
-    toggle(): void {
-        if (this.visible) {
-            this.visible = false;
-        } else {
-            this.visible = true;
-        }
+    onToggle(): void {
+        this.visible = !this.visible;
+        this.toggle.emit(this.visible);
     }
 }

@@ -1,14 +1,16 @@
-import {Component} from '@angular/core';
+import {Component, ElementRef} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import {LibraryEntry, Visualization} from '../../../common/models';
+import {LibraryEntry} from '../../../common/models';
 import {State} from '../../providers/state.service.';
 import {NotificationService} from '../../providers/notification.service';
 import {LibraryService} from '../../providers/library.service';
 import {Loader} from '../../providers/loader.service';
 import {RESET_TOKEN} from '../../../common/constants';
+import * as Ps from 'perfect-scrollbar'
 const {dialog} = require('electron').remote;
 const path = require('path');
+
 
 const DEFAULT_LIBRARY_PATH = path.join(__dirname, 'library');
 
@@ -25,8 +27,14 @@ export class VSelector {
     constructor(private notificationService: NotificationService,
                 private state: State,
                 private libraryService: LibraryService,
+                private elementRef: ElementRef,
                 private loader: Loader) {
         this.current$ = state.activeId.map(id => this.libraryService.getEntry(id));
+    }
+
+    ngAfterViewInit(): void {
+        const container = this.elementRef.nativeElement.querySelector('md-nav-list');
+        Ps.initialize(container);
     }
 
     /**
@@ -66,6 +74,7 @@ export class VSelector {
 
             }
         });
+        this.updateScrollbar();
     }
 
     select(entry: LibraryEntry): void {
@@ -87,5 +96,11 @@ export class VSelector {
             this.state.update('activeId', RESET_TOKEN);
         }
         e.stopPropagation();
+        this.updateScrollbar();
+    }
+
+    private updateScrollbar(): void {
+        const container = this.elementRef.nativeElement.querySelector('md-nav-list');
+        Ps.update(container);
     }
 }

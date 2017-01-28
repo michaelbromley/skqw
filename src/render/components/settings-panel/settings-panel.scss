@@ -1,5 +1,17 @@
 @import "variables";
 
+/deep/ .ps-container > .ps-scrollbar-y-rail > .ps-scrollbar-y {
+  background-color: rgba(150, 150, 150, 0.7);
+}
+
+/deep/ .ps-container:hover > .ps-scrollbar-y-rail:hover {
+  background-color: rgba(85, 85, 85, 0.67);
+}
+
+/deep/ .ps-container:hover.ps-in-scrolling.ps-y > .ps-scrollbar-y-rail {
+  background-color: rgba(119, 119, 119, 0.67);
+}
+
 .panel-container {
   position: absolute;
   top: 0;
@@ -52,11 +64,15 @@
 
   .panel-body {
     margin-left: 50px;
-    padding: 50px 20px 20px 10px;
+    padding: 0 20px 0 10px;
     position: relative;
-    overflow-y: scroll;
     height: 100%;
+    overflow: hidden;
   }
+}
+
+v-selector {
+  margin-top: 50px;
 }
 
 .sample-rate {

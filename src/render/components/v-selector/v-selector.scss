@@ -1,7 +1,18 @@
 @import "variables";
 
 :host {
+  display: block;
   color: #bbb;
+
+  /deep/ .ps-container > .ps-scrollbar-y-rail > .ps-scrollbar-y {
+    background-color: $primary-color;
+  }
+  /deep/ .ps-container > .ps-scrollbar-y-rail:hover > .ps-scrollbar-y {
+    background-color: $primary-color;
+  }
+  /deep/ .ps-container:hover.ps-in-scrolling.ps-y > .ps-scrollbar-y-rail > .ps-scrollbar-y {
+    background-color: #00BBFF;
+  }
 
   .v-selector-container {
   }
@@ -19,6 +30,11 @@
     color: rgba(136, 136, 136, 0.78);
     text-align: center;
     margin: 20px;
+  }
+
+  md-nav-list {
+    position: relative;
+    max-height: 300px;
   }
 
   md-list-item {

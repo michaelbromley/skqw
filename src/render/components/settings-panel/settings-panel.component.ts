@@ -1,7 +1,8 @@
-import {Component, HostListener, Input, EventEmitter, Output} from '@angular/core';
+import {Component, ElementRef, HostListener, Input, EventEmitter, Output} from '@angular/core';
 import {State} from '../../providers/state.service.';
 import {ParamUpdate, Visualization} from '../../../common/models';
 import {MIN_SAMPLE_RATE, MAX_SAMPLE_RATE} from '../../../common/constants';
+import * as Ps from 'perfect-scrollbar'
 
 declare const VERSION: string;
 
@@ -22,10 +23,17 @@ export class SettingsPanel {
     version: string = VERSION;
     private hoverTimer: any;
 
-    constructor(public state: State) {}
+    constructor(public state: State,
+                private elementRef: ElementRef) {
+    }
 
     ngOnDestroy(): void {
         clearTimeout(this.hoverTimer);
+    }
+
+    ngAfterViewInit(): void {
+        const container = this.elementRef.nativeElement.querySelector('.panel-body');
+        Ps.initialize(container);
     }
 
     @HostListener('document:mouseenter')
@@ -41,6 +49,13 @@ export class SettingsPanel {
     @HostListener('document:mouseleave')
     onMouseOut(): void {
         this.iconVisible = false;
+    }
+
+    onSettingsGroupToggle(): void {
+        const container = this.elementRef.nativeElement.querySelector('.panel-body');
+        setTimeout(() => {
+            Ps.update(container);
+        }, 300);
     }
 
     /**

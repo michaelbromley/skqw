@@ -1,6 +1,6 @@
 <div class="v-selector-container">
     <div class="title">Visualization Library</div>
-    <md-nav-list>
+    <md-nav-list class="ps-child">
         <md-list-item *ngFor="let entry of state.library | async"
                       [class.selected]="(current$ | async)?.id === entry.id"
                       (click)="select(entry)">
