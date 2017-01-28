@@ -3,7 +3,7 @@
     <div class="parameter" *ngFor="let item of paramsArray">
         <div *ngIf="item.param.type === 'range'" class="skqw-control">
             <label>{{ item.param.label }}
-                <span class="value">{{ paramSettings[item.key] || item.param.value }}</span>
+                <span class="value">{{ (paramSettings[item.key] || item.param.value) | number: '1.0-3' }}</span>
             </label>
             <md-slider  [value]="paramSettings[item.key] || item.param.value"
                         [min]="item.param.min"
