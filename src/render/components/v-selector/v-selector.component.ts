@@ -1,6 +1,8 @@
 import {Component, ElementRef} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/skip';
+import 'rxjs/add/operator/take';
 import {LibraryEntry} from '../../../common/models';
 import {State} from '../../providers/state.service.';
 import {NotificationService} from '../../providers/notification.service';
@@ -10,6 +12,7 @@ import {RESET_TOKEN} from '../../../common/constants';
 import * as Ps from 'perfect-scrollbar'
 const {dialog} = require('electron').remote;
 const path = require('path');
+const fs = require('fs');
 
 
 const DEFAULT_LIBRARY_PATH = path.join(__dirname, 'library');
@@ -35,6 +38,13 @@ export class VSelector {
     ngAfterViewInit(): void {
         const container = this.elementRef.nativeElement.querySelector('md-nav-list');
         Ps.initialize(container);
+
+        this.state.library.skip(1).take(1)
+            .subscribe(library => {
+                if (library.length === 0) {
+                    this.loadDefaultLibrary();
+                }
+            });
     }
 
     /**
@@ -42,39 +52,15 @@ export class VSelector {
      */
     add() {
         dialog.showOpenDialog({
-            title: 'Select Visualization Library Folder',
+            title: 'Select Visualization Folder(s)',
             defaultPath: this.state.lastPath.value || DEFAULT_LIBRARY_PATH,
             properties: ['openDirectory', 'multiSelections']
         }, (paths: string[]) => {
-            if (paths && 0 < paths.length) {
-                this.state.update('lastPath', path.join(paths[0], '..'));
-                let firstEntry: LibraryEntry;
-                paths.forEach(pathToScript => {
-                    try {
-                        const vis = this.loader.loadFromPath(pathToScript);
-                        if (vis) {
-                            const entry = this.libraryService.addEntry(pathToScript, vis);
-                            if (!firstEntry) {
-                                firstEntry = entry;
-                            }
-                        }
-                    } catch (e) {
-                        let message: string;
-                        if (e.code === "ENOENT") {
-                            message = `File not found: "${path.join(pathToScript, 'index.js')}"`
-                        } else {
-                            message = e.toString();
-                        }
-                        this.notificationService.notify(message);
-                    }
-                });
-                if (firstEntry) {
-                    this.state.update('activeId', firstEntry.id);
-                }
-
+            const entries = this.loadFromPaths(paths);
+            if (0 < entries.length) {
+                this.state.update('activeId', entries[0].id);
             }
         });
-        this.updateScrollbar();
     }
 
     select(entry: LibraryEntry): void {
@@ -97,6 +83,46 @@ export class VSelector {
         }
         e.stopPropagation();
         this.updateScrollbar();
+    }
+
+    private loadDefaultLibrary(): void {
+        fs.readdir(DEFAULT_LIBRARY_PATH, (err, paths) => {
+           if (err) {
+               this.notificationService.notify(`Could not load default library: ${err.message}`);
+           } else {
+               const fullPaths = paths.map(p => path.join(DEFAULT_LIBRARY_PATH, p));
+               const entries = this.loadFromPaths(fullPaths);
+               if (0 < entries.length) {
+                   this.state.update('activeId', entries[0].id);
+               }
+               this.updateScrollbar();
+           }
+        });
+    }
+
+    private loadFromPaths(paths: string[]): LibraryEntry[] {
+        let entries: LibraryEntry[] = [];
+
+        if (paths && 0 < paths.length) {
+            this.state.update('lastPath', path.join(paths[0], '..'));
+            paths.forEach(pathToScript => {
+                try {
+                    const vis = this.loader.loadFromPath(pathToScript);
+                    if (vis) {
+                        entries.push(this.libraryService.addEntry(pathToScript, vis));
+                    }
+                } catch (e) {
+                    let message: string;
+                    if (e.code === "ENOENT") {
+                        message = `File not found: "${path.join(pathToScript, 'index.js')}"`
+                    } else {
+                        message = e.toString();
+                    }
+                    this.notificationService.notify(message);
+                }
+            });
+        }
+        return entries;
     }
 
     private updateScrollbar(): void {

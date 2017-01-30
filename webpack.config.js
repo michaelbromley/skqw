@@ -159,6 +159,19 @@ module.exports = function (env) {
                  })*/
             );
 
+            if (isProd) {
+                config.plugins.push(
+                    new webpack.optimize.UglifyJsPlugin({
+                        compress: {
+                            warnings: false,
+                        },
+                        output: {
+                            comments: false,
+                        }
+                    })
+                );
+            }
+
             config.externals = [externalsFn];
 
             return config;
