@@ -62,6 +62,7 @@ export class Visualizer {
                 }
                 this.start();
             }
+            this.updateStateParamSettings();
         }
     }
 
@@ -103,11 +104,7 @@ export class Visualizer {
                 // the parameter.
                 this.visualization.params[paramUpdate.paramKey].value = paramUpdate.newValue;
             }
-            let paramSettings = {};
-            for(let name in this.visualization.params) {
-                paramSettings[name] = this.visualization.params[name].value;
-            }
-            this.state.update('paramSettings', paramSettings);
+            this.updateStateParamSettings();
         }
     }
 
@@ -127,5 +124,15 @@ export class Visualizer {
                 }
             }
         }, 100);
+    }
+
+    private updateStateParamSettings(): void {
+        if (this.visualization && this.visualization.params) {
+            let paramSettings = {};
+            for (let name in this.visualization.params) {
+                paramSettings[name] = this.visualization.params[name].value;
+            }
+            this.state.update('paramSettings', paramSettings);
+        }
     }
 }

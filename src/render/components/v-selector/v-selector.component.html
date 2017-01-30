@@ -5,7 +5,7 @@
                       [class.selected]="(current$ | async)?.id === entry.id"
                       (click)="select(entry)">
             <h4 md-line class="name">{{ entry.name }}</h4>
-            <p md-line class="path"> {{ entry.path }} </p>
+            <p md-line class="path" [title]="entry.path"> {{ entry.path }} </p>
             <button md-icon-button [mdMenuTriggerFor]="menu" (click)="menuClick($event)">
                 <md-icon>more_vert</md-icon>
             </button>

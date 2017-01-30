@@ -68,12 +68,6 @@ export class App {
             })
             .filter(vis => !!vis)
             .share();
-
-        // Set the visualization params to the values stored in the state
-        this.visualization$
-            .skip(1)
-            .delay(100)
-            .subscribe(vis => this.restoreSaveParams(vis));
     }
 
     ngOnInit(): void {
@@ -100,6 +94,7 @@ export class App {
 
         // Restore the save param settings, ensure enough time to the visialization to load and init.
         this.visualization$
+            .skip(1)
             .take(1)
             .delay(500)
             .subscribe(vis => this.restoreSaveParams(vis));
