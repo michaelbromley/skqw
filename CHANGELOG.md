@@ -1,4 +1,4 @@
-### v1.0.0-beta.2 (in progress)
+### v1.0.0-beta.2 (2017-01-30)
 #### Features
 * Breaking API change: the skqw onject is no longer passed to lifecycle methods. Use `require('skqw-core')` instead
 * Only load scripts on demand, rather than keeping whole library in memory
