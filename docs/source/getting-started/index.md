@@ -6,9 +6,8 @@ date: 2016-08-20 06:48:50
 ## Installation (Windows / Mac)
 
 1. Go to the [releases page](https://github.com/michaelbromley/skqw/releases) to get the latest installer binary for your platform. On Windows, the app will be installed to `Users/<username>/AppData/Local/SKQW`, but should automatically create a shortcut on the desktop.
-2. Then get some visualizations from the [SKQW library repo](https://github.com/michaelbromley/skqw-library). You can download a [zip with the full contents here](https://github.com/michaelbromley/skqw-library/archive/master.zip). Unzip somewhere.
-3. In SKQW, open the settings panel by clicking the icon in the top right.
-4. Open up the "library path" selector and point it to where you unzipped the files from 2.
+2. SKQW will open with the default visualization library enabled.
+3. If the app does not seem to start, ensure you have at least one audio recording source enabled in your sound card settings.
 
 #### Notes:
 * The installer is not signed. This means Windows will warn you that it is not trusted and you shouldn't install it. If you trust me, you can disregard this warning ;) If there is enough interest I will consider purchasing a code-signing certificate to make such warnings go away.

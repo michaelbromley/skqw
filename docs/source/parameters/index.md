@@ -54,7 +54,7 @@ The `value`, `type`, and `label` properties are required:
 Additionally, with a "range" type, we may also specify optional `min`, `max`, and `step` properties which control the behaviour of the slider control.
 
 #### `paramChange()` function (optional)
-This function is called every time the user changes the value of a param in the UI. The second argument is an object consisting of two properties:
+This function is called every time the user changes the value of a param in the UI. The argument is an object consisting of two properties:
 
 - `paramKey` is the key of the param that was changed. In this case it would be "hue". 
 - `newValue` is the new value assigned by the user.
