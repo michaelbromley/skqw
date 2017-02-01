@@ -18,10 +18,14 @@ export class ParameterControls {
         if (newParams) {
             let keys = Object.keys(newParams);
             this.paramsArray = keys.map(key => ({key, param: newParams[key]}));
+            this.paramSettings = Object.keys(newParams).reduce((settings, key) => {
+                settings[key] = newParams[key].value;
+                return settings;
+            }, {});
         } else if (!this.params) {
             this.paramsArray = [];
         }
-    }  
+    }
 
     updateValue(paramKey: string, newValue: number | boolean): void {
         // coerce the value into the correct type
@@ -36,7 +40,7 @@ export class ParameterControls {
             default:
                 coercedValue = newValue;
         }
-        this.updateParam.emit({ paramKey, newValue: coercedValue });
+        this.updateParam.emit({paramKey, newValue: coercedValue});
     }
 }
  

@@ -1,4 +1,7 @@
 import {Component, ElementRef, HostListener, Input, EventEmitter, Output} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/switchMap';
 import {State} from '../../providers/state.service.';
 import {ParamUpdate, Visualization} from '../../../common/models';
 import {MIN_SAMPLE_RATE, MAX_SAMPLE_RATE} from '../../../common/constants';
@@ -16,6 +19,7 @@ export class SettingsPanel {
     @Output() changeInputDeviceId = new EventEmitter<number>();
     @Output() setSampleRate = new EventEmitter<number>();
     @Output() updateParam = new EventEmitter<ParamUpdate>();
+    params$: Observable<any>;
     minSampleRate = MIN_SAMPLE_RATE;
     maxSampleRate = MAX_SAMPLE_RATE;
     iconVisible: boolean = false;

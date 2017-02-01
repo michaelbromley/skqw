@@ -12,6 +12,8 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/skip';
+import 'rxjs/add/operator/publishReplay';
+import 'rxjs/observable/ConnectableObservable';
 import {
     START_ANALYZER, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
     SET_GAIN, TOGGLE_NORMALIZATION, MAX_GAIN, MIN_GAIN, TOGGLE_FULLSCREEN, TOGGLE_DEVTOOLS, MIN_SAMPLE_RATE,
@@ -67,7 +69,8 @@ export class App {
                 }
             })
             .filter(vis => !!vis)
-            .share();
+            .publishReplay(1)
+            .refCount();
     }
 
     ngOnInit(): void {
@@ -94,7 +97,6 @@ export class App {
 
         // Restore the save param settings, ensure enough time to the visialization to load and init.
         this.visualization$
-            .skip(1)
             .take(1)
             .delay(500)
             .subscribe(vis => this.restoreSaveParams(vis));

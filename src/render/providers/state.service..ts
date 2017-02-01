@@ -1,7 +1,10 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import 'rxjs/add/operator/do';
 import {LibraryEntry} from '../../common/models';
-const storage = require('electron-json-storage');
+import * as low from 'lowdb';
+
+const db = new low('db.json');
 
 const APP_STATE_KEY = 'SKQW_app_state';
 
@@ -34,6 +37,16 @@ type BehaviorSubjectify<T> = {
     [P in keyof T]: BehaviorSubject<T[P]>;
 }
 
+if (db.has(APP_STATE_KEY).value() === false) {
+    // initialize the db with default values
+    db.setState({
+        [APP_STATE_KEY]: Object.keys(initialState).map(key => {
+            const value = initialState[key];
+            return {key, value};
+        })
+    });
+}
+
 /**
  * A state container for the entire app state, which exposes an
  * observable which emits the state on each change. State can only be changed
@@ -43,33 +56,13 @@ type BehaviorSubjectify<T> = {
 export class State {
 
     private _state = {} as BehaviorSubjectify<AppState>;
-    private loadedFromDisk: boolean = false;
-    private deferredOperations: { key: keyof AppState; value: any }[] = [];
 
     constructor() {
         // construct the state observables
         for (let key in initialState) {
-            this._state[key] = new BehaviorSubject(initialState[key]);
+            const storedValue = db.get(APP_STATE_KEY).find({ key }).value<{ key: string; value: any; }>().value;
+            this._state[key] = new BehaviorSubject(storedValue || initialState[key]);
         }
-
-
-        // restore last state from local storage
-        storage.get(APP_STATE_KEY, (err, data) => {
-            if (err) {
-                console.error(`Error restoring last state:`, err);
-                storage.clear(() => console.log('Cleared storage!'));
-                this.loadedFromDisk = true;
-            } else if (data) {
-                for(let key in data) {
-                   this.setValue(key as keyof AppState, data[key]);
-                }
-
-                this.loadedFromDisk = true;
-                this.deferredOperations.forEach(operation => {
-                    this.update(operation.key, operation.value);
-                })
-            }
-        });
     }
 
     get library(): BehaviorSubject<LibraryEntry[]> { return this._state.library; }
@@ -99,17 +92,8 @@ export class State {
         if (-1 < forceNumeric.indexOf(key)) {
             value = +value;
         }
-
-        if (this.loadedFromDisk) {
-            this.setValue(key as keyof AppState, value);
-            // TODO: is it possible to change just a key in the local storage, rather than the entire object?
-            const stateObject = this.getValue();
-            storage.set(APP_STATE_KEY, stateObject);
-        } else {
-            // If the last app state has not yet been loaded from the disk, we defer this update operation
-            // until after we have loaded it, to prevent overwriting saved state.
-            this.deferredOperations.push({ key, value });
-        }
+        this.setValue(key as keyof AppState, value);
+        db.get(APP_STATE_KEY).find({ key }).assign({ value }).value();
     }
 
     /**

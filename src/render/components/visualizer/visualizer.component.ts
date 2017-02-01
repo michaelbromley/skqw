@@ -62,7 +62,6 @@ export class Visualizer {
                 }
                 this.start();
             }
-            this.updateStateParamSettings();
         }
     }
 

@@ -1,7 +1,6 @@
 import {Component, ElementRef} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/skip';
 import 'rxjs/add/operator/take';
 import {LibraryEntry} from '../../../common/models';
 import {State} from '../../providers/state.service.';
@@ -37,9 +36,9 @@ export class VSelector {
 
     ngAfterViewInit(): void {
         const container = this.elementRef.nativeElement.querySelector('md-nav-list');
-        Ps.initialize(container);
+        Ps.initialize(container, { suppressScrollX: true });
 
-        this.state.library.skip(1).take(1)
+        this.state.library.take(1)
             .subscribe(library => {
                 if (library.length === 0) {
                     this.loadDefaultLibrary();
