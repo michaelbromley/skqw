@@ -29,7 +29,7 @@ const ipcRenderer = require('electron').ipcRenderer;
 const {app} = require('electron').remote;
 const path = require('path');
 
-require('style!./styles/app.scss');
+require('style-loader!./styles/app.scss');
 
 @Component({
     selector: 'app',

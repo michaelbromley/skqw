@@ -4,7 +4,6 @@ const ngtools = require('@ngtools/webpack');
 const AotPlugin = require('@ngtools/webpack').AotPlugin;
 
 // Webpack Plugins
-const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
@@ -12,11 +11,11 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
  * Env
  * Get npm lifecycle event to identify the environment
  */
-let ENV = process.env.npm_lifecycle_event;
-let isProd = ENV === 'app:build' || ENV === 'app:build-aot';
+const ENV = process.env.npm_lifecycle_event;
+const isProd = ENV === 'app:build' || ENV === 'app:build-aot';
 
-var externalsFn =  (function () {
-    var IGNORES = [
+const externalsFn =  (function () {
+    const IGNORES = [
         'node-core-audio',
         'electron'
     ];
@@ -41,7 +40,7 @@ module.exports = function (env) {
 
             config.name = 'render';
             if (isProd) {
-                config.devtool = 'source-map';
+                config.devtool = 'eval';
             } else {
                 config.devtool = 'eval-source-map';
             }
@@ -75,21 +74,26 @@ module.exports = function (env) {
                     // Support for .ts files.
                     {
                         test: /\.ts$/,
-                        loaders: aotMode ? ['@ngtools/webpack'] : ['ts', 'angular2-template-loader']
+                        loaders: aotMode ? ['@ngtools/webpack'] : ['ts-loader', 'angular2-template-loader']
                     },
 
                     // copy those assets to output
-                    {test: /\.(svg|png|jpe?g|gif|woff|woff2|ttf|eot|ico)$/, loader: 'file?name=assets/[name].[ext]?'},
+                    {test: /\.(svg|png|jpe?g|gif|woff|woff2|ttf|eot|ico)$/, loader: 'file-loader?name=assets/[name].[ext]?'},
                     // all css required in src/app files will be merged in js files
-                    {test: /\.css$/, loader: 'raw'},
+                    {test: /\.css$/, loader: 'raw-loader'},
 
                     // all css required in src/app files will be merged in js files
-                    {test: /\.s[ac]ss$/, loader: 'raw!sass'},
+                    {test: /\.s[ac]ss$/, loader: 'raw-loader!sass-loader'},
 
                     // support for .html as raw text
-                    {test: /\.html$/, loader: 'html'}
+                    {test: /\.html$/, loader: 'html-loader'}
                 ],
-                noParse: [/.+zone\.js\/dist\/.+/, /.+angular2\/bundles\/.+/, /angular2-polyfills\.js/]
+                noParse: [
+                    /.+zone\.js\/dist\/.+/,
+                    /.+angular2\/bundles\/.+/,
+                    /angular2-polyfills\.js/,
+                    /node_modules\/json-schema\/lib\/validate\.js/
+                ]
             };
 
             /**
@@ -196,7 +200,7 @@ module.exports = function (env) {
             },
             module: {
                 loaders: [
-                    { test: /\.ts$/, loader: 'ts' }
+                    { test: /\.ts$/, loader: 'ts-loader' }
                 ]
             },
             externals: [externalsFn]
