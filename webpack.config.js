@@ -1,7 +1,9 @@
 const path = require('path');
 const webpack = require('webpack');
-const ngtools = require('@ngtools/webpack');
-const AotPlugin = require('@ngtools/webpack').AotPlugin;
+
+// Removed for now since it was causing issues with unmet peer deps when ruuning npm install
+// const ngtools = require('@ngtools/webpack');
+// const AotPlugin = require('@ngtools/webpack').AotPlugin;
 
 // Webpack Plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -74,7 +76,7 @@ module.exports = function (env) {
                     // Support for .ts files.
                     {
                         test: /\.ts$/,
-                        loaders: aotMode ? ['@ngtools/webpack'] : ['ts-loader', 'angular2-template-loader']
+                        loaders: /*aotMode ? ['@ngtools/webpack'] :*/ ['ts-loader', 'angular2-template-loader']
                     },
 
                     // copy those assets to output
