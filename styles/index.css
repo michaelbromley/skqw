@@ -1,0 +1,168 @@
+.header-logo {
+  text-align: center;
+}
+.header-logo svg {
+  width: 100%;
+  height: auto;
+  max-width: 600px;
+}
+.header-logo svg path:nth-child(1) {
+  animation-delay: 0s;
+  animation-duration: 3s;
+  animation-name: cycle;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-fill-mode: both;
+}
+.header-logo svg path:nth-child(2) {
+  animation-delay: 0.2s;
+  animation-duration: 3s;
+  animation-name: cycle;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-fill-mode: both;
+}
+.header-logo svg path:nth-child(3) {
+  animation-delay: 0.4s;
+  animation-duration: 3s;
+  animation-name: cycle;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-fill-mode: both;
+}
+.header-logo svg path:nth-child(4) {
+  animation-delay: 0.6s;
+  animation-duration: 3s;
+  animation-name: cycle;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-fill-mode: both;
+}
+.header-logo svg path:nth-child(5) {
+  animation-delay: 0.8s;
+  animation-duration: 3s;
+  animation-name: cycle;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-fill-mode: both;
+}
+.header-logo svg path:nth-child(6) {
+  animation-delay: 1s;
+  animation-duration: 3s;
+  animation-name: cycle;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-fill-mode: both;
+}
+.header-logo svg path:nth-child(7) {
+  animation-delay: 1.2s;
+  animation-duration: 3s;
+  animation-name: cycle;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-fill-mode: both;
+}
+.header-logo svg path:nth-child(8) {
+  animation-delay: 1.4s;
+  animation-duration: 3s;
+  animation-name: cycle;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-fill-mode: both;
+}
+.header-logo svg path:nth-child(9) {
+  animation-delay: 1.6s;
+  animation-duration: 3s;
+  animation-name: cycle;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-fill-mode: both;
+}
+.header-logo .version {
+  font-size: 24px;
+  text-transform: uppercase;
+  color: #96cada;
+  margin-top: -30px;
+  text-align: center;
+  letter-spacing: 1.5em;
+}
+.hero {
+  text-align: center;
+  padding-bottom: 50px;
+  padding-bottom: 50px;
+  margin-bottom: 50px;
+  color: #19653d;
+  border-bottom: 1px solid #a5ffc7;
+}
+.hero h3 {
+  font-weight: normal;
+  letter-spacing: 0.05em;
+  font-size: 1.5em;
+}
+.hero .download-button {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  color: #19653d;
+  background-color: #b3f7ff;
+  box-shadow: 0px 1px 5px -1px rgba(0,0,0,0.44);
+  border-radius: 3px;
+  padding: 10px 20px;
+  transition: background 0.3s;
+}
+.hero .download-button:hover {
+  background-color: #e0f6ff;
+}
+.hero .download-button > * {
+  margin: 0 5px;
+}
+.hero .download-button > img {
+  opacity: 0.1;
+}
+.yt-video {
+  text-align: center;
+}
+@-moz-keyframes cycle {
+  0% {
+    fill: rgba(62,231,191,0.3);
+  }
+  50% {
+    fill: rgba(62,231,255,0.3);
+  }
+  100% {
+    fill: rgba(0,169,255,0.3);
+  }
+}
+@-webkit-keyframes cycle {
+  0% {
+    fill: rgba(62,231,191,0.3);
+  }
+  50% {
+    fill: rgba(62,231,255,0.3);
+  }
+  100% {
+    fill: rgba(0,169,255,0.3);
+  }
+}
+@-o-keyframes cycle {
+  0% {
+    fill: rgba(62,231,191,0.3);
+  }
+  50% {
+    fill: rgba(62,231,255,0.3);
+  }
+  100% {
+    fill: rgba(0,169,255,0.3);
+  }
+}
+@keyframes cycle {
+  0% {
+    fill: rgba(62,231,191,0.3);
+  }
+  50% {
+    fill: rgba(62,231,255,0.3);
+  }
+  100% {
+    fill: rgba(0,169,255,0.3);
+  }
+}

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<title>
+  
+    Developer Guide: Using Three.js
+  
+</title>
+
+<meta name="description" content="SKQW supports both the 2d and 3d contexts of the HTML Canvas. For working with 3d, it is common to use a library to abstract over the low-level WebGL APIs. One popular 3d library is Three.js.
+Here is">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Developer Guide: Using Three.js">
+<meta property="og:url" content="http://michaelbromley.github.io/skqw/using-three-js/index.html">
+<meta property="og:site_name" content="SKQW">
+<meta property="og:description" content="SKQW supports both the 2d and 3d contexts of the HTML Canvas. For working with 3d, it is common to use a library to abstract over the low-level WebGL APIs. One popular 3d library is Three.js.
+Here is">
+<meta property="og:image" content="http://michaelbromley.github.io/skqw/images/screenshot-01.jpg">
+<meta property="og:updated_time" content="2017-03-08T19:39:04.376Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Developer Guide: Using Three.js">
+<meta name="twitter:description" content="SKQW supports both the 2d and 3d contexts of the HTML Canvas. For working with 3d, it is common to use a library to abstract over the low-level WebGL APIs. One popular 3d library is Three.js.
+Here is">
+<meta name="twitter:image" content="http://michaelbromley.github.io/skqw/images/screenshot-01.jpg">
+<meta name="twitter:creator" content="@michlbrmly">
+
+
+  <link rel="alternative" href="/atom.xml" title="SKQW" type="application/atom+xml">
+
+
+
+  <link rel="icon" href="images/favicon.ico">
+
+
+<link rel="stylesheet" href="/skqw/styles/main.css">
+
+
+
+
+</head>
+<body
+        
+        class="monochrome"
+        
+>
+<div class="mobile-header">
+  <button class="sidebar-toggle" type="button">
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+  </button>
+  <a class="title" href="/skqw/">
+    <img src="/skqw/images/logo-line.svg" class="mobile-header-logo">
+  </a>
+</div>
+
+<div class="main-container">
+  <div class="sidebar">
+  <div class="header">
+    <a href="/skqw/">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="597" height="197" class="logo" viewBox="0 0 597 197" preserveAspectRatio="xMidYMid meet">
+  <rect id="backgroundrect" width="100%" height="100%" x="0" y="0" fill="none" stroke="none"/>
+    <g transform="translate(-96.146 -485.097)"  stroke="#4fd6cb" fill="none">
+        <path d="M511.482 492.87v159.604l90.712-159.464z"  />
+        <path d="M590.703 522.98l16-29.564h76.566l-33.485 57.994-58.624 101.54z"  />
+        <path d="M383.643 644.29l87.6-151.727H395.07l-11.116 19.256z"  />
+        <path d="M476.5 620.352l-27.972 48.45h28.686z"  />
+        <path d="M249.643 644.29l87.6-151.727h-87.6z"  />
+        <path d="M250 653.22l52.28-90.554 48.023 89.91z"  />
+        <path d="M140.36 601.368l-34.84-60.34 27.974-48.45h68.76z"  stroke-width="1.013" />
+        <path d="M384.357 653.22l92.26-159.798v103.012L443.783 653.3z"  />
+        <path d="M178.854 543.765l34.838 60.34-27.973 48.45h-68.76z"  stroke-width="1.013" />
+    </g>
+</svg>
+
+    </a>
+    <div class="info">
+      <div class="content">
+        
+      </div>
+    </div>
+  </div>
+  <div class="body">
+    
+    
+    <ul class="nav">
+      
+      
+
+      
+      <li class="section-title">
+        <span>User Guide</span>
+      </li>
+      
+      
+      
+      
+
+      
+      <li>
+        <a href="/skqw/getting-started" title="Getting Started">Getting Started</a>
+      </li>
+      
+      
+      
+      
+
+      
+      <li>
+        <a href="/skqw/how-to" title="How To Guides">How To Guides</a>
+      </li>
+      
+      
+      
+    </ul>
+    
+    <ul class="nav">
+      
+      
+
+      
+      <li class="section-title">
+        <span>Developer Guide</span>
+      </li>
+      
+      
+      
+      
+
+      
+      <li>
+        <a href="/skqw/developer-guide-getting-started" title="Getting Started">Getting Started</a>
+      </li>
+      
+      
+      
+      
+
+      
+      <li>
+        <a href="/skqw/parameters" title="Parameters">Parameters</a>
+      </li>
+      
+      
+      
+      
+
+      
+      <li>
+        <a href="/skqw/using-three-js" title="Using Three.js">Using Three.js</a>
+      </li>
+      
+      
+      
+      
+
+      
+      <li>
+        <a href="/skqw/api-reference" title="API Reference">API Reference</a>
+      </li>
+      
+      
+      
+      
+
+      
+      <li>
+        <a href="/skqw/skqw-core-module" title="skqw-core">skqw-core</a>
+      </li>
+      
+      
+      
+    </ul>
+    
+    <ul class="nav">
+      
+      
+
+      
+      <li class="section-title">
+        <span>Links</span>
+      </li>
+      
+      
+      
+      
+
+      
+      <li>
+        <a href="https://github.com/michaelbromley/skqw" title="SKQW on Github" target="_blank" rel="external">SKQW on Github</a>
+      </li>
+      
+      
+      
+      
+
+      
+      <li>
+        <a href="https://twitter.com/michlbrmly" title="@michlbrmly" target="_blank" rel="external">@michlbrmly</a>
+      </li>
+      
+      
+      
+    </ul>
+    
+    
+  </div>
+</div>
+
+  <div class="main-content">
+    
+    <div style="max-width: 800px">
+      
+      <article id="page-undefined" class="article article-type-page">
+  
+    <h1 class="article-header">
+      Developer Guide: Using Three.js
+    </h1>
+  
+  
+
+  <div class="article-info">
+    <span class="article-date">
+  Updated: 2017-03-08
+</span>
+
+    
+
+    
+
+  </div>
+  <div class="article-entry">
+    <p>SKQW supports both the 2d and 3d contexts of the HTML Canvas. For working with 3d, it is common to use a library to abstract over the low-level WebGL APIs. One popular 3d library is <a href="http://threejs.org/" target="_blank" rel="external">Three.js</a>.</p>
+<p>Here is a complete example which recreates the <a href="http://threejs.org/docs/index.html#Manual/Introduction/Creating_a_scene" target="_blank" rel="external">“creating a scene” tutorial example</a> from the Three documentation as a SKQW visualization:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> &#123;createCanvas, getSample, getDimensions&#125; = <span class="built_in">require</span>(<span class="string">'skqw-core'</span>);</div><div class="line"><span class="comment">// The Three library can be downloaded and saved in the same folder as the visualization script.</span></div><div class="line"><span class="keyword">const</span> THREE = <span class="built_in">require</span>(<span class="string">'./three'</span>);</div><div class="line"></div><div class="line"><span class="keyword">let</span> scene;</div><div class="line"><span class="keyword">let</span> camera;</div><div class="line"><span class="keyword">let</span> renderer;</div><div class="line"><span class="keyword">let</span> cube;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">init</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">const</span> &#123; width, height &#125; = getDimensions();</div><div class="line">    scene = <span class="keyword">new</span> THREE.Scene();</div><div class="line">    camera = <span class="keyword">new</span> THREE.PerspectiveCamera( <span class="number">75</span>, width / height, <span class="number">0.1</span>, <span class="number">1000</span> );</div><div class="line"></div><div class="line">    <span class="comment">// create a canvas</span></div><div class="line">    <span class="keyword">let</span> canvas = createCanvas();</div><div class="line">    <span class="comment">// and pass it to Three, so Three can use it to render onto</span></div><div class="line">    renderer = <span class="keyword">new</span> THREE.WebGLRenderer(&#123; canvas &#125;);</div><div class="line"></div><div class="line">    renderer.setSize( width, height );</div><div class="line"></div><div class="line">    <span class="keyword">let</span> geometry = <span class="keyword">new</span> THREE.BoxGeometry( <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span> );</div><div class="line">    <span class="keyword">let</span> material = <span class="keyword">new</span> THREE.MeshBasicMaterial( &#123; <span class="attr">color</span>: <span class="number">0x00ff00</span> &#125; );</div><div class="line">    cube = <span class="keyword">new</span> THREE.Mesh( geometry, material );</div><div class="line">    scene.add( cube );</div><div class="line"></div><div class="line">    camera.position.z = <span class="number">5</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">tick</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    cube.rotation.x += <span class="number">0.01</span>;</div><div class="line">    cube.rotation.y += <span class="number">0.01</span>;</div><div class="line">    renderer.render( scene, camera );</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = &#123;</div><div class="line">    <span class="attr">name</span>: <span class="string">'Three.js Demo'</span>,</div><div class="line">    init,</div><div class="line">    tick</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h2 id="Loading-External-Scripts"><a href="#Loading-External-Scripts" class="headerlink" title="Loading External Scripts"></a>Loading External Scripts</h2><p>For more advanced results, you will likely want to load external JavaScript files for things like shaders or effect composers.</p>
+<p>To do this, you should use the <code>loadScript()</code> function from the <code>skqw-core</code> module.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> &#123;createCanvas, getSample, getDimensions, loadScript&#125; = <span class="built_in">require</span>(<span class="string">'skqw-core'</span>);</div><div class="line"></div><div class="line"><span class="comment">// Using loadScript() rather than require() will automatically create the global THREE object.</span></div><div class="line">loadScript(<span class="string">'./three.js'</span>);</div><div class="line"></div><div class="line"><span class="comment">// Some external scripts we need for our fancy 3d visualization.</span></div><div class="line"><span class="comment">// Saved locally in the same folder as the visualization.</span></div><div class="line">loadScript(<span class="string">'./CopyShader.js'</span>);</div><div class="line">loadScript(<span class="string">'./EffectComposer.js'</span>);</div><div class="line">loadScript(<span class="string">'./RGBShiftShader.js'</span>);</div><div class="line">loadScript(<span class="string">'./RenderPass.js'</span>);</div><div class="line">loadScript(<span class="string">'./ShaderPass.js'</span>);</div><div class="line"></div><div class="line"><span class="comment">// ... skip some variable declarations</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">init</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">const</span> &#123; width, height &#125; = getDimensions();</div><div class="line">    <span class="keyword">const</span> &#123; ft &#125; = getSample();;</div><div class="line"></div><div class="line">    scene = <span class="keyword">new</span> THREE.Scene();</div><div class="line">    camera = <span class="keyword">new</span> THREE.PerspectiveCamera(<span class="number">100</span>, width / height, <span class="number">10</span>, <span class="number">5000</span>);</div><div class="line">    camera.position.set(<span class="number">0</span>, <span class="number">100</span>, <span class="number">10</span>);</div><div class="line">    camera.lookAt(<span class="keyword">new</span> THREE.Vector3(<span class="number">0</span>, <span class="number">10</span>, <span class="number">-100</span>));</div><div class="line">    <span class="keyword">let</span> canvas = createCanvas();</div><div class="line">    renderer = <span class="keyword">new</span> THREE.WebGLRenderer(&#123; <span class="attr">antialias</span>: <span class="literal">true</span>, canvas &#125;);</div><div class="line">    renderer.setSize(width, height);</div><div class="line"></div><div class="line">    scene = <span class="keyword">new</span> THREE.Scene();</div><div class="line"></div><div class="line">    <span class="comment">// postprocessing</span></div><div class="line">    composer = <span class="keyword">new</span> THREE.EffectComposer(renderer);</div><div class="line">    composer.addPass(<span class="keyword">new</span> THREE.RenderPass(scene, camera));</div><div class="line"></div><div class="line">    rgbEffect = <span class="keyword">new</span> THREE.ShaderPass(THREE.RGBShiftShader);</div><div class="line">    rgbEffect.uniforms[<span class="string">'amount'</span>].value = <span class="number">0.0015</span>;</div><div class="line">    rgbEffect.renderToScreen = <span class="literal">true</span>;</div><div class="line">    composer.addPass(rgbEffect);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+  </div>
+  <footer class="article-footer">
+
+  </footer>
+</article>
+
+
+      <div class="main-footer">
+    © 2017 Michael Bromley - Powered by <a href="http://hexo.io" target="_blank">Hexo</a>
+</div>
+
+      
+    </div>
+    
+  </div>
+</div>
+<script src="/skqw/scripts/main.js"></script>
+</body>
+</html>
