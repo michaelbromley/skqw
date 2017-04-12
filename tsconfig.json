@@ -5,7 +5,8 @@
     "lib": ["es2015", "dom"],
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "types": ["node"]
   },
   "exclude": [
     "node_modules",

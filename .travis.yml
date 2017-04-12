@@ -21,7 +21,6 @@ install:
 - npm install
 - cd ..
 script:
-- npm run typings:install
 - npm run electron:rebuild
 - npm run app:build
 - cd app/node_modules/node-core-audio

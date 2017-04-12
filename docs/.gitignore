@@ -2,7 +2,6 @@
 /node_modules
 /app
 /src
-/typings
 db.json
 
 # Windows image file caches
