@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MaterialModule} from '@angular/material';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import 'hammerjs';
 
 import {GainSelector} from './components/gain-selector/gain-selector.component';
@@ -22,6 +23,7 @@ import {LibraryService} from './providers/library.service';
 @NgModule({
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         ReactiveFormsModule,
         MaterialModule.forRoot()
     ],

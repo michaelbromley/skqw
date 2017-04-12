@@ -35,7 +35,7 @@ Those who are familiar with compiling electron apps and native node modules on O
 4. `npm install` - installs the runtime dependencies (native node addons)
 5. `cd ..`
 7. `npm run typings:install` - install global type definitions for TypeScript.
-6. `.\node_modules\.bin\electron-rebuild.cmd -m src/node_modules` - rebuild the native modules for electron
+6. `npm run electron:rebuild` - rebuild the native modules for electron
 7. `npm run app:build` - build the app
 8. `npm run electron:start` - test the app in dev mode
 9. `npm run dist:win64` - create a Windows 64-bit binary. Will be created in the `dist` folder.
