@@ -4,6 +4,7 @@
 * Update to Electron 1.6.6
 * Update to Angular 4 & Angular Material 2.0.0-beta.3
 * Display Three.js version in UI
+* Persist param settings when reloading a visualization
 
 
 ### v1.0.0-beta.2 (2017-01-30)

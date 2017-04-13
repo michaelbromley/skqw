@@ -25,6 +25,7 @@ import {ParamUpdate, Sample, Visualization} from '../common/models';
 import {State} from './providers/state.service.';
 import {NotificationService} from './providers/notification.service';
 import {LibraryService} from './providers/library.service';
+import {Subscription} from 'rxjs/Subscription';
 const ipcRenderer = require('electron').ipcRenderer;
 const {app} = require('electron').remote;
 const path = require('path');
@@ -43,6 +44,7 @@ export class App {
     visualization$: Observable<Visualization>;
     private debugMode: boolean = false;
     private reload$ = new Subject<string>();
+    private subscriptions: Subscription[] = [];
 
     constructor(public state: State,
                 private loader: Loader,
@@ -96,14 +98,27 @@ export class App {
         });
 
         // Restore the save param settings, ensure enough time to the visialization to load and init.
-        this.visualization$
-            .take(1)
-            .delay(500)
-            .subscribe(vis => this.restoreSaveParams(vis));
+        this.subscriptions.push(
+            this.state.activeId
+                .take(1)
+                .delay(500)
+                .subscribe(vis => this.restoreSaveParams())
+        );
+
+        // Restore the saved params when reloading a visualization.
+        this.subscriptions.push(
+            this.reload$
+            .delay(200)
+            .subscribe(vis => this.restoreSaveParams())
+        );
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(subscription => subscription.unsubscribe());
     }
 
     /**
-     * Reload the current visualization files from disk.
+     * Handler for keyboard shortcuts
      */
     @HostListener('document:keydown', ['$event'])
     onKeydown(e: KeyboardEvent): void {
@@ -159,14 +174,12 @@ export class App {
         }
     }
 
-    private restoreSaveParams(vis: Visualization): void {
-        if (vis.params) {
-            const paramSettings = this.state.paramSettings.value;
-            for (let paramKey in paramSettings) {
-                if (paramSettings.hasOwnProperty(paramKey)) {
-                    const newValue = paramSettings[paramKey];
-                    this.updateParamValue({paramKey, newValue});
-                }
+    private restoreSaveParams(): void {
+        const paramSettings = this.state.paramSettings.value;
+        for (let paramKey in paramSettings) {
+            if (paramSettings.hasOwnProperty(paramKey)) {
+                const newValue = paramSettings[paramKey];
+                this.updateParamValue({paramKey, newValue});
             }
         }
     }
