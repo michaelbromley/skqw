@@ -6,8 +6,10 @@ import {State} from '../../providers/state.service.';
 import {ParamUpdate, Visualization} from '../../../common/models';
 import {MIN_SAMPLE_RATE, MAX_SAMPLE_RATE} from '../../../common/constants';
 import * as Ps from 'perfect-scrollbar'
+import * as path from 'path';
 
 declare const VERSION: string;
+const THREE = (global as any).require(path.join(__dirname, 'vendor/three/three'));
 
 @Component({
     selector: 'settings-panel',
@@ -25,6 +27,7 @@ export class SettingsPanel {
     iconVisible: boolean = false;
     expanded: boolean = false;
     version: string = VERSION;
+    threeVersion: string = THREE.REVISION;
     private hoverTimer: any;
 
     constructor(public state: State,
