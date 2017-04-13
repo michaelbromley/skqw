@@ -21,7 +21,7 @@ Go to the releases page to get the latest installer binary for your platform. On
 <meta property="og:description" content="Installation (Windows / Mac)
 Go to the releases page to get the latest installer binary for your platform. On Windows, the app will be installed to Users/&amp;lt;username&amp;gt;/AppData/Local/SKQW, but shoul">
 <meta property="og:image" content="http://michaelbromley.github.io/skqw/images/screenshot-01.jpg">
-<meta property="og:updated_time" content="2017-03-08T19:39:04.305Z">
+<meta property="og:updated_time" content="2017-04-12T18:39:47.990Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Getting Started">
 <meta name="twitter:description" content="Installation (Windows / Mac)
@@ -226,7 +226,7 @@ Go to the releases page to get the latest installer binary for your platform. On
 
   <div class="article-info">
     <span class="article-date">
-  Updated: 2017-03-08
+  Updated: 2017-04-12
 </span>
 
     
@@ -244,30 +244,6 @@ Go to the releases page to get the latest installer binary for your platform. On
 <li>The installer is not signed. This means Windows will warn you that it is not trusted and you shouldn’t install it. If you trust me, you can disregard this warning ;) If there is enough interest I will consider purchasing a code-signing certificate to make such warnings go away.</li>
 <li>This is beta software. It is likely you will encounter bugs. Please open issues in this repo (if you know how) so I can fix them for the next release.</li>
 </ul>
-<h2 id="Building-From-Source-Windows-OS-X-Linux"><a href="#Building-From-Source-Windows-OS-X-Linux" class="headerlink" title="Building From Source (Windows / OS X / Linux)"></a>Building From Source (Windows / OS X / Linux)</h2><p>I develop SKQW on a Windows machine, so I can only provide exact instructions for building on Windows for now. Since SKQW makes use of a natively-compiled node addon for sound card access, it needs to be compiled on the target platform.</p>
-<p>Those who are familiar with compiling electron apps and native node modules on OSX / Linux may be able to follow along with these instructions and modify the platform-specific parts. If you succeed, please let me know how you did it, so I can add instructions for those platforms.</p>
-<h3 id="Requirements"><a href="#Requirements" class="headerlink" title="Requirements"></a>Requirements</h3><ul>
-<li>[<strong>Windows</strong>] Visual Studio (for compiling the native node modules). You can download the <a href="https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx" target="_blank" rel="external">community edition</a> for free. [<strong>OS X / Linux</strong>] See the <a href="https://github.com/nodejs/node-gyp#installation" target="_blank" rel="external">node-gyp docs</a> for requirements for compiling native addons.</li>
-<li>[<strong>Windows 7 only</strong>] <a href="https://developer.microsoft.com/en-us/windows/downloads/windows-8-1-sdk" target="_blank" rel="external">Windows SDK version 8.1</a> or above - only applicable if you are on Windows 7 or below.</li>
-<li><a href="https://nodejs.org/en/" target="_blank" rel="external">Node</a>. Make sure the node version is 64-bit for building for x64 versions of Windows, and vice-versa.</li>
-<li>[<strong>Windows</strong>] If you have Visual Studio 2015 update 3+, make sure your npm version is &gt; 3.10.5, otherwise you will get an error when trying to run <code>dist:win64</code></li>
-</ul>
-<h3 id="Steps-to-Build"><a href="#Steps-to-Build" class="headerlink" title="Steps to Build"></a>Steps to Build</h3><ol>
-<li><code>git clone https://github.com/michaelbromley/skqw.git</code></li>
-<li><code>npm install</code> - installs the dev dependencies</li>
-<li><code>cd src</code></li>
-<li><code>npm install</code> - installs the runtime dependencies (native node addons)</li>
-<li><code>cd ..</code></li>
-<li><code>npm run typings:install</code> - install global type definitions for TypeScript.</li>
-<li><code>.\node_modules\.bin\electron-rebuild.cmd -m src/node_modules</code> - rebuild the native modules for electron</li>
-<li><code>npm run app:build</code> - build the app</li>
-<li><code>npm run electron:start</code> - test the app in dev mode</li>
-<li><code>npm run dist:win64</code> - create a Windows 64-bit binary. Will be created in the <code>dist</code> folder.</li>
-</ol>
-<h5 id="Build-issue-with-Node-6-4-0-Windows"><a href="#Build-issue-with-Node-6-4-0-Windows" class="headerlink" title="Build issue with Node 6.4.0 / Windows"></a>Build issue with Node 6.4.0 / Windows</h5><p>I just upgraded to Node 6.4.0. This caused some problems with incompatible dependencies which have not upgraded some of their own dependencies to newer versions. Here’s what I needed to do to get the build to work:</p>
-<ol>
-<li>Update the npm version inside electron-rebuild to the latest version, so that we get a newer node-gyp which does not break with VS2015 update 3.</li>
-</ol>
 
   </div>
   <footer class="article-footer">
