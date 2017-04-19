@@ -1,0 +1,16 @@
+@import "scrollbars";
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+remote-control {
+  background: linear-gradient(to bottom, rgba(15, 15, 25, 0.8) 0%, rgba(25, 25, 40, 0.8) 100%);
+  height: calc(100vh - 40px);
+  display: block;
+  position: relative;
+  padding: 20px;
+
+  @include scrollbar-styles();
+}

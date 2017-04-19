@@ -1,6 +1,7 @@
 ### v1.0.0-beta.3 (in progress)
 
 #### Features
+* Add remote control
 * Update to Electron 1.6.6
 * Update to Angular 4 & Angular Material 2.0.0-beta.3
 * Display Three.js version in UI

@@ -3,6 +3,8 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/do';
 import {LibraryEntry} from '../../common/models';
 import * as low from 'lowdb';
+import {STATE_CHANGE} from '../../common/constants';
+const {ipcRenderer} = require('electron');
 
 const db = new low('db.json');
 
@@ -56,6 +58,7 @@ if (db.has(APP_STATE_KEY).value() === false) {
 export class State {
 
     private _state = {} as BehaviorSubjectify<AppState>;
+    private id: string = Math.random().toString(36).substring(3);
 
     constructor() {
         // construct the state observables
@@ -63,6 +66,13 @@ export class State {
             const storedValue = db.get(APP_STATE_KEY).find({ key }).value<{ key: string; value: any; }>().value;
             this._state[key] = new BehaviorSubject(storedValue || initialState[key]);
         }
+
+        // listen to state updates from a remote instance of this StateService
+        ipcRenderer.on(STATE_CHANGE, (event, change) => {
+            if (change.id !== this.id) {
+                this.setValue(change.key, change.value);
+            }
+        });
     }
 
     get library(): BehaviorSubject<LibraryEntry[]> { return this._state.library; }
@@ -92,8 +102,12 @@ export class State {
         if (-1 < forceNumeric.indexOf(key)) {
             value = +value;
         }
+        // set and emit the value internally
         this.setValue(key as keyof AppState, value);
+        // persist the value to the db
         db.get(APP_STATE_KEY).find({ key }).assign({ value }).value();
+        // emit a state change event
+        ipcRenderer.send(STATE_CHANGE, { id: this.id, key, value });
     }
 
     /**
@@ -105,6 +119,10 @@ export class State {
             plainState[key] = this._state[key].getValue();
         }
         return plainState;
+    }
+
+    ngOnDestroy(): void {
+        ipcRenderer.removeAllListeners();
     }
 
     /**

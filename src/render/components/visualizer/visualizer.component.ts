@@ -87,26 +87,6 @@ export class Visualizer {
         this.onResizeFn = null;
     }
 
-    updateParam(paramUpdate: ParamUpdate): void {
-        if (this.visualization && this.visualization.params) {
-            if (!this.visualization.params.hasOwnProperty(paramUpdate.paramKey)) {
-                return;
-            }
-            if (typeof this.visualization.paramChange === 'function') {
-                try {
-                    this.visualization.paramChange(paramUpdate);
-                } catch (e) {
-                    console.log(e);
-                }
-            } else {
-                // if the paramChange hook is not defined, automatically update
-                // the parameter.
-                this.visualization.params[paramUpdate.paramKey].value = paramUpdate.newValue;
-            }
-            this.updateStateParamSettings();
-        }
-    }
-
     /**
      * Debounce the resize handler since the resize even gets fired rapidly in
      * succession as the user resizes.
@@ -123,15 +103,5 @@ export class Visualizer {
                 }
             }
         }, 100);
-    }
-
-    private updateStateParamSettings(): void {
-        if (this.visualization && this.visualization.params) {
-            let paramSettings = {};
-            for (let name in this.visualization.params) {
-                paramSettings[name] = this.visualization.params[name].value;
-            }
-            this.state.update('paramSettings', paramSettings);
-        }
     }
 }

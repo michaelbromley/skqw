@@ -1,4 +1,4 @@
-<visualizer [sample]="sample" [visualization]="visualization$ | async"></visualizer>
+<visualizer [sample]="sample" [visualization]="visualization.current$ | async"></visualizer>
 
 <gain-selector [gain]="state.gain | async"
                (setGain)="setGain($event)"></gain-selector>
@@ -6,6 +6,6 @@
 <notification></notification>
 
 <settings-panel (changeInputDeviceId)="setInputDeviceId($event)"
-                [current]="visualization$ | async"
+                [current]="visualization.current$ | async"
                 (setSampleRate)="setSampleRate($event)"
                 (updateParam)="updateParamValue($event)"></settings-panel>

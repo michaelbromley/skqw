@@ -1,7 +1,10 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {ReactiveFormsModule} from '@angular/forms';
-import {MaterialModule} from '@angular/material';
+import {
+    MdSliderModule, MdButtonModule, MdSelectModule, MdListModule, MdIconModule,
+    MdSlideToggleModule, MdMenuModule
+} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import 'hammerjs';
 
@@ -19,13 +22,20 @@ import {State} from './providers/state.service.';
 import {Loader} from './providers/loader.service';
 import {CanvasService} from './providers/canvas.service';
 import {LibraryService} from './providers/library.service';
+import {VisualizationService} from './providers/visualization.service';
 
 @NgModule({
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
         ReactiveFormsModule,
-        MaterialModule.forRoot()
+        MdSliderModule,
+        MdButtonModule,
+        MdSelectModule,
+        MdListModule,
+        MdIconModule,
+        MdSlideToggleModule,
+        MdMenuModule
     ],
     declarations: [
         App,
@@ -43,7 +53,8 @@ import {LibraryService} from './providers/library.service';
         LibraryService,
         State,
         NotificationService,
-        CanvasService
+        CanvasService,
+        VisualizationService
     ],
     bootstrap: [App]
 })

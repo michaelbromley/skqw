@@ -8,6 +8,10 @@
 
     <div class="panel-body">
 
+        <div class="remote-toggle" title="Open remote controls" (click)="openRemoteControls()">
+            <md-icon>open_in_new</md-icon>
+        </div>
+
         <v-selector></v-selector>
 
         <parameter-controls [params]="current?.params"

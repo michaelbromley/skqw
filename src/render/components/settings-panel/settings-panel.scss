@@ -1,16 +1,8 @@
 @import "variables";
+@import '~@angular/material/theming';
+@import "scrollbars";
 
-/deep/ .ps-container > .ps-scrollbar-y-rail > .ps-scrollbar-y {
-  background-color: rgba(150, 150, 150, 0.7);
-}
-
-/deep/ .ps-container:hover > .ps-scrollbar-y-rail:hover {
-  background-color: rgba(85, 85, 85, 0.67);
-}
-
-/deep/ .ps-container:hover.ps-in-scrolling.ps-y > .ps-scrollbar-y-rail {
-  background-color: rgba(119, 119, 119, 0.67);
-}
+@include scrollbar-styles();
 
 .panel-container {
   position: absolute;
@@ -68,6 +60,19 @@
     position: relative;
     height: 100%;
     overflow: hidden;
+
+    .remote-toggle {
+      position: absolute;
+      z-index: 11;
+      top: 15px;
+      right: 18px;
+      color: #aeaeae;
+      cursor: pointer;
+      transition: color 0.2s;
+      &:hover {
+        color: map-get($mat-cyan, A200);
+      }
+    }
   }
 }
 

@@ -1,6 +1,4 @@
-import {Component, ViewChild, HostListener, ViewEncapsulation} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
+import {Component, HostListener, ViewChild, ViewEncapsulation} from '@angular/core';
 import 'rxjs/observable/combineLatest';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -10,23 +8,35 @@ import 'rxjs/add/operator/merge';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/skip';
 import 'rxjs/add/operator/publishReplay';
 import 'rxjs/observable/ConnectableObservable';
 import {
-    START_ANALYZER, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
-    SET_GAIN, TOGGLE_NORMALIZATION, MAX_GAIN, MIN_GAIN, TOGGLE_FULLSCREEN, TOGGLE_DEVTOOLS, MIN_SAMPLE_RATE,
-    MAX_SAMPLE_RATE, SET_SAMPLE_RATE, CLOSE_DEVTOOLS, OPEN_DEVTOOLS, SAMPLE, RESET_TOKEN
+    CLOSE_DEVTOOLS,
+    MAX_GAIN,
+    MAX_SAMPLE_RATE,
+    MIN_GAIN,
+    MIN_SAMPLE_RATE,
+    OPEN_DEVTOOLS,
+    RECEIVE_DEVICE_LIST,
+    REQUEST_DEVICE_LIST,
+    SAMPLE,
+    SET_GAIN,
+    SET_INPUT_DEVICE_ID,
+    SET_SAMPLE_RATE,
+    START_ANALYZER,
+    TOGGLE_DEVTOOLS,
+    TOGGLE_FULLSCREEN,
+    TOGGLE_NORMALIZATION
 } from '../common/constants';
 import {Visualizer} from './components/visualizer/visualizer.component';
 import {Loader} from './providers/loader.service';
-import {ParamUpdate, Sample, Visualization} from '../common/models';
+import {ParamUpdate, Sample} from '../common/models';
 import {State} from './providers/state.service.';
 import {NotificationService} from './providers/notification.service';
 import {LibraryService} from './providers/library.service';
-import {Subscription} from 'rxjs/Subscription';
-const ipcRenderer = require('electron').ipcRenderer;
+import {VisualizationService} from './providers/visualization.service';
+const {ipcRenderer} = require('electron');
 const {app} = require('electron').remote;
 const path = require('path');
 
@@ -41,12 +51,9 @@ export class App {
 
     @ViewChild(Visualizer) visualizer: Visualizer;
     sample: Sample = { ft: [], ts: [] };
-    visualization$: Observable<Visualization>;
-    private debugMode: boolean = false;
-    private reload$ = new Subject<string>();
-    private subscriptions: Subscription[] = [];
 
     constructor(public state: State,
+                public visualization: VisualizationService,
                 private loader: Loader,
                 private libraryService: LibraryService,
                 private notification: NotificationService) {
@@ -57,22 +64,6 @@ export class App {
             console.log('Normalization set to ', normalizeFt);
             ipcRenderer.send(TOGGLE_NORMALIZATION, normalizeFt);
         };
-
-        this.visualization$ = this.state.activeId
-            .map(id => id.toString())
-            .filter(id => !!id)
-            .distinctUntilChanged()
-            .merge(this.reload$)
-            .map(id => {
-                if (id === RESET_TOKEN) {
-                    return {};
-                } else {
-                    return this.loader.loadLibraryEntry(id, this.debugMode)
-                }
-            })
-            .filter(vis => !!vis)
-            .publishReplay(1)
-            .refCount();
     }
 
     ngOnInit(): void {
@@ -87,34 +78,14 @@ export class App {
 
         ipcRenderer.send(START_ANALYZER);
 
-
         ipcRenderer.on(OPEN_DEVTOOLS, () => {
-            this.debugMode = true;
+            this.visualization.setDebugMode(true);
             this.notification.notify(`Debug mode enabled`);
         });
         ipcRenderer.on(CLOSE_DEVTOOLS, () => {
-            this.debugMode = false;
+            this.visualization.setDebugMode(false);
             this.notification.notify(`Debug mode disabled`);
         });
-
-        // Restore the save param settings, ensure enough time to the visialization to load and init.
-        this.subscriptions.push(
-            this.state.activeId
-                .take(1)
-                .delay(500)
-                .subscribe(vis => this.restoreSaveParams())
-        );
-
-        // Restore the saved params when reloading a visualization.
-        this.subscriptions.push(
-            this.reload$
-            .delay(200)
-            .subscribe(vis => this.restoreSaveParams())
-        );
-    }
-
-    ngOnDestroy(): void {
-        this.subscriptions.forEach(subscription => subscription.unsubscribe());
     }
 
     /**
@@ -127,7 +98,7 @@ export class App {
         }
         if (e.altKey === true && e.which === 82) {
             // Handle alt + R - reload current visualization.
-            this.reloadCurrentVisualization();
+            this.visualization.reload();
             this.notification.notify(`Reloaded visualization`);
         }
         if (e.altKey === true && e.which === 70) {
@@ -137,7 +108,7 @@ export class App {
         if (e.ctrlKey=== true && e.shiftKey && e.which === 73) {
             // Handle ctrl + shift + i - toggle devtools.
             ipcRenderer.send(TOGGLE_DEVTOOLS);
-            this.reloadCurrentVisualization();
+            this.visualization.reload();
         }
         if (e.which === 38) {
             // increase the gain
@@ -157,7 +128,7 @@ export class App {
     }
 
     updateParamValue(update: ParamUpdate): void {
-        this.visualizer.updateParam(update);
+        this.visualization.updateParam(update);
     }
 
     setGain(val: number) {
@@ -171,24 +142,6 @@ export class App {
         if (MIN_SAMPLE_RATE <= val && val <= MAX_SAMPLE_RATE) {
             this.state.update('sampleRate', val);
             ipcRenderer.send(SET_SAMPLE_RATE, val);
-        }
-    }
-
-    private restoreSaveParams(): void {
-        const paramSettings = this.state.paramSettings.value;
-        for (let paramKey in paramSettings) {
-            if (paramSettings.hasOwnProperty(paramKey)) {
-                const newValue = paramSettings[paramKey];
-                this.updateParamValue({paramKey, newValue});
-            }
-        }
-    }
-
-    private reloadCurrentVisualization(): void {
-        const activeEntry = this.libraryService.getActive();
-        if (activeEntry) {
-            this.reload$.next(RESET_TOKEN);
-            this.reload$.next(this.state.activeId.value);
         }
     }
 }

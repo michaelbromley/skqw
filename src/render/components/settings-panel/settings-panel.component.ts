@@ -1,12 +1,11 @@
 import {Component, ElementRef, HostListener, Input, EventEmitter, Output} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/switchMap';
+import {Observable} from 'rxjs';
 import {State} from '../../providers/state.service.';
 import {ParamUpdate, Visualization} from '../../../common/models';
-import {MIN_SAMPLE_RATE, MAX_SAMPLE_RATE} from '../../../common/constants';
+import {MIN_SAMPLE_RATE, MAX_SAMPLE_RATE, OPEN_REMOTE_CONTROL} from '../../../common/constants';
 import * as Ps from 'perfect-scrollbar'
 import * as path from 'path';
+const {ipcRenderer} = require('electron');
 
 declare const VERSION: string;
 const THREE = (global as any).require(path.join(__dirname, 'vendor/three/three'));
@@ -78,5 +77,10 @@ export class SettingsPanel {
                 this.iconVisible = false;
             }
         }, 3000);
+    }
+
+    openRemoteControls(): void {
+        ipcRenderer.send(OPEN_REMOTE_CONTROL);
+        this.expanded = false;
     }
 } 

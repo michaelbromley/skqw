@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const webpackMainConfig = require('./webpack.main');
 const webpackRenderConfig = require('./webpack.render');
+const webpackRemoteControlConfig = require('./webpack.remote-control');
 
 // Get npm lifecycle event to identify the environment
 const ENV = process.env.npm_lifecycle_event;
@@ -12,5 +13,9 @@ module.exports = function (env) {
     const aotMode = env === 'aot';
     console.log(`building in ${aotMode ? 'aot' : 'jit'} mode...`);
 
-    return [webpackRenderConfig(prodMode), webpackMainConfig];
+    return [
+        webpackRenderConfig(prodMode),
+        webpackRemoteControlConfig(prodMode),
+        webpackMainConfig
+    ];
 };

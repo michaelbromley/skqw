@@ -8,13 +8,15 @@ if (handleSquirrelEvent()) {
 
 import {
     START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
-    SET_GAIN, TOGGLE_NORMALIZATION, TOGGLE_FULLSCREEN, TOGGLE_DEVTOOLS, SET_SAMPLE_RATE, OPEN_DEVTOOLS, CLOSE_DEVTOOLS
+    SET_GAIN, TOGGLE_NORMALIZATION, TOGGLE_FULLSCREEN, TOGGLE_DEVTOOLS, SET_SAMPLE_RATE, OPEN_DEVTOOLS, CLOSE_DEVTOOLS,
+    STATE_CHANGE, OPEN_REMOTE_CONTROL, CLOSE_REMOTE_CONTROL
 } from '../common/constants';
 const {app, BrowserWindow, ipcMain, shell} = require('electron');
 import {Analyzer} from './analyzer';
 require('electron-debug')();
 
 let mainWindow = null;
+let remoteWindow = null;
 let analyzer = new Analyzer();
 let fullscreen = false;
 
@@ -45,6 +47,9 @@ app.on('ready', () => {
 
     mainWindow.on('close', () => {
         sampleSubscription.unsubscribe();
+        if (remoteWindow && !remoteWindow.isDestroyed()) {
+            remoteWindow.close();
+        }
     });
 });
 
@@ -54,9 +59,45 @@ let sampleSubscription = analyzer.sample$.subscribe(sample => {
     }
 });
 
+ipcMain.on(OPEN_REMOTE_CONTROL, () => {
+    if (remoteWindow && !remoteWindow.isDestroyed()) {
+        return;
+    }
+    remoteWindow = new BrowserWindow({
+        height: 600,
+        width: 400,
+        minWidth: 300,
+        minHeight: 200,
+        backgroundColor: '#222',
+        show: false,
+        frame: true
+    });
+    remoteWindow.loadURL('file://' + __dirname + '/remote-control/index.html');
+    remoteWindow.setMenu(null);
+    remoteWindow.once('ready-to-show', () => {
+        remoteWindow.show();
+    });
+});
+
+ipcMain.on(CLOSE_REMOTE_CONTROL, () => {
+    remoteWindow.close();
+    remoteWindow = null;
+});
+
 ipcMain.on(START_ANALYZER, () => {
     analyzer.start();
 });
+
+ipcMain.on(STATE_CHANGE, (event, change) => {
+    mainWindow.webContents.send(STATE_CHANGE, change);
+    try {
+        if (remoteWindow && !remoteWindow.isDestroyed()) {
+            remoteWindow.webContents.send(STATE_CHANGE, change);
+        }
+    } catch (e) {
+        throw new Error('sod it all');
+    }
+})
 
 ipcMain.on(REQUEST_DEVICE_LIST, (event) => {
     event.sender.send(RECEIVE_DEVICE_LIST, analyzer.listAudioDevices());

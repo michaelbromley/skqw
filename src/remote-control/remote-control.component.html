@@ -1,0 +1,20 @@
+<v-selector></v-selector>
+
+<parameter-controls [params]="(visualization.current$ | async)?.params"
+                    [paramSettings]="state.paramSettings | async"
+                    (updateParam)="updateParamValue($event)"></parameter-controls>
+
+<settings-group groupTitle="Audio Source" (toggle)="onSettingsGroupToggle($event)">
+    <input-selector [inputs]="state.inputDevices | async"
+                    [selectedId]="state.selectedInputId | async"
+                    (inputChange)="setInputDeviceId($event)"></input-selector>
+
+    <div class="sample-rate">
+        <label>Sample Rate (Hz): <span class="value">{{ state.sampleRate | async  }}</span></label>
+        <md-slider [value]="state.sampleRate | async"
+                   (change)="setSampleRate($event.value)"
+                   [min]="minSampleRate"
+                   [max]="maxSampleRate"></md-slider>
+    </div>
+
+</settings-group>
