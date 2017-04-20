@@ -2,10 +2,14 @@
 
 #### Features
 * Add remote control
-* Update to Electron 1.6.6
+* Update to Electron 1.6.7
 * Update to Angular 4 & Angular Material 2.0.0-beta.3
+* [Windows] Use the nsis installer rather than Squirrel (Setup exe about 20MB smaller)
 * Display Three.js version in UI
 * Persist param settings when reloading a visualization
+
+#### Fixes
+* Fixed closed app process persisting in background
 
 
 ### v1.0.0-beta.2 (2017-01-30)

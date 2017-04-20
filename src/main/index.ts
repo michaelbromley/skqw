@@ -1,18 +1,22 @@
-import {logToFile} from './utils';
-import {handleSquirrelEvent} from './squirrel-install';
-
-logToFile('starting SKQW...');
-if (handleSquirrelEvent()) {
-    process.exit(0);
-}
-
 import {
-    START_ANALYZER, SAMPLE, REQUEST_DEVICE_LIST, RECEIVE_DEVICE_LIST, SET_INPUT_DEVICE_ID,
-    SET_GAIN, TOGGLE_NORMALIZATION, TOGGLE_FULLSCREEN, TOGGLE_DEVTOOLS, SET_SAMPLE_RATE, OPEN_DEVTOOLS, CLOSE_DEVTOOLS,
-    STATE_CHANGE, OPEN_REMOTE_CONTROL, CLOSE_REMOTE_CONTROL
+    CLOSE_DEVTOOLS,
+    CLOSE_REMOTE_CONTROL,
+    OPEN_DEVTOOLS,
+    OPEN_REMOTE_CONTROL,
+    RECEIVE_DEVICE_LIST,
+    REQUEST_DEVICE_LIST,
+    SAMPLE,
+    SET_GAIN,
+    SET_INPUT_DEVICE_ID,
+    SET_SAMPLE_RATE,
+    START_ANALYZER,
+    STATE_CHANGE,
+    TOGGLE_DEVTOOLS,
+    TOGGLE_FULLSCREEN,
+    TOGGLE_NORMALIZATION
 } from '../common/constants';
-const {app, BrowserWindow, ipcMain, shell} = require('electron');
 import {Analyzer} from './analyzer';
+const {app, BrowserWindow, ipcMain, shell} = require('electron');
 require('electron-debug')();
 
 let mainWindow = null;
@@ -51,6 +55,10 @@ app.on('ready', () => {
             remoteWindow.close();
         }
     });
+});
+
+app.on('window-all-closed', function() {
+    app.quit();
 });
 
 let sampleSubscription = analyzer.sample$.subscribe(sample => {

@@ -37,9 +37,9 @@
     "copy-webpack-plugin": "^3.0.1",
     "css-loader": "^0.23.1",
     "electron": "^1.6.6",
-    "electron-builder": "7.3.0",
+    "electron-builder": "17.0.1",
     "electron-debug": "^1.0.1",
-    "electron-rebuild": "1.5.6",
+    "electron-rebuild": "1.5.7",
     "es6-shim": "^0.35.0",
     "file-loader": "^0.8.5",
     "fourier-transform": "^1.0.1",
@@ -73,7 +73,8 @@
       "category": "public.app-category.entertainment"
     },
     "win": {
-      "iconUrl": "https://raw.githubusercontent.com/michaelbromley/skqw/master/build/icon.ico"
+      "target": "nsis",
+      "icon": "build/icon.ico"
     },
     "nodeGypRebuild": false
   }
