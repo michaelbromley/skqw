@@ -13,7 +13,7 @@ cache:
   - $HOME/.electron
   - $HOME/.cache
 install:
-- nvm install 6
+- nvm install 7
 - npm install -g node-gyp
 - npm install
 - npm prune
@@ -24,7 +24,7 @@ script:
 - npm run electron:rebuild
 - npm run app:build
 - cd app/node_modules/node-core-audio
-- node-gyp rebuild --target=1.4.0 --arch=x64 --dist-url=https://atom.io/download/atom-shell
+- node-gyp rebuild --target=1.6.0 --arch=x64 --dist-url=https://atom.io/download/atom-shell
 - cd ..
 - cd ..
 - cd ..
