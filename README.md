@@ -1,6 +1,6 @@
 ![SKQW Logo](src/assets/images/logo.png)
 
-#### A native desktop audio visualizer, built with Electron and Angular 2.
+#### A native desktop audio visualizer, built with Electron and Angular.
 
 SKQW (pronounced "skew") allows you to visualize the audio output of you computer's sound card. It is inspired by my love of the old Winamp plugins like [Milkdrop](https://www.google.com/search?tbm=isch&q=milkdrop+plugin+visualization) and [Geiss](https://www.google.com/search?q=geiss+plugin+visualization&tbm=isch). Visualizations are written in JavaScript and use HTML Canvas (2d or 3d) to render.
 
